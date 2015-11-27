@@ -1,0 +1,7 @@
+---
+# This playbook generates the DCOS installation/configuration files
+
+#- name: Start ZooKeeper
+- shell: docker run -d -p 20181:2181 -p 20888:2888 -p 30888:3888 --name=dcos_int_zk jplock/zookeeper
+  ignore_errors: yes
+  when: exhibitor == "zookeeper"

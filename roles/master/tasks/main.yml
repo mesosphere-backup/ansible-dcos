@@ -1,0 +1,3 @@
+#- name: install dcos masters
+- shell: cd /tmp/dcos/; sudo bash dcos_install.sh master
+  ignore_errors: yes

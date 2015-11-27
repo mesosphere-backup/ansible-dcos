@@ -1,0 +1,34 @@
+- hosts: masters
+  remote_user: centos
+  sudo: yes
+  tasks:
+    - shell: firewall-cmd --zone=trusted --add-port=80/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=53/udp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=53/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=5050/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=8080/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=2181/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=8181/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=2888/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=3888/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=20181/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=20888/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-port=30888/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-source={{ admin_ip }} --permanent
+    - shell: firewall-cmd --zone=trusted --add-source={{ item }} --permanent
+      with_items: groups.all
+
+- hosts: all
+  remote_user: centos
+  sudo: yes
+  tasks:
+    - shell: firewall-cmd --zone=trusted --add-port=5051/tcp --permanent
+    - shell: firewall-cmd --zone=trusted --add-source={{ item }} --permanent
+      with_items: groups.all
+
+- hosts: all
+  remote_user: centos
+  sudo: yes
+  tasks:
+    - shell: firewall-cmd --reload
+    - hostname: name={{server_name}}

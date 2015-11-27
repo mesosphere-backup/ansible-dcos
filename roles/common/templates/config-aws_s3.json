@@ -1,0 +1,15 @@
+{
+    "cluster_name": "jrx-onprem",
+    "exhibitor_storage_backend": "aws_s3",
+    "aws_access_key_id": "{{ aws_s3_access_key_id }}",
+    "aws_secret_access_key": "{{ aws_s3_secret_access_key }}",
+    "aws_region": "us-west-2",
+    "s3_bucket": "janr-bucket",
+    "s3_prefix": "s3-website",
+    "bootstrap_url":"file:///tmp/dcos",
+    "resolvers": "{{ resolvers }}",
+    "master_discovery":"static",
+    "master_list": "[{% set pipe = joiner(',') %}{% for host in groups['masters'] %}{{ pipe() }}{{ '\\\"' + host + '\\\"' }}{% endfor %}]",
+    "roles": "slave_public",
+    "weights": "slave_public=1"
+}

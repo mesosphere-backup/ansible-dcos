@@ -1,0 +1,49 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- shell: yum update -y
+- yum: name=rsync state=latest
+- yum: name=unzip state=latest
+- yum: name=wget state=latest
+- yum: name=tar state=latest
+- yum: name=xz state=latest
+- yum: name=curl state=latest
+- shell: sysctl -w net.ipv6.conf.all.disable_ipv6=1
+- shell: sysctl -w net.ipv6.conf.default.disable_ipv6=1
+- shell: curl -sSL https://get.docker.com | sh
+- shell: usermod -aG docker centos
+- shell: sed -i s/SELINUX=enforcing/SELINUX=permissive/g /etc/selinux/config
+- shell: groupadd nogroup
+  ignore_errors: yes
+- service: name=docker enabled=yes
+  retries: 10
+- service: name=docker state=started
+  retries: 10
+  ignore_errors: yes
+# Repeat docker start because it fails the first time on aws
+- service: name=docker state=started
+  retries: 10
+
+# Prepare the directories and download installation file
+- file: path=/tmp/dcos-install state=directory mode=0755
+- file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
+- get_url: url=http://downloads.mesosphere.com/dcos/stable/dcos_generate_config.sh dest=/tmp/dcos-install/ mode=0440
+
+# Generate config.json
+- template: src=config-zookeeper.json dest=/tmp/dcos-install/genconf/config.json mode=0644
+  when: exhibitor == "zookeeper"
+- template: src=config-aws_s3.json dest=/tmp/dcos-install/genconf/config.json mode=0644
+  when: exhibitor == "aws_s3"
+
+# Generate IP Detection
+- template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "aws"
+- template: src=ip-detect-profitbricks dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "profitbricks"
+
+# Generate DCOS configuration
+- shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
+- command: mv /tmp/dcos-install/genconf/serve/ /tmp/dcos creates=/tmp/dcos removes=/tmp/dcos-install/genconf/serve/
+
+# Cleanup DCOS install files
+- file: path=/tmp/dcos-install/ state=absent

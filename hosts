@@ -18,7 +18,7 @@ aws_s3_access_key_id=ACCESSKEYID
 aws_s3_secret_access_key=SECRETACCESSKEY
 
 # options: aws, profitbricks
-provider=profitbricks
+provider=vmware
 
 # options: aws=169.254.169.253, profitbricks=185.48.118.6
 resolvers=[\"185.48.118.6\"]

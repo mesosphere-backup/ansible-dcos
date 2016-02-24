@@ -38,8 +38,8 @@
 # Generate IP Detection
 - template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
   when: provider == "aws"
-- template: src=ip-detect-profitbricks dest=/tmp/dcos-install/genconf/ip-detect mode=0644
-  when: provider == "profitbricks"
+- template: src=ip-detect-vmware dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "vmware"
 
 # Generate DCOS configuration
 - shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/

@@ -5,3 +5,28 @@
 - shell: docker run -d -p 20181:2181 -p 20888:2888 -p 30888:3888 --name=dcos_int_zk jplock/zookeeper
   ignore_errors: yes
   when: exhibitor == "zookeeper"
+
+
+# # Prepare the directories and download installation file
+# - file: path=/tmp/dcos-install state=directory mode=0755
+# - file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
+# - get_url: url=http://downloads.mesosphere.com/dcos/stable/dcos_generate_config.sh dest=/tmp/dcos-install/ mode=0440
+#
+# # Generate config.json
+# - template: src=config-zookeeper.json dest=/tmp/dcos-install/genconf/config.json mode=0644
+#   when: exhibitor == "zookeeper"
+# - template: src=config-aws_s3.json dest=/tmp/dcos-install/genconf/config.json mode=0644
+#   when: exhibitor == "aws_s3"
+#
+# # Generate IP Detection
+# - template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+#   when: provider == "aws"
+# - template: src=ip-detect-default dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+#   when: provider == "default"
+#
+# # Generate DCOS configuration
+# - shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
+# - command: mv /tmp/dcos-install/genconf/serve/ /tmp/dcos creates=/tmp/dcos removes=/tmp/dcos-install/genconf/serve/
+#
+# # Cleanup DCOS install files
+# - file: path=/tmp/dcos-install/ state=absent

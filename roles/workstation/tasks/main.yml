@@ -1,32 +1,65 @@
 ---
 # This playbook generates the DCOS installation/configuration files
 
-#- name: Start ZooKeeper
-- shell: docker run -d -p 20181:2181 -p 20888:2888 -p 30888:3888 --name=dcos_int_zk jplock/zookeeper
-  ignore_errors: yes
+# Install docker-py as a workaround for Ansible issue
+- name: make sure docker-python RPM is not installed
+  yum:
+    name: docker-python
+    state: absent
+
+- name: make sure epel-release is installed
+  yum:
+    name: epel-release
+    state: present
+
+- name: make sure pip is installed
+  yum:
+    name: python-pip
+    state: present
+
+- name: make sure required PyPi packages are installed
+  pip: name={{ item }} state=present
+  with_items:
+    - docker-py==1.2.3
+    - six>=1.4.0
+
+# ZooKeeper
+- name: Start ZooKeeper for shared storage
+  docker:
+    name: dcos_int_zk
+    image: jplock/zookeeper
+    state: started
+    ports:
+    - "2181:2181"
+    - "2888:2888"
+    - "3888:3888"
   when: exhibitor == "zookeeper"
 
+# Prepare the directories and download installation file
+- file: path=/tmp/dcos-install state=directory mode=0755
+- file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
+- get_url: url="{{ dcos_download }}" dest=/tmp/dcos-install/dcos_generate_config.sh mode=0440
 
-# # Prepare the directories and download installation file
-# - file: path=/tmp/dcos-install state=directory mode=0755
-# - file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
-# - get_url: url=http://downloads.mesosphere.com/dcos/stable/dcos_generate_config.sh dest=/tmp/dcos-install/ mode=0440
-#
-# # Generate config.json
-# - template: src=config-zookeeper.json dest=/tmp/dcos-install/genconf/config.json mode=0644
-#   when: exhibitor == "zookeeper"
-# - template: src=config-aws_s3.json dest=/tmp/dcos-install/genconf/config.json mode=0644
-#   when: exhibitor == "aws_s3"
-#
-# # Generate IP Detection
-# - template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
-#   when: provider == "aws"
-# - template: src=ip-detect-default dest=/tmp/dcos-install/genconf/ip-detect mode=0644
-#   when: provider == "default"
-#
-# # Generate DCOS configuration
-# - shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
-# - command: mv /tmp/dcos-install/genconf/serve/ /tmp/dcos creates=/tmp/dcos removes=/tmp/dcos-install/genconf/serve/
-#
-# # Cleanup DCOS install files
-# - file: path=/tmp/dcos-install/ state=absent
+# Create IP detection script
+- template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "aws"
+- template: src=ip-detect-default dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "default"
+
+# Generate DC/OS configuration file
+- template: src=config-zookeeper.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  when: exhibitor == "zookeeper"
+
+# Generate DC/OS bootstrap files
+- shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
+
+# Nginx
+- name: Start web server to serve the bootstrap files
+  docker:
+    name: dcos_nginx
+    image: nginx
+    state: started
+    ports:
+    - "8080:80"
+    volumes:
+    - "/tmp/dcos-install/genconf/serve:/usr/share/nginx/html:ro"

@@ -17,20 +17,3 @@
 workstations
 masters
 agents
-
-[common:vars]
-workstation_ip=52.36.71.102
-remote_user=centos
-
-# options: aws_s3, zookeeper
-exhibitor=zookeeper
-
-# if aws_s3 is used:
-aws_s3_access_key_id=ACCESSKEYID
-aws_s3_secret_access_key=SECRETACCESSKEY
-
-# options: default, aws
-provider=default
-
-# options: aws=169.254.169.253, profitbricks=185.48.118.6
-resolvers=[\"185.48.118.6\"]

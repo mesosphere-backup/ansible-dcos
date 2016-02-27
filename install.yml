@@ -1,19 +1,19 @@
 ---
 # This playbook deploys dcos on-premise.
 
-- name: apply common configuration to all nodes and generates the DCOS configuration
-  hosts: all
-  sudo: yes
-
-  roles:
-    - common
-#
-# - name: starts ZooKeeper for bootstrapping
+# - name: apply common configuration to all nodes and generates the DCOS configuration
+#   hosts: all
 #   sudo: yes
-#   hosts: workstations
 #
 #   roles:
-#     - workstation
+#     - common
+#
+- name: starts ZooKeeper for bootstrapping
+  sudo: yes
+  hosts: workstations
+
+  roles:
+    - workstation
 #
 # - name: deploy DCOS masters
 #   sudo: yes

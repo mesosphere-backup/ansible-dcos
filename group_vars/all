@@ -1,0 +1,31 @@
+---
+# this is the site wide default
+
+workstation_ip: 52.36.71.102
+remote_user: centos
+dcos_download: https://downloads.mesosphere.com/dcos/EarlyAccess/dcos_generate_config.ee.sh
+
+# options: aws_s3, zookeeper
+exhibitor: zookeeper
+
+# if aws_s3 is used:
+aws_s3_access_key_id: ACCESSKEYID
+aws_s3_secret_access_key: SECRETACCESSKEY
+
+# options: default, aws
+provider: default
+
+# master_list
+master_list: |
+  - 1.2.3.4
+  - 1.2.3.4
+  - 1.2.3.4
+  
+# options: aws 169.254.169.253, profitbricks 185.48.118.6
+resolvers: |
+  - 8.8.8.8
+  - 8.8.4.4"
+
+# DC/OS credentials
+superuser_username: admin
+superuser_password_hash: $6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ.

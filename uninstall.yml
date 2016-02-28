@@ -1,0 +1,12 @@
+- hosts: all
+  remote_user: centos
+  sudo: yes
+  tasks:
+
+    - name: DC/OS uninstall
+      shell: sudo -i /opt/mesosphere/bin/pkgpanda uninstall
+      ignore_errors: true
+
+    - name: Remove DC/OS configuration
+      file: path=/opt/mesosphere state=absent
+      ignore_errors: true

@@ -1,3 +1,9 @@
-#- name: install dcos masters
+---
+# This playbook deploys the dcos master nodes
+
+- file: path=/tmp/dcos/ state=directory mode=0755
+
+- get_url: url="http://{{ workstation_ip }}:8080/dcos_install.sh" dest=/tmp/dcos/dcos_install.sh mode=0440
+
 - shell: cd /tmp/dcos/; sudo bash dcos_install.sh master
   ignore_errors: yes

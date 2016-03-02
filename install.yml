@@ -28,3 +28,10 @@
 
   roles:
     - agent
+
+- name: deploy DCOS agents
+  sudo: yes
+  hosts: agents_public
+
+  roles:
+    - agent_public

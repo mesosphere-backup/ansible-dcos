@@ -1,9 +1,0 @@
-- hosts: all
-  remote_user: centos
-  sudo: yes
-  tasks:
-    - name: Reboot
-      shell: sleep 2 && shutdown -r now "Ansible updates triggered"
-      async: 1
-      poll: 0
-      ignore_errors: true

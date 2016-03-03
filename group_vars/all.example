@@ -2,13 +2,15 @@
 # this is the site wide default
 
 # (internal) IP Address of the Workstation
-workstation_ip: 172.31.2.37
+workstation_ip: 1.2.3.4
 
 # (internal) IP Addresses for the Master Nodes
 master_list: |
-  - 172.31.2.36
+  - 1.2.3.4
+  - 1.2.3.4
+  - 1.2.3.4
 
-# options: aws 169.254.169.253, profitbricks 185.48.118.6
+# DNS Resolvers (AWS: 172.31.0.2, ProfitBricks: 185.48.118.6)
 resolvers: |
   - 172.31.0.2
 

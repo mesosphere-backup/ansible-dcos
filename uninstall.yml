@@ -1,4 +1,4 @@
-- hosts: all
+- hosts: [ masters, agents, agents_public]
   remote_user: centos
   sudo: yes
   tasks:
@@ -9,4 +9,29 @@
 
     - name: Remove DC/OS configuration
       file: path=/opt/mesosphere state=absent
+      ignore_errors: true
+
+    - name: Clear install directory
+      file: path=/tmp/dcos/ state=absent
+      ignore_errors: true
+
+- hosts: workstations
+  remote_user: centos
+  sudo: yes
+  tasks:
+
+    - name: Stop Nginx
+      docker:
+        name: dcos_nginx
+        image: jplock/zookeeper
+        state: stopped
+
+    - name: Stop ZooKeeper
+      docker:
+        name: dcos_int_zk
+        image: nginx
+        state: stopped
+
+    - name: Clear install directory
+      file: path=/tmp/dcos-install/ state=absent
       ignore_errors: true

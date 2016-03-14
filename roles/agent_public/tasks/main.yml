@@ -1,5 +1,5 @@
 ---
-# This playbook deploys the dcos agent nodes
+# This playbook deploys the dcos public agent nodes
 
 - file: path=/tmp/dcos/ state=directory mode=0755
 

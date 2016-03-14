@@ -5,7 +5,7 @@
 
 ## Steps for installation
 
-1. Copy host.example to hosts and fill in the IP Adresses of your cluster
+1. Copy host.example to hosts and fill in the IP addresses of your cluster
 
 2. Copy group_vars/all.example to group_vars/all and fill in the variables
 

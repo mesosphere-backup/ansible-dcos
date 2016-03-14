@@ -29,7 +29,7 @@
   roles:
     - agent
 
-- name: deploy DCOS agents
+- name: deploy DCOS public agents
   sudo: yes
   hosts: agents_public
 

@@ -1,0 +1,17 @@
+---
+bootstrap_url: http://{{ workstation_ip }}:8080
+cluster_name: 'jrx-onprem'
+exhibitor_storage_backend: aws_s3
+exhibitor_zk_hosts: {{ workstation_ip }}:2181
+aws_access_key_id: {{ aws_access_key_id }}
+aws_secret_access_key: {{ aws_secret_access_key }}
+aws_region: {{ aws_region }}
+s3_bucket: {{ s3_bucket }}
+s3_prefix: {{ s3_prefix }}
+master_discovery: static
+master_list:
+{{ master_list }}
+superuser_username: {{ superuser_username }}
+superuser_password_hash: {{ superuser_password_hash }}
+resolvers:
+{{ resolvers }}

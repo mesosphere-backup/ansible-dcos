@@ -24,8 +24,11 @@ dcos_download: https://downloads.mesosphere.com/dcos/EarlyAccess/dcos_generate_c
 exhibitor: zookeeper
 
 # if aws_s3 is used:
-aws_s3_access_key_id: ACCESSKEYID
-aws_s3_secret_access_key: SECRETACCESSKEY
+aws_access_key_id: ACCESSKEYID
+aws_secret_access_key: SECRETACCESSKEY
+aws_region: us-west-2
+s3_bucket: mybucket
+s3_prefix: s3-example
 
 # options: default, aws
 provider: aws

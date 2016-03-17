@@ -1,6 +1,9 @@
 ---
 # This playbook deploys the dcos master nodes
 
+- mount: name=/shared-mount src="{{ workstation_ip }}:/shared-mount" fstype=nfs state=mounted
+  when: exhibitor == "shared_filesystem"
+
 - file: path=/tmp/dcos/ state=directory mode=0755
 
 - get_url: url="http://{{ workstation_ip }}:8080/dcos_install.sh" dest=/tmp/dcos/dcos_install.sh mode=0440

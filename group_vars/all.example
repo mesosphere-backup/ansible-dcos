@@ -20,7 +20,7 @@ remote_user: centos
 # Download URL for DC/OS
 dcos_download: https://downloads.mesosphere.com/dcos/EarlyAccess/dcos_generate_config.ee.sh
 
-# options: aws_s3, zookeeper
+# options: aws_s3, zookeeper, shared_filesystem
 exhibitor: zookeeper
 
 # if aws_s3 is used:

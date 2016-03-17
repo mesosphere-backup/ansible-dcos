@@ -35,6 +35,22 @@
     - "3888:3888"
   when: exhibitor == "zookeeper"
 
+# Create NFS Share
+- yum: name=nfs-utils state=latest
+  when: exhibitor == "shared_filesystem"
+- file: path=/shared-mount state=directory mode=0777
+  when: exhibitor == "shared_filesystem"
+- lineinfile: dest=/etc/exports regexp=^/shared-mount line='/shared-mount    *(rw,sync,no_root_squash,no_all_squash)'
+  when: exhibitor == "shared_filesystem"
+- service: name=rpcbind enabled=yes state=started
+  when: exhibitor == "shared_filesystem"
+- service: name=nfs-server enabled=yes state=started
+  when: exhibitor == "shared_filesystem"
+- service: name=nfs-lock enabled=yes state=started
+  when: exhibitor == "shared_filesystem"
+- service: name=nfs-idmap enabled=yes state=started
+  when: exhibitor == "shared_filesystem"
+
 # Prepare the directories and download installation file
 - file: path=/tmp/dcos-install state=directory mode=0755
 - file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
@@ -51,6 +67,8 @@
   when: exhibitor == "zookeeper"
 - template: src=config-aws_s3.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
   when: exhibitor == "aws_s3"
+- template: src=config-shared_filesystem.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  when: exhibitor == "shared_filesystem"
 
 # Generate DC/OS bootstrap files
 - shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/

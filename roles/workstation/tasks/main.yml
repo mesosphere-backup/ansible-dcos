@@ -69,6 +69,8 @@
   when: exhibitor == "aws_s3"
 - template: src=config-shared_filesystem.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
   when: exhibitor == "shared_filesystem"
+- template: src=config-static.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  when: exhibitor == "static"
 
 # Generate DC/OS bootstrap files
 - shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/

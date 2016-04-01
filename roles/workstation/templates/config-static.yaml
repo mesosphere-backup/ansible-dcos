@@ -1,0 +1,11 @@
+---
+bootstrap_url: http://{{ workstation_ip }}:8080
+cluster_name: 'jrx-onprem'
+exhibitor_storage_backend: static
+master_discovery: static
+master_list:
+{{ master_list }}
+superuser_username: {{ superuser_username }}
+superuser_password_hash: {{ superuser_password_hash }}
+resolvers:
+{{ resolvers }}

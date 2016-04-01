@@ -3,35 +3,40 @@
 
 - name: apply common configuration to all nodes
   hosts: all
+  serial: 10
   sudo: yes
 
   roles:
     - common
 
-- name: starts ZooKeeper for bootstrapping and generates the DC/OS configuration
-  sudo: yes
+- name: generate the DC/OS configuration
   hosts: workstations
+  serial: 10
+  sudo: yes
 
   roles:
     - workstation
 
 - name: deploy DCOS masters
-  sudo: yes
   hosts: masters
+  serial: 10
+  sudo: yes
 
   roles:
     - master
 
 - name: deploy DCOS agents
-  sudo: yes
   hosts: agents
+  serial: 10
+  sudo: yes
 
   roles:
     - agent
 
 - name: deploy DCOS public agents
-  sudo: yes
   hosts: agents_public
+  serial: 10
+  sudo: yes
 
   roles:
     - agent_public

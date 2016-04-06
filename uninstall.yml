@@ -32,6 +32,10 @@
         image: nginx
         state: stopped
 
+    - name: Remove content of NFS Share
+      file: path=/shared-mount/exhibitor.properties state=absent
+      ignore_errors: true
+
     - name: Clear install directory
       file: path=/tmp/dcos-install/ state=absent
       ignore_errors: true

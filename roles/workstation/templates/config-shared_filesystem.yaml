@@ -10,3 +10,4 @@ superuser_username: {{ superuser_username }}
 superuser_password_hash: {{ superuser_password_hash }}
 resolvers:
 {{ resolvers }}
+dns_search: {{ dns_search }}

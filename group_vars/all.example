@@ -13,6 +13,9 @@ master_list: |
 # DNS Resolvers (AWS: 172.31.0.2, ProfitBricks: 185.48.118.6)
 resolvers: |
   - 172.31.0.2
+  - 8.8.8.8
+
+dns_search: eu-central-1.compute.internal
 
 # SSH User for installation
 remote_user: centos

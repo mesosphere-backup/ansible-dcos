@@ -7,35 +7,36 @@ workstation_ip: 1.2.3.4
 # (internal) IP Addresses for the Master Nodes
 master_list: |
   - 1.2.3.4
-  - 1.2.3.4
-  - 1.2.3.4
 
-# DNS Resolvers (AWS: 172.31.0.2, ProfitBricks: 185.48.118.6)
+# DNS Resolvers
 resolvers: |
   - 172.31.0.2
   - 8.8.8.8
 
+# DNS Search Domain
 dns_search: eu-central-1.compute.internal
 
-# SSH User for installation
+# SSH User for Installation
 remote_user: centos
 
-# Download URL for DC/OS
-dcos_download: https://downloads.mesosphere.com/dcos/EarlyAccess/dcos_generate_config.ee.sh
-
-# options: aws_s3, zookeeper, shared_filesystem, static
-exhibitor: zookeeper
-
-# if aws_s3 is used:
-aws_access_key_id: ACCESSKEYID
-aws_secret_access_key: SECRETACCESSKEY
-aws_region: us-west-2
-s3_bucket: mybucket
-s3_prefix: s3-example
-
+# Choose the IP Detect Script
 # options: default, aws
 provider: aws
 
-# DC/OS credentials
+# Download URL for DC/OS
+dcos_download: https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh
+
+# Configuration for the Exhibitor Storage Backend
+# options: aws_s3, zookeeper, shared_filesystem, static
+exhibitor: static
+
+# AWS S3 Credentials (only needed for exhibitor: aws_s3)
+aws_access_key_id: ******
+aws_secret_access_key: ******
+aws_region: us-west-2
+s3_bucket: janr-bucket
+s3_prefix: s3-website
+
+# DC/OS credentials (only needed for Mesosphere Enterprise DC/OS)
 superuser_username: admin
-superuser_password_hash: $6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ.
+superuser_password_hash: ******

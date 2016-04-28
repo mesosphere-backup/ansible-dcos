@@ -46,7 +46,7 @@ dns_search: eu-central-1.compute.internal
 remote_user: centos
 
 # Choose the IP Detect Script
-# options: default, aws
+# options: eth0, aws, gce
 provider: aws
 
 # Download URL for DC/OS

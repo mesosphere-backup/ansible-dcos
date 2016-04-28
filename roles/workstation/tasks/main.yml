@@ -59,8 +59,10 @@
 # Create IP detection script
 - template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
   when: provider == "aws"
-- template: src=ip-detect-default dest=/tmp/dcos-install/genconf/ip-detect mode=0644
-  when: provider == "default"
+- template: src=ip-detect-gce dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "gce"
+- template: src=ip-detect-eth0 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  when: provider == "eth0"
 
 # Generate DC/OS configuration file
 - template: src=config-zookeeper.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644

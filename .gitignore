@@ -1,3 +1,6 @@
 .DS_Store
 hosts
 group_vars/all
+*.tfstate
+*.tfstate.backup
+terraform.tfvars

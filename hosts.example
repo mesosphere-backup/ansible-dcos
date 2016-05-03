@@ -1,15 +1,14 @@
 [workstations]
-1.2.3.4
+${workstation_public_ips}
 
 [masters]
-1.2.3.4
+${master_public_ips}
 
 [agents]
-1.2.3.4
-1.2.3.4
+${agent_public_ips}
 
 [agents_public]
-1.2.3.4
+${public_agent_public_ips}
 
 [common:children]
 workstations

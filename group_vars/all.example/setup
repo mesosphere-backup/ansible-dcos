@@ -1,21 +1,4 @@
 ---
-# this is the site wide default
-
-# (internal) IP Address of the Workstation
-workstation_ip: 1.2.3.4
-
-# (internal) IP Addresses for the Master Nodes
-master_list: |
-  - 1.2.3.4
-
-# DNS Resolvers
-resolvers: |
-  - 172.31.0.2
-  - 8.8.8.8
-
-# DNS Search Domain
-dns_search: eu-central-1.compute.internal
-
 # SSH User for Installation
 remote_user: centos
 

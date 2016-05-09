@@ -1,9 +1,35 @@
-# Variables
+### Variables ###
+
+# Define instance count of the DC/OS nodes
+
+variable "workstation_instance_count" {
+  description = "Number of workstation nodes to launch"
+  default = 1
+}
+
+variable "master_instance_count" {
+  description = "Number of master nodes to launch"
+  default = 1
+}
+
+
+variable "agent_instance_count" {
+  description = "Number of agent nodes to launch"
+  default = 2
+}
+
+variable "public_agent_instance_count" {
+  description = "Number of public agent nodes to launch"
+  default = 0
+}
+
 variable "access_key" {}
 variable "secret_key" {}
 variable "region" {
     default = "eu-central-1"
 }
+
+# AMIs for CentOS
 
 variable "amis" {
     default = {
@@ -26,27 +52,6 @@ variable "sg_name" {
   description = "Tag Name for sg"
 }
 
-variable "workstation_instance_count" {
-  description = "Number of workstation nodes to launch"
-  default = 1
-}
-
-variable "master_instance_count" {
-  description = "Number of master nodes to launch"
-  default = 3
-}
-
-
-variable "agent_instance_count" {
-  description = "Number of agent nodes to launch"
-  default = 4
-}
-
-variable "public_agent_instance_count" {
-  description = "Number of public agent nodes to launch"
-  default = 1
-}
-
 variable "public_key_path" {
   description = <<DESCRIPTION
 Path to the SSH public key to be used for authentication.
@@ -59,6 +64,44 @@ DESCRIPTION
 variable "key_name" {
   description = "Desired name of AWS key pair"
 }
+
+variable "owner" {
+  description = "Just a tag of the owner"
+  default = "jan.repnak"
+}
+
+variable "expiration" {
+  description = "Just a tag of the expiration time"
+  default = "8hours"
+}
+
+### Outputs ###
+
+output "workstation_public_ips" {
+    value = "${join("\n", aws_instance.workstations.*.public_ip)}"
+}
+
+output "workstation_private_ips" {
+    value = "${join("\n  - ", aws_instance.workstations.*.private_ip)}"
+}
+
+output "master_public_ips" {
+    value = "${join("\n", aws_instance.masters.*.public_ip)}"
+}
+
+output "master_private_ips" {
+    value = "${join("\n  - ", aws_instance.masters.*.private_ip)}"
+}
+
+output "agent_public_ips" {
+    value = "${join("\n", aws_instance.agents.*.public_ip)}"
+}
+
+output "public_agent_public_ips" {
+    value = "${join("\n", aws_instance.public_agents.*.public_ip)}"
+}
+
+### Create Environment ###
 
 # Specify the provider and access details
 provider "aws" {
@@ -96,12 +139,13 @@ resource "aws_route" "internet_access" {
   gateway_id             = "${aws_internet_gateway.default.id}"
 }
 
+# Key pair
 resource "aws_key_pair" "auth" {
   key_name   = "${var.key_name}"
   public_key = "${file(var.public_key_path)}"
 }
 
-# Our default security group
+# Default security group
 resource "aws_security_group" "dcos_sg" {
   name = "main_dcos_sg"
   description = "Allow all inbound traffic"
@@ -130,34 +174,9 @@ resource "aws_security_group" "dcos_sg" {
 
 }
 
-# Get IPs
-output "workstation_public_ips" {
-    value = "${join("\n", aws_instance.workstations.*.public_ip)}"
-}
-
-output "workstation_private_ips" {
-    value = "${join("\n  - ", aws_instance.workstations.*.private_ip)}"
-}
-
-output "master_public_ips" {
-    value = "${join("\n", aws_instance.masters.*.public_ip)}"
-}
-
-output "master_private_ips" {
-    value = "${join("\n  - ", aws_instance.masters.*.private_ip)}"
-}
-
-output "agent_public_ips" {
-    value = "${join("\n", aws_instance.agents.*.public_ip)}"
-}
-
-output "public_agent_public_ips" {
-    value = "${join("\n", aws_instance.public_agents.*.public_ip)}"
-}
-
 # Create Workstations
 resource "aws_instance" "workstations" {
-  instance_type = "m3.medium"
+  instance_type = "t2.micro"
   ami = "${lookup(var.amis, var.region)}"
 
   count = "${var.workstation_instance_count}"
@@ -168,8 +187,8 @@ resource "aws_instance" "workstations" {
 
   tags {
           Name = "dcos-workstation"
-          owner = "jan.repnak"
-          expiration = "8hours"
+          owner = "${var.owner}"
+          expiration = "${var.expiration}"
       }
 
 }
@@ -187,8 +206,8 @@ resource "aws_instance" "masters" {
 
   tags {
           Name = "dcos-master"
-          owner = "jan.repnak"
-          expiration = "8hours"
+          owner = "${var.owner}"
+          expiration = "${var.expiration}"
       }
 
 }
@@ -206,8 +225,8 @@ resource "aws_instance" "agents" {
 
   tags {
           Name = "dcos-agent"
-          owner = "jan.repnak"
-          expiration = "8hours"
+          owner = "${var.owner}"
+          expiration = "${var.expiration}"
       }
 
 }
@@ -225,8 +244,8 @@ resource "aws_instance" "public_agents" {
 
   tags {
           Name = "dcos-public_agent"
-          owner = "jan.repnak"
-          expiration = "8hours"
+          owner = "${var.owner}"
+          expiration = "${var.expiration}"
       }
 
 }

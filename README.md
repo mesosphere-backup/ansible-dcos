@@ -2,9 +2,19 @@
 
 This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The installation steps are based on the [Advanced Installation Guide](https://dcos.io/docs/1.7/administration/installing/custom/advanced/) of DC/OS.
 
+## (Optional) Create CentOS machines in AWS
+
+This repo includes the Terraform script `setup-aws.tf` to create the CentOS machines to run the Ansible script on. This script is just for testing purposes and you don't have to use it.
+
+- Run `terraform apply` to create the nodes on AWS
+
+There is also the script `setup-ansible.sh` that reads out the IPs from the machines created on AWS and creates the Ansible configuration files `group_vars/all/networking` and `hosts` by using the `.example` files as a template.
+
+- Run `bash ./setup-ansible.sh` to overwrite the Ansible configuration files.
+
 ## Steps for installation
 
-- Copy `host.example` to `hosts` and fill in the (public) IP addresses of your cluster. For example:
+- Copy `host.example` to `hosts` and fill in the (public) IP addresses of your cluster. If you followed the steps above this is already done. For example:
 
 ```
 [workstations]
@@ -20,11 +30,17 @@ This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The instal
 [agents_public]
 1.0.0.5
 
-...
+[common:children]
+workstations
+masters
+agents
+agents_public
 
 ```
 
-- Copy `group_vars/all.example` to `group_vars/all` and fill in the variables that match your preferred configuration. The variables are explained below.
+- Copy the directory `group_vars/all.example` to `group_vars/all`.
+
+- Within the file `group_vars/all/networking` you have to define all the (internal/private) IPs of your Cluster. An example is listed below:
 
 ```
 # (internal) IP Address of the Workstation
@@ -41,7 +57,11 @@ resolvers: |
 
 # DNS Search Domain
 dns_search: eu-central-1.compute.internal
+```
 
+- There is another file called `group_vars/all/setup`. This file is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the example below:
+
+```
 # SSH User for Installation
 remote_user: centos
 
@@ -75,3 +95,7 @@ superuser_password_hash: ******
 This uninstall playbook runs a cleanup script on the nodes.
 
 - Run `ansible-playbook uninstall.yml`
+
+If you created the AWS environment with the Terraform script you can delete the AWS stack by running the command below.
+
+- Run `terraform destroy`

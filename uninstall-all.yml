@@ -1,0 +1,53 @@
+- hosts: [ masters, agents, agents_public]
+  remote_user: centos
+  sudo: yes
+  tasks:
+
+    - name: DC/OS uninstall
+      shell: sudo -i /opt/mesosphere/bin/pkgpanda uninstall
+      ignore_errors: true
+
+    - name: Remove DC/OS configuration
+      file: path=/opt/mesosphere state=absent
+      ignore_errors: true
+
+    - name: Remove DC/OS configuration
+      file: path=/etc/mesosphere state=absent
+      ignore_errors: true
+
+    - name: Remove ZooKeeper state
+      file: path=/var/lib/zookeeper state=absent
+      ignore_errors: true
+
+    - name: Remove Mesos state
+      file: path=/var/log/mesos state=absent
+      ignore_errors: true
+
+    - name: Clear install directory
+      file: path=/tmp/dcos/ state=absent
+      ignore_errors: true
+
+- hosts: workstations
+  remote_user: centos
+  sudo: yes
+  tasks:
+
+    - name: Stop Nginx
+      docker:
+        name: dcos_nginx
+        image: jplock/zookeeper
+        state: stopped
+
+    - name: Stop ZooKeeper
+      docker:
+        name: dcos_int_zk
+        image: nginx
+        state: stopped
+
+    - name: Remove content of NFS Share
+      file: path=/shared-mount/exhibitor.properties state=absent
+      ignore_errors: true
+
+    - name: Clear install directory
+      file: path=/tmp/dcos-install/ state=absent
+      ignore_errors: true

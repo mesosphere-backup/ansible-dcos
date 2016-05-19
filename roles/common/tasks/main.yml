@@ -18,6 +18,7 @@
 - yum: name=xz state=latest
 - yum: name=unzip state=latest
 - yum: name=curl state=latest
+- yum: name=ipset state=latest
 
 # Cluster permissions
 - selinux: policy=targeted state=permissive
@@ -25,5 +26,6 @@
 - sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
 - sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
 
-# Fix for Minuteman
-- yum: name=ipset state=latest
+# Disable Firewall
+- service: name=firewalld enabled=no
+- service: name=firewalld state=stopped

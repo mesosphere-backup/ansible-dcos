@@ -1,6 +1,6 @@
 ---
 bootstrap_url: http://{{ workstation_ip }}:8080
-cluster_name: 'jrx-onprem'
+cluster_name: '{{ cluster_name }}'
 exhibitor_storage_backend: shared_filesystem
 exhibitor_fs_config_dir: /shared-mount
 master_discovery: static

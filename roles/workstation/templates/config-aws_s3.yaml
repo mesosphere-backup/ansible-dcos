@@ -1,6 +1,6 @@
 ---
 bootstrap_url: http://{{ workstation_ip }}:8080
-cluster_name: 'jrx-onprem'
+cluster_name: '{{ cluster_name }}'
 exhibitor_storage_backend: aws_s3
 exhibitor_explicit_keys: 'true'
 aws_access_key_id: {{ aws_access_key_id }}

@@ -1,4 +1,7 @@
 ---
+# Name of the DC/OS Cluster
+cluster_name: dcos-ansible
+
 # SSH User for Installation
 remote_user: centos
 

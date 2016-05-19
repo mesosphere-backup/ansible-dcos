@@ -1,15 +1,15 @@
 ---
 # (internal) IP Address of the Workstation
-workstation_ip: ${workstation_private_ips}
+workstation_ip: 1.0.0.1
 
 # (internal) IP Addresses for the Master Nodes
 master_list: |
-  - ${master_private_ips}
+  - 1.0.0.2
 
 # DNS Resolvers
 resolvers: |
-  - 172.31.0.2
+  - 8.8.4.4
   - 8.8.8.8
 
 # DNS Search Domain
-dns_search: eu-central-1.compute.internal
+dns_search: None

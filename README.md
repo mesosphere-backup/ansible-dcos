@@ -35,7 +35,6 @@ workstations
 masters
 agents
 agents_public
-
 ```
 
 - Copy the directory `group_vars/all.example` to `group_vars/all`.
@@ -43,6 +42,7 @@ agents_public
 - Within the file `group_vars/all/networking` you have to define all the (internal/private) IPs of your Cluster. An example is listed below:
 
 ```
+---
 # (internal) IP Address of the Workstation
 workstation_ip: 1.0.0.1
 
@@ -52,16 +52,20 @@ master_list: |
 
 # DNS Resolvers
 resolvers: |
-  - 172.31.0.2
+  - 8.8.4.4
   - 8.8.8.8
 
 # DNS Search Domain
-dns_search: eu-central-1.compute.internal
+dns_search: None
 ```
 
 - There is another file called `group_vars/all/setup`. This file is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the example below:
 
 ```
+---
+# Name of the DC/OS Cluster
+cluster_name: dcos-ansible
+
 # SSH User for Installation
 remote_user: centos
 

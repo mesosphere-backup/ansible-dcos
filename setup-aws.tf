@@ -9,18 +9,18 @@ variable "workstation_instance_count" {
 
 variable "master_instance_count" {
   description = "Number of master nodes to launch"
-  default = 1
+  default = 3
 }
 
 
 variable "agent_instance_count" {
   description = "Number of agent nodes to launch"
-  default = 2
+  default = 4
 }
 
 variable "public_agent_instance_count" {
   description = "Number of public agent nodes to launch"
-  default = 0
+  default = 1
 }
 
 variable "access_key" {}
@@ -41,6 +41,11 @@ variable "amis" {
 variable "subnet_range" {
   description = "Subnet IP range"
   default = "172.31.0.0/16"
+}
+
+variable "subnet_dns" {
+  description = "Subnet DNS"
+  default = "172.31.0.2"
 }
 
 variable "admin_ip" {
@@ -99,6 +104,14 @@ output "agent_public_ips" {
 
 output "public_agent_public_ips" {
     value = "${join("\n", aws_instance.public_agents.*.public_ip)}"
+}
+
+output "dns" {
+    value = "${var.subnet_dns}"
+}
+
+output "dns_search" {
+    value = "${var.region}.compute.internal"
 }
 
 ### Create Environment ###

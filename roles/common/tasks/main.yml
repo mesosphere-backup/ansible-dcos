@@ -4,7 +4,8 @@
 # Update system
 - yum: name=* state=latest
 
-# Install docker
+# Install Docker
+- template: src=overlay.conf dest=/etc/modules-load.d/overlay.conf mode=0644
 - template: src=docker.repo dest=/etc/yum.repos.d/docker.repo mode=0644
 - file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
 - template: src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf mode=0644

@@ -158,6 +158,67 @@ resource "aws_key_pair" "auth" {
   public_key = "${file(var.public_key_path)}"
 }
 
+# Define IAM role to create external volumes on AWS
+resource "aws_iam_instance_profile" "agent_profile" {
+  name = "agent_profile"
+  roles = ["${aws_iam_role.dcos_agent_role.name}"]
+
+  lifecycle {
+    create_before_destroy = true
+  }
+}
+
+resource "aws_iam_role_policy" "agent_policy" {
+    name = "agent_policy"
+    role = "${aws_iam_role.dcos_agent_role.id}"
+    policy = <<EOF
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Action": [
+                "ec2:CreateTags",
+                "ec2:DescribeInstances",
+                "ec2:CreateVolume",
+                "ec2:DeleteVolume",
+                "ec2:AttachVolume",
+                "ec2:DetachVolume",
+                "ec2:DescribeVolumes",
+                "ec2:DescribeVolumeStatus",
+                "ec2:DescribeVolumeAttribute",
+                "ec2:CreateSnapshot",
+                "ec2:CopySnapshot",
+                "ec2:DeleteSnapshot",
+                "ec2:DescribeSnapshots",
+                "ec2:DescribeSnapshotAttribute"
+            ],
+            "Resource": "*",
+            "Effect": "Allow"
+        }
+    ]
+}
+EOF
+}
+
+resource "aws_iam_role" "dcos_agent_role" {
+    name = "dcos_agent_role"
+    assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Action": "sts:AssumeRole",
+      "Principal": {
+        "Service": "ec2.amazonaws.com"
+      },
+      "Effect": "Allow",
+      "Sid": ""
+    }
+  ]
+}
+EOF
+}
+
 # Default security group
 resource "aws_security_group" "dcos_sg" {
   name = "main_dcos_sg"
@@ -235,6 +296,7 @@ resource "aws_instance" "agents" {
   subnet_id = "${aws_subnet.dcos_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.dcos_sg.id}"]
   associate_public_ip_address = true
+  iam_instance_profile = "${aws_iam_instance_profile.agent_profile.name}"
 
   tags {
           Name = "dcos-agent"
@@ -254,6 +316,7 @@ resource "aws_instance" "public_agents" {
   subnet_id = "${aws_subnet.dcos_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.dcos_sg.id}"]
   associate_public_ip_address = true
+  iam_instance_profile = "${aws_iam_instance_profile.agent_profile.name}"
 
   tags {
           Name = "dcos-public_agent"

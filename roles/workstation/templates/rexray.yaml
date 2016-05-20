@@ -1,0 +1,10 @@
+rexray:
+  loglevel: info
+  storageDrivers:
+    - ec2
+  volume:
+    unmount:
+      ignoreusedcount: true
+aws:
+  accessKey: {{ aws_access_key_id }}
+  secretKey: {{ aws_secret_access_key }}

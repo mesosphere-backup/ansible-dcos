@@ -23,6 +23,10 @@ aws_region: us-west-2
 s3_bucket: janr-bucket
 s3_prefix: s3-website
 
+# Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
+# options: empty, file
+rexray_config_method: empty
+
 # DC/OS credentials (only needed for Mesosphere Enterprise DC/OS)
 superuser_username: admin
 superuser_password_hash: ******

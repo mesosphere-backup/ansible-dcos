@@ -11,3 +11,5 @@ superuser_password_hash: {{ superuser_password_hash }}
 resolvers:
 {{ resolvers }}
 dns_search: {{ dns_search }}
+rexray_config_method: {{ rexray_config_method }}
+rexray_config_filename: genconf/rexray.yaml

@@ -1,7 +1,6 @@
 ---
 # This playbook generates the DCOS installation/configuration files
 
-# Install docker-py as a workaround for Ansible issue
 - name: make sure docker-python RPM is not installed
   yum:
     name: docker-python
@@ -23,8 +22,7 @@
     - docker-py==1.2.3
     - six>=1.4.0
 
-# ZooKeeper
-- name: Start ZooKeeper for shared storage
+- name: start ZooKeeper for shared storage
   docker:
     name: dcos_int_zk
     image: jplock/zookeeper
@@ -35,54 +33,75 @@
     - "3888:3888"
   when: exhibitor == "zookeeper"
 
-# Create NFS Share
-- yum: name=nfs-utils state=latest
-  when: exhibitor == "shared_filesystem"
-- file: path=/shared-mount state=directory mode=0777
-  when: exhibitor == "shared_filesystem"
-- lineinfile: dest=/etc/exports regexp=^/shared-mount line='/shared-mount    *(rw,sync,no_root_squash,no_all_squash)'
-  when: exhibitor == "shared_filesystem"
-- service: name=rpcbind enabled=yes state=started
-  when: exhibitor == "shared_filesystem"
-- service: name=nfs-server enabled=yes state=started
-  when: exhibitor == "shared_filesystem"
-- service: name=nfs-lock enabled=yes state=started
-  when: exhibitor == "shared_filesystem"
-- service: name=nfs-idmap enabled=yes state=started
+- name: install NFS utilities
+  yum: name=nfs-utils state=latest
   when: exhibitor == "shared_filesystem"
 
-# Prepare the directories and download installation file
-- file: path=/tmp/dcos-install state=directory mode=0755
-- file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
-- get_url: url="{{ dcos_download }}" dest=/tmp/dcos-install/dcos_generate_config.sh mode=0440
+- name: create mount point
+  file: path=/shared-mount state=directory mode=0777
+  when: exhibitor == "shared_filesystem"
 
-# Create IP detection script
-- template: src=ip-detect-aws dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+- name: configure mount point
+  lineinfile: dest=/etc/exports regexp=^/shared-mount line='/shared-mount    *(rw,sync,no_root_squash,no_all_squash)'
+  when: exhibitor == "shared_filesystem"
+
+- name: enable NFS services
+  service:
+    name: "{{ item }}"
+    enabled: yes
+    state: started
+  when: exhibitor == "shared_filesystem"
+  with_items:
+    - rpcbind
+    - nfs-server
+    - nfs-lock
+    - nfs-idmap
+
+- name: create install directory
+  file: path=/tmp/dcos-install state=directory mode=0755
+
+- name: create install directory/genconf
+  file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
+
+- name: download installation file
+  get_url: url="{{ dcos_download }}" dest=/tmp/dcos-install/dcos_generate_config.sh mode=0440
+
+- name: set IP detection script for AWS
+  template: src=ip-detect-aws.j2 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
   when: provider == "aws"
-- template: src=ip-detect-gce dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+
+- name: set IP detection script for GCE
+  template: src=ip-detect-gce.j2 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
   when: provider == "gce"
-- template: src=ip-detect-eth0 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+
+- name: set IP detection script for eth0
+  template: src=ip-detect-eth0.j2 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
   when: provider == "eth0"
 
-# Generate DC/OS configuration file
-- template: src=config-zookeeper.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
-  when: exhibitor == "zookeeper"
-- template: src=config-aws_s3.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
-  when: exhibitor == "aws_s3"
-- template: src=config-shared_filesystem.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
-  when: exhibitor == "shared_filesystem"
-- template: src=config-static.yaml dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+- name: generate DC/OS configuration with exhibitor backend static
+  template: src=config-static.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
   when: exhibitor == "static"
 
-# Generate Rexray configuration file
-- template: src=rexray.yaml dest=/tmp/dcos-install/genconf/rexray.yaml mode=0644
+- name: generate DC/OS configuration with exhibitor backend ZooKeeper
+  template: src=config-zookeeper.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  when: exhibitor == "zookeeper"
+
+- name: generate DC/OS configuration with exhibitor backend AWS S3
+  template: src=config-aws_s3.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  when: exhibitor == "aws_s3"
+
+- name: generate DC/OS configuration with exhibitor backend Shared Filesystem
+  template: src=config-shared_filesystem.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  when: exhibitor == "shared_filesystem"
+
+- name: configure to use rexray storage driver
+  template: src=rexray.yaml.j2 dest=/tmp/dcos-install/genconf/rexray.yaml mode=0644
   when: rexray_config_method == "file"
 
-# Generate DC/OS bootstrap files
-- shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
+- name: generate DC/OS bootstrap files
+  shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
 
-# Nginx
-- name: Start web server to serve the bootstrap files
+- name: start web server to serve the bootstrap files
   docker:
     name: dcos_nginx
     image: nginx

@@ -1,32 +1,63 @@
 ---
 # This playbook contains common plays that will be run on all nodes.
 
-# Update system
-- yum: name=* state=latest
+- name: update all packages
+  yum:
+    name: "*"
+    state: latest
 
-# Install Docker
-- template: src=overlay.conf dest=/etc/modules-load.d/overlay.conf mode=0644
-- template: src=docker.repo dest=/etc/yum.repos.d/docker.repo mode=0644
-- file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
-- template: src=override.conf dest=/etc/systemd/system/docker.service.d/override.conf mode=0644
-- yum: name=docker-engine update_cache=yes state=latest
-- service: name=docker enabled=yes
-- service: name=docker state=started
-- user: name="{{ remote_user }}" groups=docker append=yes
+- name: enable overlay module
+  template: src=overlay.conf.j2 dest=/etc/modules-load.d/overlay.conf mode=0644
 
-# Install utilities
-- yum: name=tar state=latest
-- yum: name=xz state=latest
-- yum: name=unzip state=latest
-- yum: name=curl state=latest
-- yum: name=ipset state=latest
+- name: enable docker yum repo
+  template: src=docker.repo.j2 dest=/etc/yum.repos.d/docker.repo mode=0644
 
-# Cluster permissions
-- selinux: policy=targeted state=permissive
-- group: name=nogroup state=present
-- sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
-- sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
+- name: create docker systemd directory
+  file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
 
-# Disable Firewall
-- service: name=firewalld enabled=no
-- service: name=firewalld state=stopped
+- name: configure docker to use overlay driver
+  template: src=override.conf.j2 dest=/etc/systemd/system/docker.service.d/override.conf mode=0644
+
+- name: install docker packages
+  yum:
+    name: docker-engine
+    update_cache: yes
+    state: latest
+
+- name: enable docker
+  service:
+    name: docker
+    enabled: yes
+    state: started
+
+- name: allow the default user to use docker
+  user: name="{{ remote_user }}" groups=docker append=yes
+
+- name: install system utilities
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - tar
+    - xz
+    - unzip
+    - curl
+    - ipset
+
+- name: disable selinux
+  selinux: policy=targeted state=permissive
+
+- name: create group 'nogroup'
+  group: name=nogroup state=present
+
+- name: disable IPv6 for all interfaces
+  sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
+
+- name: disable IPv6 for default interface
+  sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped

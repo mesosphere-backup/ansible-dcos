@@ -9,7 +9,7 @@ variable "workstation_instance_count" {
 
 variable "master_instance_count" {
   description = "Number of master nodes to launch"
-  default = 3
+  default = 1
 }
 
 
@@ -283,6 +283,10 @@ resource "aws_instance" "masters" {
           owner = "${var.owner}"
           expiration = "${var.expiration}"
       }
+
+  root_block_device {
+    volume_size = 20
+  }
 
 }
 

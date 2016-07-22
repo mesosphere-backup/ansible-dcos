@@ -6,13 +6,13 @@
       shell: sudo -i /opt/mesosphere/bin/pkgpanda uninstall
       ignore_errors: true
 
-    - name: Remove DC/OS configuration
-      file: path=/opt/mesosphere state=absent
-      ignore_errors: true
-
-    - name: Clear install directory
-      file: path=/tmp/dcos/ state=absent
-      ignore_errors: true
+    - name: remove DC/OS configuration
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /opt/mesosphere
+        - /etc/mesosphere
 
 - hosts: workstations
   sudo: yes

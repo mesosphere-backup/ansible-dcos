@@ -6,25 +6,17 @@
       shell: sudo -i /opt/mesosphere/bin/pkgpanda uninstall
       ignore_errors: true
 
-    - name: Remove DC/OS configuration
-      file: path=/opt/mesosphere state=absent
-      ignore_errors: true
-
-    - name: Remove DC/OS configuration
-      file: path=/etc/mesosphere state=absent
-      ignore_errors: true
-
-    - name: Remove ZooKeeper state
-      file: path=/var/lib/zookeeper state=absent
-      ignore_errors: true
-
-    - name: Remove Mesos state
-      file: path=/var/log/mesos state=absent
-      ignore_errors: true
-
-    - name: Clear install directory
-      file: path=/tmp/dcos/ state=absent
-      ignore_errors: true
+    - name: remove DC/OS configuration
+      file:
+        path: "{{ item }}"
+        state: absent
+      with_items:
+        - /opt/mesosphere
+        - /etc/mesosphere
+        - /var/lib/dcos
+        - /var/lib/zookeeper
+        - /var/lib/mesos
+        - /tmp/dcos/
 
 - hosts: workstations
   sudo: yes

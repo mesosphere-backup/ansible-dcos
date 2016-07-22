@@ -284,9 +284,9 @@ resource "aws_instance" "masters" {
           expiration = "${var.expiration}"
       }
 
-  root_block_device {
-    volume_size = 20
-  }
+#  root_block_device {
+#    volume_size = 20
+#  }
 
 }
 

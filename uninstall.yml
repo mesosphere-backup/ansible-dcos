@@ -1,5 +1,4 @@
 - hosts: [ masters, agents, agents_public]
-  remote_user: centos
   sudo: yes
   tasks:
 
@@ -16,7 +15,6 @@
       ignore_errors: true
 
 - hosts: workstations
-  remote_user: centos
   sudo: yes
   tasks:
 

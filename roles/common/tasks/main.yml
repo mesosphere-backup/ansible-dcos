@@ -31,7 +31,7 @@
     state: started
 
 - name: allow the default user to use docker
-  user: name="{{ remote_user }}" groups=docker append=yes
+  user: name="{{ ansible_ssh_user }}" groups=docker append=yes
 
 - name: install system utilities
   yum:

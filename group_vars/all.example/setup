@@ -2,9 +2,6 @@
 # Name of the DC/OS Cluster
 cluster_name: dcos-ansible
 
-# SSH User for Installation
-remote_user: centos
-
 # Choose the IP Detect Script
 # options: eth0, aws, gce
 provider: aws

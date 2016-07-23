@@ -66,9 +66,6 @@ dns_search: None
 # Name of the DC/OS Cluster
 cluster_name: dcos-ansible
 
-# SSH User for Installation
-remote_user: centos
-
 # Choose the IP Detect Script
 # options: eth0, aws, gce
 provider: aws
@@ -87,7 +84,11 @@ aws_region: us-west-2
 s3_bucket: janr-bucket
 s3_prefix: s3-website
 
-# DC/OS credentials (only needed for Mesosphere Enterprise DC/OS)
+# Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
+# options: empty, file
+rexray_config_method: empty
+
+# DC/OS credentials (only for Mesosphere Enterprise DC/OS)
 superuser_username: admin
 superuser_password_hash: ******
 ```

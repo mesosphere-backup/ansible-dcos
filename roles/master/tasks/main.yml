@@ -1,16 +1,16 @@
 ---
-# This playbook deploys the dcos master nodes
+# This playbook deploys the DC/OS master nodes
 
 - name: mount shared file system for exhibitor
   mount: name=/shared-mount src="{{ workstation_ip }}:/shared-mount" fstype=nfs state=mounted
   when: exhibitor == "shared_filesystem"
 
 - name: create temporary install directory
-  file: path=/tmp/dcos/ state=directory mode=0755
+  file: path={{ path_tmp }} state=directory mode=0755
 
 - name: download installation file from the workstation
-  get_url: url="http://{{ workstation_ip }}:8080/dcos_install.sh" dest=/tmp/dcos/dcos_install.sh mode=0440
+  get_url: url="http://{{ workstation_ip }}:{{ port_webserver }}/dcos_install.sh" dest={{ path_tmp }}/dcos_install.sh mode=0440
 
 - name: install DC/OS master
-  shell: cd /tmp/dcos/; sudo bash dcos_install.sh master
+  shell: cd {{ path_tmp }}; sudo bash dcos_install.sh master
   ignore_errors: yes

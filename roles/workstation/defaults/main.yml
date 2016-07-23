@@ -1,0 +1,3 @@
+---
+path_tmp: /tmp/dcos-install
+port_webserver: 8080

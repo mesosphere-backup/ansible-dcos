@@ -1,5 +1,5 @@
 ---
-# This playbook generates the DCOS installation/configuration files
+# This playbook generates the DC/OS installation/configuration files
 
 - name: make sure docker-python RPM is not installed
   yum:
@@ -58,48 +58,48 @@
     - nfs-idmap
 
 - name: create install directory
-  file: path=/tmp/dcos-install state=directory mode=0755
+  file: path={{ path_tmp }} state=directory mode=0755
 
 - name: create install directory/genconf
-  file: path=/tmp/dcos-install/genconf/ state=directory mode=0755
+  file: path={{ path_tmp }}/genconf/ state=directory mode=0755
 
 - name: download installation file
-  get_url: url="{{ dcos_download }}" dest=/tmp/dcos-install/dcos_generate_config.sh mode=0440
+  get_url: url="{{ dcos_download }}" dest={{ path_tmp }}/dcos_generate_config.sh mode=0440
 
 - name: set IP detection script for AWS
-  template: src=ip-detect-aws.j2 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  template: src=ip-detect-aws.j2 dest={{ path_tmp }}/genconf/ip-detect mode=0644
   when: provider == "aws"
 
 - name: set IP detection script for GCE
-  template: src=ip-detect-gce.j2 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  template: src=ip-detect-gce.j2 dest={{ path_tmp }}/genconf/ip-detect mode=0644
   when: provider == "gce"
 
 - name: set IP detection script for eth0
-  template: src=ip-detect-eth0.j2 dest=/tmp/dcos-install/genconf/ip-detect mode=0644
+  template: src=ip-detect-eth0.j2 dest={{ path_tmp }}/genconf/ip-detect mode=0644
   when: provider == "eth0"
 
 - name: generate DC/OS configuration with exhibitor backend static
-  template: src=config-static.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  template: src=config-static.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "static"
 
 - name: generate DC/OS configuration with exhibitor backend ZooKeeper
-  template: src=config-zookeeper.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  template: src=config-zookeeper.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "zookeeper"
 
 - name: generate DC/OS configuration with exhibitor backend AWS S3
-  template: src=config-aws_s3.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  template: src=config-aws_s3.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "aws_s3"
 
 - name: generate DC/OS configuration with exhibitor backend Shared Filesystem
-  template: src=config-shared_filesystem.yaml.j2 dest=/tmp/dcos-install/genconf/config.yaml mode=0644
+  template: src=config-shared_filesystem.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "shared_filesystem"
 
 - name: configure to use rexray storage driver
-  template: src=rexray.yaml.j2 dest=/tmp/dcos-install/genconf/rexray.yaml mode=0644
+  template: src=rexray.yaml.j2 dest={{ path_tmp }}/genconf/rexray.yaml mode=0644
   when: rexray_config_method == "file"
 
 - name: generate DC/OS bootstrap files
-  shell: bash dcos_generate_config.sh chdir=/tmp/dcos-install/
+  shell: bash dcos_generate_config.sh chdir={{ path_tmp }}
 
 - name: start web server to serve the bootstrap files
   docker:
@@ -107,6 +107,6 @@
     image: nginx
     state: started
     ports:
-    - "8080:80"
+    - "{{ port_webserver }}:80"
     volumes:
-    - "/tmp/dcos-install/genconf/serve:/usr/share/nginx/html:ro"
+    - "{{ path_tmp }}/genconf/serve:/usr/share/nginx/html:ro"

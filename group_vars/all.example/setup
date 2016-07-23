@@ -24,6 +24,6 @@ s3_prefix: s3-website
 # options: empty, file
 rexray_config_method: empty
 
-# DC/OS credentials (only needed for Mesosphere Enterprise DC/OS)
+# DC/OS credentials (only for Mesosphere Enterprise DC/OS)
 superuser_username: admin
 superuser_password_hash: ******

@@ -1,5 +1,5 @@
 ---
-# This playbook deploys dcos on-premise.
+# This playbook deploys DC/OS
 
 - name: apply common configuration to all nodes
   hosts: all
@@ -17,7 +17,7 @@
   roles:
     - workstation
 
-- name: deploy DCOS masters
+- name: deploy DC/OS masters
   hosts: masters
   serial: 10
   sudo: yes
@@ -25,7 +25,7 @@
   roles:
     - master
 
-- name: deploy DCOS agents
+- name: deploy DC/OS agents
   hosts: agents
   serial: 10
   sudo: yes
@@ -33,7 +33,7 @@
   roles:
     - agent
 
-- name: deploy DCOS public agents
+- name: deploy DC/OS public agents
   hosts: agents_public
   serial: 10
   sudo: yes

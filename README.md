@@ -1,6 +1,6 @@
-# dcos-onprem-ansible
+# ansible-dcos
 
-This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The installation steps are based on the [Advanced Installation Guide](https://dcos.io/docs/1.7/administration/installing/custom/advanced/) of DC/OS.
+This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The installation steps are based on the [Advanced Installation Guide](https://dcos.io/docs/latest/administration/installing/custom/advanced/) of DC/OS.
 
 ## (Optional) Create CentOS machines in AWS
 

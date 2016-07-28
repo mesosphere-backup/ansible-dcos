@@ -5,6 +5,9 @@
 hosts
 group_vars/all
 
+# vagrant
+.vagrant
+
 # terraform
 /*.tf
 *.tfstate

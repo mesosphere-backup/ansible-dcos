@@ -1,6 +1,15 @@
+# common
 .DS_Store
+
+# ansible
 hosts
 group_vars/all
+
+# terraform
+/*.tf
 *.tfstate
 *.tfstate.backup
 terraform.tfvars
+
+# terraform gce
+/account.json

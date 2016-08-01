@@ -3,7 +3,7 @@
 cluster_name: dcos-ansible
 
 # Choose the IP Detect Script
-# options: eth0, aws, gce
+# options: eth0, eth1, aws, gce
 provider: aws
 
 # Download URL for DC/OS

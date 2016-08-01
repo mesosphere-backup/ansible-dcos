@@ -4,8 +4,9 @@ This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The instal
 
 ## (Optional) Create CentOS machines in AWS
 
-This repo includes the Terraform script `setup-aws.tf` to create the CentOS machines to run the Ansible script on. This script is just for testing purposes and you don't have to use it.
+This repo includes the Terraform script `terraform/aws.tf` to create the CentOS machines to run the Ansible script on. This script is just for testing purposes and you don't have to use it.
 
+- Copy `terraform/aws.tf` to `./aws.tf`
 - Run `terraform apply` to create the nodes on AWS
 
 There is also the script `setup-ansible.sh` that reads out the IPs from the machines created on AWS and creates the Ansible configuration files `group_vars/all/networking` and `hosts` by using the `.example` files as a template.
@@ -67,7 +68,7 @@ dns_search: None
 cluster_name: dcos-ansible
 
 # Choose the IP Detect Script
-# options: eth0, aws, gce
+# options: eth0, eth1, aws, gce
 provider: aws
 
 # Download URL for DC/OS

@@ -20,7 +20,7 @@
 
 - name: install docker packages
   yum:
-    name: docker-engine
+    name: docker-engine-1.11.2-1.el7.centos
     update_cache: yes
     state: latest
 

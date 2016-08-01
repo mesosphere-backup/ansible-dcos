@@ -72,7 +72,7 @@ variable "key_name" {
 
 variable "owner" {
   description = "Just a tag of the owner"
-  default = "jan.repnak"
+  default = "username"
 }
 
 variable "expiration" {

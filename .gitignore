@@ -4,6 +4,7 @@
 # ansible
 hosts
 group_vars/all
+*.retry
 
 # vagrant
 .vagrant

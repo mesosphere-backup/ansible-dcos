@@ -5,6 +5,7 @@
   yum:
     name: "*"
     state: latest
+    exclude: docker-engine
 
 - name: enable overlay module
   template: src=overlay.conf.j2 dest=/etc/modules-load.d/overlay.conf mode=0644
@@ -22,7 +23,7 @@
   yum:
     name: docker-engine-1.11.2-1.el7.centos
     update_cache: yes
-    state: latest
+    state: present
 
 - name: enable docker
   service:
@@ -61,3 +62,4 @@
     name: firewalld
     enabled: false
     state: stopped
+  ignore_errors: yes

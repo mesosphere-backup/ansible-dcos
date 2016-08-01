@@ -4,7 +4,7 @@
 - name: apply common configuration to all nodes
   hosts: all
   serial: 10
-  sudo: yes
+  become: true
 
   roles:
     - common
@@ -12,7 +12,7 @@
 - name: generate the DC/OS configuration
   hosts: workstations
   serial: 10
-  sudo: yes
+  become: true
 
   roles:
     - workstation
@@ -20,7 +20,7 @@
 - name: deploy DC/OS masters
   hosts: masters
   serial: 10
-  sudo: yes
+  become: true
 
   roles:
     - master
@@ -28,7 +28,7 @@
 - name: deploy DC/OS agents
   hosts: agents
   serial: 10
-  sudo: yes
+  become: true
 
   roles:
     - agent
@@ -36,7 +36,7 @@
 - name: deploy DC/OS public agents
   hosts: agents_public
   serial: 10
-  sudo: yes
+  become: true
 
   roles:
     - agent_public

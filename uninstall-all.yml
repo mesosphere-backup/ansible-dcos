@@ -1,5 +1,5 @@
 - hosts: [ masters, agents, agents_public]
-  sudo: yes
+  become: true
   tasks:
 
     - name: DC/OS uninstall
@@ -19,7 +19,7 @@
         - /tmp/dcos/
 
 - hosts: workstations
-  sudo: yes
+  become: true
   tasks:
 
     - name: Stop Nginx

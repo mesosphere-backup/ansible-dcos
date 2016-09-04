@@ -74,6 +74,10 @@ cluster_name: dcos-ansible
 # Download URL for DC/OS
 dcos_download: https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh
 
+# Install latest operating system updates
+# options: true, false
+system_updates: true
+
 # Configuration for the Exhibitor Storage Backend
 # options: aws_s3, zookeeper, shared_filesystem, static
 exhibitor: static

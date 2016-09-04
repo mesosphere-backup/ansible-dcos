@@ -5,6 +5,7 @@
 hosts
 group_vars/all
 *.retry
+/tmp
 
 # vagrant
 .vagrant

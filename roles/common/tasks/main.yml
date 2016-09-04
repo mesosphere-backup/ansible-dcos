@@ -6,6 +6,7 @@
     name: "*"
     state: latest
     exclude: docker-engine
+  when: system_updates
 
 - name: enable overlay module
   template: src=overlay.conf.j2 dest=/etc/modules-load.d/overlay.conf mode=0644

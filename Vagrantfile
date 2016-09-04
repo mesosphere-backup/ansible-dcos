@@ -3,6 +3,10 @@ system("
     if [ #{ARGV[0]} = 'up' ]; then
 cat <<EOF > group_vars/all/networking.yaml
 ---
+# Choose the IP Detect Script
+# options: eth0, eth1, aws, gce
+ip_detect: eth1
+
 # (internal) IP Address of the Workstation
 workstation_ip: 192.168.33.10
 
@@ -37,6 +41,10 @@ Vagrant.configure(2) do |config|
     config.vm.define "ws1" do |ws1|
         ws1.vm.network "private_network", ip: "192.168.33.10"
         ws1.vm.hostname = "ws1"
+        config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "1024"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+        end
         ws1.vm.provision "ansible" do |ansible|
             ansible.playbook = "install.yml"
             ansible.groups = ANSIBLE_GROUPS
@@ -46,6 +54,10 @@ Vagrant.configure(2) do |config|
     config.vm.define "m1" do |m1|
         m1.vm.network "private_network", ip: "192.168.33.11"
         m1.vm.hostname = "m1"
+        config.vm.provider :virtualbox do |vb|
+          vb.customize ["modifyvm", :id, "--memory", "1024"]
+          vb.customize ["modifyvm", :id, "--cpus", "1"]
+        end
         m1.vm.provision "ansible" do |ansible|
             ansible.playbook = "install.yml"
             ansible.groups = ANSIBLE_GROUPS

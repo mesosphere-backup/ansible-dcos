@@ -2,10 +2,6 @@
 # Name of the DC/OS Cluster
 cluster_name: dcos-ansible
 
-# Choose the IP Detect Script
-# options: eth0, eth1, aws, gce
-provider: aws
-
 # Download URL for DC/OS
 dcos_download: https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh
 

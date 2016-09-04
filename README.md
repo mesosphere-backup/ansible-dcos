@@ -44,6 +44,10 @@ agents_public
 
 ```
 ---
+# Choose the IP Detect Script
+# options: eth0, eth1, aws, gce
+ip_detect: aws
+
 # (internal) IP Address of the Workstation
 workstation_ip: 1.0.0.1
 
@@ -66,10 +70,6 @@ dns_search: None
 ---
 # Name of the DC/OS Cluster
 cluster_name: dcos-ansible
-
-# Choose the IP Detect Script
-# options: eth0, eth1, aws, gce
-provider: aws
 
 # Download URL for DC/OS
 dcos_download: https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh

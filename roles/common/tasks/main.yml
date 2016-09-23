@@ -45,6 +45,7 @@
     - unzip
     - curl
     - ipset
+    - ntp
 
 - name: disable selinux
   selinux: policy=targeted state=permissive
@@ -64,3 +65,9 @@
     enabled: false
     state: stopped
   ignore_errors: yes
+  
+- name: enable ntpd
+  service:
+    name: ntpd
+    enabled: yes
+    state: started

@@ -13,6 +13,11 @@
       with_items:
         - /opt/mesosphere
         - /etc/mesosphere
+        - /var/lib/dcos
+        - /var/lib/zookeeper
+        - /var/lib/mesos
+        - /tmp/dcos/
+        - /run/dcos/
 
 - hosts: workstations
   become: true

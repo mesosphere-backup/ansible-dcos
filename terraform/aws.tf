@@ -269,7 +269,7 @@ resource "aws_instance" "workstations" {
 
 # Create Masters
 resource "aws_instance" "masters" {
-  instance_type = "m3.medium"
+  instance_type = "m3.xlarge"
   ami = "${lookup(var.amis, var.region)}"
 
   count = "${var.master_instance_count}"

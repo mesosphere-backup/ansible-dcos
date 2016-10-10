@@ -89,6 +89,10 @@ aws_region: us-west-2
 s3_bucket: janr-bucket
 s3_prefix: s3-website
 
+# This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
+# options: disabled, permissive, strict
+security: permissive
+
 # Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
 # options: empty, file
 rexray_config_method: empty

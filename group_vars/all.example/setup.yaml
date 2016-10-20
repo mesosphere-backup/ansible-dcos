@@ -3,7 +3,7 @@
 cluster_name: dcos-ansible
 
 # Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh
+dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
 
 # Install latest operating system updates
 # options: true, false
@@ -14,8 +14,8 @@ system_updates: true
 exhibitor: static
 
 # AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: ******
-aws_secret_access_key: ******
+aws_access_key_id: "******"
+aws_secret_access_key: "******"
 aws_region: us-west-2
 s3_bucket: janr-bucket
 s3_prefix: s3-website
@@ -30,4 +30,4 @@ rexray_config_method: empty
 
 # DC/OS credentials (only for Mesosphere Enterprise DC/OS)
 superuser_username: admin
-superuser_password_hash: ******
+superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin

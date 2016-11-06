@@ -1,7 +1,11 @@
-rexray:
-  loglevel: info
-  storageDrivers:
-    - ec2
-  volume:
-    unmount:
-      ignoreusedcount: true
+rexray_config:
+  rexray:
+    loglevel: info
+    modules:
+      default-admin:
+        host: tcp://127.0.0.1:61003
+    storageDrivers:
+      - ec2
+    volume:
+      unmount:
+        ignoreusedcount: true

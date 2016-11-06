@@ -98,10 +98,6 @@
   template: src=config-shared_filesystem.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "shared_filesystem"
 
-- name: configure to use rexray storage driver
-  template: src=rexray.yaml.j2 dest={{ path_tmp }}/genconf/rexray.yaml mode=0644
-  when: rexray_config_method == "file"
-
 - name: generate DC/OS bootstrap files
   shell: bash dcos_generate_config.sh chdir={{ path_tmp }}
 

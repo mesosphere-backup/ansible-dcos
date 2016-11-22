@@ -19,14 +19,14 @@
 - name: make sure required PyPi packages are installed
   pip: name={{ item }} state=present
   with_items:
-    - docker-py==1.2.3
-    - six>=1.4.0
+    - docker-py==1.7.0
 
 - name: start ZooKeeper for shared storage
-  docker:
+  docker_container:
     name: dcos_int_zk
     image: jplock/zookeeper
     state: started
+    recreate: yes
     ports:
     - "2181:2181"
     - "2888:2888"
@@ -102,10 +102,11 @@
   shell: bash dcos_generate_config.sh chdir={{ path_tmp }}
 
 - name: start web server to serve the bootstrap files
-  docker:
+  docker_container:
     name: dcos_nginx
     image: nginx
     state: started
+    recreate: yes
     ports:
     - "{{ port_webserver }}:80"
     volumes:

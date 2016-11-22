@@ -20,16 +20,14 @@
   tasks:
 
     - name: Stop Nginx
-      docker:
+      docker_container:
         name: dcos_nginx
-        image: jplock/zookeeper
-        state: stopped
+        state: absent
 
     - name: Stop ZooKeeper
-      docker:
+      docker_container:
         name: dcos_int_zk
-        image: nginx
-        state: stopped
+        state: absent
 
     - name: Remove content of NFS Share
       file: path=/shared-mount/exhibitor.properties state=absent

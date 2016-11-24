@@ -34,7 +34,7 @@ variable "region" {
 variable "amis" {
     default = {
         eu-central-1 = "ami-9bf712f4"
-        us-west-2 = "	ami-d2c924b2"
+        us-west-2 = "ami-d2c924b2"
     }
 }
 

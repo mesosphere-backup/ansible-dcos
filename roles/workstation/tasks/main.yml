@@ -19,7 +19,7 @@
 - name: make sure required PyPi packages are installed
   pip: name={{ item }} state=present
   with_items:
-    - docker-py==1.7.0
+    - docker-py==1.10.6
 
 - name: start ZooKeeper for shared storage
   docker_container:

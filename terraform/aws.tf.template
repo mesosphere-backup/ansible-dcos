@@ -8,25 +8,25 @@ variable "workstation_instance_count" {
 }
 
 variable "master_instance_count" {
-  description = "Number of master nodes to launch"
-  default = 1
+  description = "Number of master nodes to launch [1, 3, 5]"
+  default = 3
 }
 
 
 variable "agent_instance_count" {
-  description = "Number of agent nodes to launch"
+  description = "Number of agent nodes to launch [min 3]"
   default = 4
 }
 
 variable "public_agent_instance_count" {
-  description = "Number of public agent nodes to launch"
+  description = "Number of public agent nodes to launch [min 1]"
   default = 1
 }
 
 variable "access_key" {}
 variable "secret_key" {}
 variable "region" {
-    default = "eu-central-1"
+    default = "us-east-1"
 }
 
 # AMIs for CentOS
@@ -35,6 +35,7 @@ variable "amis" {
     default = {
         eu-central-1 = "ami-9bf712f4"
         us-west-2 = "ami-d2c924b2"
+        us-east-1 = "ami-6d1c2007"
     }
 }
 
@@ -57,22 +58,22 @@ variable "sg_name" {
   description = "Tag Name for sg"
 }
 
-variable "public_key_path" {
-  description = <<DESCRIPTION
-Path to the SSH public key to be used for authentication.
-Ensure this keypair is added to your local SSH agent so provisioners can
-connect.
-Example: ~/.ssh/terraform.pub
-DESCRIPTION
-}
+#variable "public_key_path" {
+#  description = <<DESCRIPTION
+#Path to the SSH public key to be used for authentication.
+#Ensure this keypair is added to your local SSH agent so provisioners can
+#connect.
+#Example: ~/.ssh/terraform.pub
+#DESCRIPTION
+#}
 
 variable "key_name" {
-  description = "Desired name of AWS key pair"
+  description = "Name of existing AWS key pair to use"
 }
 
 variable "owner" {
   description = "Just a tag of the owner"
-  default = "username"
+#  default = "username"
 }
 
 variable "expiration" {
@@ -153,10 +154,10 @@ resource "aws_route" "internet_access" {
 }
 
 # Key pair
-resource "aws_key_pair" "auth" {
-  key_name   = "${var.key_name}"
-  public_key = "${file(var.public_key_path)}"
-}
+#resource "aws_key_pair" "auth" {
+#  key_name   = "${var.key_name}"
+#  public_key = "${file(var.public_key_path)}"
+#}
 
 # Define IAM role to create external volumes on AWS
 resource "aws_iam_instance_profile" "agent_profile" {
@@ -254,13 +255,13 @@ resource "aws_instance" "workstations" {
   ami = "${lookup(var.amis, var.region)}"
 
   count = "${var.workstation_instance_count}"
-  key_name = "${aws_key_pair.auth.id}"
+  key_name = "${var.key_name}"
   subnet_id = "${aws_subnet.dcos_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.dcos_sg.id}"]
   associate_public_ip_address = true
 
   tags {
-          Name = "dcos-workstation"
+          Name = "${var.owner}-dcos-workstation"
           owner = "${var.owner}"
           expiration = "${var.expiration}"
       }
@@ -273,13 +274,13 @@ resource "aws_instance" "masters" {
   ami = "${lookup(var.amis, var.region)}"
 
   count = "${var.master_instance_count}"
-  key_name = "${aws_key_pair.auth.id}"
+  key_name = "${var.key_name}"
   subnet_id = "${aws_subnet.dcos_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.dcos_sg.id}"]
   associate_public_ip_address = true
 
   tags {
-          Name = "dcos-master"
+          Name = "${var.owner}-dcos-master-${count.index}"
           owner = "${var.owner}"
           expiration = "${var.expiration}"
       }
@@ -296,14 +297,14 @@ resource "aws_instance" "agents" {
   ami = "${lookup(var.amis, var.region)}"
 
   count = "${var.agent_instance_count}"
-  key_name = "${aws_key_pair.auth.id}"
+  key_name = "${var.key_name}"
   subnet_id = "${aws_subnet.dcos_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.dcos_sg.id}"]
   associate_public_ip_address = true
   iam_instance_profile = "${aws_iam_instance_profile.agent_profile.name}"
 
   tags {
-          Name = "dcos-agent"
+          Name = "${var.owner}-dcos-agent-${count.index}"
           owner = "${var.owner}"
           expiration = "${var.expiration}"
       }
@@ -316,14 +317,14 @@ resource "aws_instance" "public_agents" {
   ami = "${lookup(var.amis, var.region)}"
 
   count = "${var.public_agent_instance_count}"
-  key_name = "${aws_key_pair.auth.id}"
+  key_name = "${var.key_name}"
   subnet_id = "${aws_subnet.dcos_subnet.id}"
   vpc_security_group_ids = ["${aws_security_group.dcos_sg.id}"]
   associate_public_ip_address = true
   iam_instance_profile = "${aws_iam_instance_profile.agent_profile.name}"
 
   tags {
-          Name = "dcos-public_agent"
+          Name = "${var.owner}-dcos-public_agent-${count.index}"
           owner = "${var.owner}"
           expiration = "${var.expiration}"
       }

@@ -1,0 +1,5 @@
+[defaults]
+ssh_args = -i pemfile
+inventory = hosts
+host_key_checking = False
+remote_user = centos

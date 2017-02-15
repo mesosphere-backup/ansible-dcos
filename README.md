@@ -1,19 +1,27 @@
 # ansible-dcos
 
-This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The installation steps are based on the [Advanced Installation Guide](https://dcos.io/docs/latest/administration/installing/custom/advanced/) of DC/OS.
+Updated for 1.8.x!
 
-## (Optional) Create CentOS machines in AWS
+This ansible playbook installs DC/OS and should run on CentOS/RHEL 7. The installation steps are based on the [Advanced Installation Guide](https://docs.mesosphere.com/latest/administration/installing/custom/advanced/) of DC/OS.
 
-This repo includes the Terraform script `terraform/aws.tf` to create the CentOS machines to run the Ansible script on. This script is just for testing purposes and you don't have to use it.
+## (Optional) Create CentOS machines in AWS, using Terraform and Ansible
 
-- Copy `terraform/aws.tf` to `./aws.tf`
+This repo includes the Terraform script `terraform/aws.tf.template` to create the CentOS machines to run the Ansible script on. This script is just for testing purposes and you don't have to use it.
+
+- {on a mac} `brew install terraform` && `brew install ansible`
+- {on linux} Manually install Terraform and Ansible before continuing
+- Create an SSH keypair in AWS CLI (IAM) and download .pem file
+- Copy {keypair}.pem file to ~/.ssh and `chmod 0600 {keypair}.pem`
+- Execute `ssh-add {keypair}.pem`
+- Copy `terraform/aws.tf.template` to `./aws.tf`
 - Run `terraform apply` to create the nodes on AWS
+- Run `bash ./setup-ansible.sh` to overwrite the Ansible configuration files. You will be prompted for several entries.
+- Run `ansible-playbook install.yml` to apply the Ansible playbook
 
-There is also the script `setup-ansible.sh` that reads out the IPs from the machines created on AWS and creates the Ansible configuration files `group_vars/all/networking` and `hosts` by using the `.example` files as a template.
+## Steps for installation (manual - not using setup-ansible.sh)
 
-- Run `bash ./setup-ansible.sh` to overwrite the Ansible configuration files.
-
-## Steps for installation
+- Copy ansible-dcos/ansible/ansible.cfg.template to ansible-dcos/ansible.cfg
+- Update ansible-dcos/ansible.cfg:ssh_args = -i ~/.ssh/{keypair}.pem
 
 - Copy `host.example` to `hosts` and fill in the (public) IP addresses of your cluster. If you followed the steps above this is already done. For example:
 

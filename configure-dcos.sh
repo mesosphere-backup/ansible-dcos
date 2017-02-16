@@ -22,6 +22,11 @@ if [ -f $setup_dest ]; then
 else
 	mkdir -p $setup_directory
 
+	# Set defaults
+	echo "system_updates: false" >> $setup_dest
+	echo "superuser_username: admin" >> $setup_dest
+	echo "superuser_password_hash: \"\$6\$rounds=656000\$8CXbMqwuglDt3Yai\$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ.\" # Password: admin" >> $setup_dest
+
 	echo "Please name your cluster (e.g. dcos-ansible-test) no pipes (|)"
 	read cluster_name
 	echo "cluster_name: \"$cluster_name\"" >> $setup_dest
@@ -70,6 +75,9 @@ else
 				echo "OSS DC/OS Selected"
 
 				echo "enterprise_dcos: false" >> $setup_dest
+				echo "customer_key: \"00000000-0000-0000-0000-000000000000\"" >> $setup_dest
+				echo "security: permissive"  >> $setup_dest
+				echo "rexray_config_method: empty" >> $setup_dest
 
 				echo "Please input download URL starting with http://downloads..."
 				read download_url

@@ -1,40 +1,39 @@
 ---
-# Enterprise or OSS?
-enterprise_dcos: true
-
 # Name of the DC/OS Cluster
-cluster_name: cluster-name
+cluster_name: demo
 
 # Download URL for DC/OS
-dcos_download: dcos-download
+dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
 
 # Install latest operating system updates
 # options: true, false
-system_updates: true
+system_updates: false
 
 # Configuration for the Exhibitor Storage Backend
 # options: aws_s3, zookeeper, shared_filesystem, static
-exhibitor: exhibitor-backend
+exhibitor: static
 
 # AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: "key-id"
-aws_secret_access_key: "key-secret"
-aws_region: s3-region
-s3_bucket: s3-bucket
-s3_prefix: s3-prefix
+aws_access_key_id: "******"
+aws_secret_access_key: "******"
+aws_region: us-west-2
+s3_bucket: bucket-name
+s3_prefix: s3-website
 
 # This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
 # options: disabled, permissive, strict
-security: security-mode
+security: permissive
 
 # Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
+# Note: Set rexray_config_method: file and edit ./roles/workstation/templates/rexray.yaml.j2 for a custom rexray configuration
 # options: empty, file
-rexray_config_method: rexray-config-method
-#rexray_config_filename: rexray-config-file #custom file not yet supported by playbook
+rexray_config_method: empty
+
+# Enterprise or OSS?
+enterprise_dcos: true
 
 # Customer Key (only for Mesosphere Enterprise DC/OS)
-# Format ########-####-####-####-############
-customer_key : customer-key
+customer_key: "########-####-####-####-############"
 
 # DC/OS credentials (only for Mesosphere Enterprise DC/OS)
 superuser_username: admin

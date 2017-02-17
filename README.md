@@ -21,8 +21,9 @@ This repo includes the Terraform script `terraform/aws.tf.template` to create th
 
 ## Steps for installation (manual - not using configure-networking.sh and configure-dcos.sh)
 
-- Copy `ansible/ansible.cfg.template` to `./ansible.cfg`
-- Update the file `./ansible.cfg` with `ssh_args = -i ~/.ssh/{keypair}.pem`
+- Copy `./ansible.cfg.example` to `./ansible.cfg`
+
+- Add the line `ssh_args = -i ~/.ssh/{keypair}.pem` to the file `./ansible.cfg` to specify the ssh key for Ansible
 
 - Copy `./hosts.example` to `./hosts` and fill in the (public) IP addresses of your cluster. For example:
 

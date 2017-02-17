@@ -2,15 +2,15 @@
 
 # Create Ansible Config File
 
-config_src="./ansible/ansible.cfg.template"
-config_dest="./ansible.cfg"
+ansiblecfg_src="./ansible.cfg.example"
+ansiblecfg_dest="./ansible.cfg"
 
-cp -R $config_src $config_dest
+cp -R $ansiblecfg_src $ansiblecfg_dest
 
 echo "Path to .pem file, e.g. ~/.ssh/test_identity.pem"
 read pempath
 
-sed -i '' "s|pemfile|$pempath|g" $config_dest
+echo "ssh_args = -i $pempath" >> $ansiblecfg_dest
 
 # Create setup config
 

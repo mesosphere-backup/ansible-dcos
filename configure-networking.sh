@@ -1,5 +1,13 @@
 #!/bin/bash
 
+
+# Create ansible config file
+
+ansiblecfg_src="./ansible.cfg.example"
+ansiblecfg_dest="./ansible.cfg"
+
+cp -R $ansiblecfg_src $ansiblecfg_dest
+
 # Create hosts file
 
 hosts_src="./hosts.example"

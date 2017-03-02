@@ -1,0 +1,11 @@
+---
+# configures ldap directory
+
+- name: sets ldap configuration
+  uri:
+    url: http://127.0.0.1:8101/acs/api/v1/ldap/config
+    method: PUT
+    body: "{{ lookup('template','ldap.json.j2') }}"
+    status_code: 200
+    body_format: json
+  run_once: true

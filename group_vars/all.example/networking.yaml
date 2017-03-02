@@ -17,3 +17,6 @@ resolvers: |
 
 # DNS Search Domain
 dns_search: None
+
+# Internal Loadbalancer DNS for Masters
+exhibitor_address: masterlb.internal

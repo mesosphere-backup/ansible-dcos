@@ -3,14 +3,14 @@
 cluster_name: demo
 
 # Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+dcos_download: https://downloads.dcos.io/dcos/EarlyAcess/dcos_generate_config.sh
 
 # Install latest operating system updates
 # options: true, false
 system_updates: false
 
 # Configuration for the Exhibitor Storage Backend
-# options: aws_s3, zookeeper, shared_filesystem, static
+# options: aws_s3, static
 exhibitor: static
 
 # AWS S3 Credentials (only needed for exhibitor: aws_s3)
@@ -18,7 +18,6 @@ aws_access_key_id: "******"
 aws_secret_access_key: "******"
 aws_region: us-west-2
 s3_bucket: bucket-name
-s3_prefix: s3-website
 
 # This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
 # options: disabled, permissive, strict

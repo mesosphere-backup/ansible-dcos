@@ -1,0 +1,12 @@
+{
+  "port": 389,
+  "host": "crowd-ldap-int.ext.management.orgul.io",
+  "lookup-dn": "uid=dcos,ou=users,dc=crowd",
+  "enforce-starttls": false,
+  "user-search": {
+    "search-base": "ou=users,dc=crowd",
+    "search-filter-template": "(uid=%(username)s)"
+  },
+  "lookup-password": "{{ ldap_password }}",
+  "use-ldaps": false
+}

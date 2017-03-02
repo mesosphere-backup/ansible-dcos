@@ -1,0 +1,20 @@
+---
+# This playbook installs the public agents nodes
+
+- name: read availability zone
+  uri: url="http://169.254.169.254/latest/meta-data/placement/availability-zone" return_content=yes
+  register: az_id
+  tags: register
+
+- name: set mesos attribute for availability zone for public agents
+  lineinfile:
+    dest: /var/lib/dcos/mesos-slave-common
+    regexp: ^MESOS_ATTRIBUTES='az_id
+    line: "MESOS_ATTRIBUTES='az_id:{{ az_id.content }};public_ip:true;'"
+    create: yes
+
+- name: install agent
+  shell: bash dcos_install.sh slave_public
+  args:
+    chdir: "{{ path_tmp }}"
+  ignore_errors: yes

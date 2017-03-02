@@ -1,3 +1,25 @@
 ---
 path_tmp: /tmp/dcos-install
 port_webserver: 8080
+upgrade: false
+
+s3_prefix: "ansible-dcos-exhibitor"
+
+cluster_name: demo
+dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+
+exhibitor: static
+rexray_config_method: empty
+
+enterprise_dcos: false
+security: permissive
+customer_key: "00000000-0000-0000-0000-000000000000"
+superuser_username: admin
+superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
+
+
+ip_detect: eth0
+resolvers: |
+  - 8.8.4.4
+  - 8.8.8.8
+dns_search: None

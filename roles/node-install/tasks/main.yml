@@ -1,0 +1,17 @@
+---
+# This playbook installs all nodes
+
+- name: create temporary install directory
+  file: path={{ path_tmp }} state=directory mode=0755
+
+- name: download installation file from the workstation
+  get_url: url="http://{{ workstation_ip }}:{{ port_webserver }}/dcos_install.sh" dest={{ path_tmp }}/dcos_install.sh mode=0440
+
+- include: master.yml
+  when: "'masters' in group_names"
+
+- include: agent.yml
+  when: "'agents' in group_names"
+
+- include: agent_public.yml
+  when: "'agents_public' in group_names"

@@ -1,0 +1,15 @@
+---
+# DCOS-12332 Certificate did not match expected hostname CERT, ELB master_http_loadbalancer
+# Fix only required for DC/OS 1.8
+
+- name: modify environment file to configure the internal lb dns name
+  lineinfile:
+    dest: /opt/mesosphere/environment
+    regexp: ^INTERNAL_MASTER_LB_DNSNAME
+    line: "INTERNAL_MASTER_LB_DNSNAME={{ exhibitor_address }}"
+    create: no
+  when: "'masters' in group_names and exhibitor == 'aws_s3'"
+  notify:
+    - wait for admin router
+    - delete certificate
+    - restart admin router

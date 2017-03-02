@@ -1,0 +1,19 @@
+---
+# DCOS-12332 Certificate did not match expected hostname CERT, ELB master_http_loadbalancer
+# Fix only required for DC/OS 1.8
+
+- name: wait for admin router
+  wait_for:
+    port: 443
+    delay: 10
+  when: "'masters' in group_names and exhibitor == 'aws_s3'"
+
+- name: delete certificate
+  file: path=/run/dcos/pki/tls/certs/adminrouter.crt state=absent
+  when: "'masters' in group_names and exhibitor == 'aws_s3'"
+
+- name: restart admin router
+  service:
+    name: dcos-adminrouter
+    state: restarted
+  when: "'masters' in group_names and exhibitor == 'aws_s3'"

@@ -1,23 +1,28 @@
 ---
 bootstrap_url: http://{{ workstation_ip }}:{{ port_webserver }}
 cluster_name: '{{ cluster_name }}'
+
 exhibitor_storage_backend: aws_s3
 exhibitor_explicit_keys: 'true'
+exhibitor_address: {{ exhibitor_address }}
 aws_access_key_id: {{ aws_access_key_id }}
 aws_secret_access_key: {{ aws_secret_access_key }}
 aws_region: {{ aws_region }}
 s3_bucket: {{ s3_bucket }}
 s3_prefix: {{ s3_prefix }}
-master_discovery: static
-master_list:
-{{ master_list }}
-superuser_username: {{ superuser_username }}
-superuser_password_hash: {{ superuser_password_hash }}
-customer_key: {{ customer_key }}
+master_discovery: master_http_loadbalancer
+num_masters: {{ groups['masters'] | length }}
 resolvers:
 {{ resolvers }}
 dns_search: {{ dns_search }}
+
+{% if enterprise_dcos == true %}
+superuser_username: {{ superuser_username }}
+superuser_password_hash: {{ superuser_password_hash }}
+customer_key: {{ customer_key }}
 security: {{ security }}
+{% endif %}
+
 {% if rexray_config_method == 'file' %}
 {% include "rexray.yaml.j2" %}
 {% endif %}

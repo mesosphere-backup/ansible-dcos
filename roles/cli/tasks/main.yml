@@ -1,0 +1,16 @@
+---
+# This playbook installs the DC/OS cli
+
+- name: download cli
+  get_url: url="{{ cli_download }}" dest={{ cli_dest }}/dcos mode=0740
+
+- name: cli set url
+  shell: "dcos config set core.dcos_url https://127.0.0.1"
+
+- name: cli disable ssl verification
+  shell: dcos config set core.ssl_verify false
+
+- name: cli login
+  shell: "dcos auth login --username={{ superuser_username }} --password-env=DCOS_PASSWORD"
+  environment:
+    DCOS_PASSWORD: "{{ superuser_password }}"

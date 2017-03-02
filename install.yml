@@ -3,7 +3,7 @@
 
 - name: apply common configuration to all nodes
   hosts: all
-  serial: 10
+  serial: 20
   become: true
 
   roles:
@@ -11,16 +11,24 @@
 
 - name: generate the DC/OS configuration
   hosts: workstations
-  serial: 10
+  serial: 20
   become: true
 
   roles:
     - workstation
 
-- name: deploy DC/OS
+- name: deploy nodes
   hosts: [ masters, agents, agents_public]
-  serial: 10
+  serial: 20
   become: true
 
   roles:
-    - node
+    - node-install
+
+# - name: deploy internal lb dns name
+#   hosts: masters
+#   serial: 1
+#   become: true
+#
+#   roles:
+#     - dnsfix-1.8

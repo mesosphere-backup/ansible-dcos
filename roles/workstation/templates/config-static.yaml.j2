@@ -1,17 +1,22 @@
 ---
 bootstrap_url: http://{{ workstation_ip }}:{{ port_webserver }}
 cluster_name: '{{ cluster_name }}'
+
 exhibitor_storage_backend: static
 master_discovery: static
 master_list:
 {{ master_list }}
-superuser_username: {{ superuser_username }}
-superuser_password_hash: {{ superuser_password_hash }}
-customer_key: {{ customer_key }}
 resolvers:
 {{ resolvers }}
 dns_search: {{ dns_search }}
+
+{% if enterprise_dcos == true %}
+superuser_username: {{ superuser_username }}
+superuser_password_hash: {{ superuser_password_hash }}
+customer_key: {{ customer_key }}
 security: {{ security }}
+{% endif %}
+
 {% if rexray_config_method == 'file' %}
 {% include "rexray.yaml.j2" %}
 {% endif %}

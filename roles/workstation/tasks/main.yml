@@ -21,41 +21,13 @@
   with_items:
     - docker-py==1.10.6
 
-- name: start ZooKeeper for shared storage
+- name: stop web server
   docker_container:
-    name: dcos_int_zk
-    image: jplock/zookeeper
-    state: started
-    recreate: yes
-    ports:
-    - "2181:2181"
-    - "2888:2888"
-    - "3888:3888"
-  when: exhibitor == "zookeeper"
+    name: dcos_nginx
+    state: absent
 
-- name: install NFS utilities
-  yum: name=nfs-utils state=latest
-  when: exhibitor == "shared_filesystem"
-
-- name: create mount point
-  file: path=/shared-mount state=directory mode=0777
-  when: exhibitor == "shared_filesystem"
-
-- name: configure mount point
-  lineinfile: dest=/etc/exports regexp=^/shared-mount line='/shared-mount    *(rw,sync,no_root_squash,no_all_squash)'
-  when: exhibitor == "shared_filesystem"
-
-- name: enable NFS services
-  service:
-    name: "{{ item }}"
-    enabled: yes
-    state: started
-  when: exhibitor == "shared_filesystem"
-  with_items:
-    - rpcbind
-    - nfs-server
-    - nfs-lock
-    - nfs-idmap
+- name: clear install directory
+  file: path=/tmp/dcos-install/ state=absent
 
 - name: create install directory
   file: path={{ path_tmp }} state=directory mode=0755
@@ -86,20 +58,18 @@
   template: src=config-static.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "static"
 
-- name: generate DC/OS configuration with exhibitor backend ZooKeeper
-  template: src=config-zookeeper.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
-  when: exhibitor == "zookeeper"
-
 - name: generate DC/OS configuration with exhibitor backend AWS S3
   template: src=config-aws_s3.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
   when: exhibitor == "aws_s3"
 
-- name: generate DC/OS configuration with exhibitor backend Shared Filesystem
-  template: src=config-shared_filesystem.yaml.j2 dest={{ path_tmp }}/genconf/config.yaml mode=0644
-  when: exhibitor == "shared_filesystem"
-
 - name: generate DC/OS bootstrap files
-  shell: bash dcos_generate_config.sh chdir={{ path_tmp }}
+  shell: "bash dcos_generate_config.sh"
+  args:
+    chdir: "{{ path_tmp }}"
+  when: upgrade == false
+
+- include: upgrade.yml
+  when: upgrade == true
 
 - name: start web server to serve the bootstrap files
   docker_container:

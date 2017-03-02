@@ -1,0 +1,30 @@
+---
+# This playbook deploys DC/OS
+
+- name: generate upgrade configuration
+  hosts: workstations
+  serial: 20
+  become: true
+
+  vars:
+    upgrade: true
+    installed_cluster_version: 1.8.8
+
+  roles:
+    - workstation
+
+- name: upgrade masters
+  hosts: masters
+  serial: 1
+  become: true
+
+  roles:
+    - node-upgrade
+
+- name: upgrade agents
+  hosts: [ agents, agents_public]
+  serial: 20
+  become: true
+
+  roles:
+    - node-upgrade

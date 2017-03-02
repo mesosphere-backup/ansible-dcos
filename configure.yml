@@ -1,0 +1,12 @@
+---
+# This playbook configures DC/OS
+
+- name: configure environment
+  hosts: masters
+  serial: 5
+  become: true
+
+  roles:
+    - ldap
+    - cli
+    - marathon-lb

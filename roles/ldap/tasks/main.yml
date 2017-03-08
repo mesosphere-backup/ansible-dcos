@@ -9,3 +9,4 @@
     status_code: 200
     body_format: json
   run_once: true
+  when: enterprise_dcos == true

@@ -10,7 +10,16 @@
 - name: cli disable ssl verification
   shell: dcos config set core.ssl_verify false
 
-- name: cli login
+- name: cli login enterprise
   shell: "dcos auth login --username={{ superuser_username }} --password-env=DCOS_PASSWORD"
   environment:
     DCOS_PASSWORD: "{{ superuser_password }}"
+  when: enterprise_dcos == true
+
+- name: cli login oss
+  lineinfile:
+    dest: /root/.dcos/dcos.toml
+    regexp: "^dcos_acs_token"
+    line: "dcos_acs_token = \"{{ superuser_token }}\""
+    create: yes
+  when: enterprise_dcos == false

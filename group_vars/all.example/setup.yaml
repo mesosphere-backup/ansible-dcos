@@ -3,7 +3,7 @@
 cluster_name: demo
 
 # Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/EarlyAcess/dcos_generate_config.sh
+dcos_download: https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh
 
 # Install latest operating system updates
 # options: true, false
@@ -19,6 +19,9 @@ aws_secret_access_key: "******"
 aws_region: us-west-2
 s3_bucket: bucket-name
 
+# Enterprise or OSS?
+enterprise_dcos: false
+
 # This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
 # options: disabled, permissive, strict
 security: permissive
@@ -27,9 +30,6 @@ security: permissive
 # Note: Set rexray_config_method: file and edit ./roles/workstation/templates/rexray.yaml.j2 for a custom rexray configuration
 # options: empty, file
 rexray_config_method: empty
-
-# Enterprise or OSS?
-enterprise_dcos: true
 
 # Customer Key (only for Mesosphere Enterprise DC/OS)
 customer_key: "########-####-####-####-############"

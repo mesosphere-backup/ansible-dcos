@@ -12,6 +12,7 @@ group_vars/all
 .vagrant
 
 # terraform
+.terraform
 /*.tf
 *.tfstate
 *.tfstate.backup

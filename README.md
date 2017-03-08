@@ -4,6 +4,8 @@ This ansible playbook installs DC/OS and is supposed to run on CentOS 7. The ins
 
 ## Steps for installation
 
+- Clone or fork this repo: `git clone https://github.com/mesosphere/ansible-dcos`
+
 - (on a MacOS) `brew install terraform` && `brew install ansible`
 
 - (on Linux) Manually install Terraform and Ansible before continuing
@@ -14,11 +16,9 @@ This ansible playbook installs DC/OS and is supposed to run on CentOS 7. The ins
 
 - Execute `ssh-add {keypair}.pem`
 
-- Copy `./ansible.cfg.example` to `./ansible.cfg`
+- Create the ansible configuration file: `cp ./ansible.cfg.example ./ansible.cfg`
 
-- Add the line `ssh_args = -i ~/.ssh/{keypair}.pem` to the file `./ansible.cfg` to specify the ssh key for Ansible
-
-- Copy the directory `group_vars/all.example` to `group_vars/all`.
+- Create the `group_vars/all` directory from the example: `cp -r group_vars/all.example group_vars/all`
 
 - The file `group_vars/all/setup.yaml` is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the example below:
 
@@ -44,6 +44,9 @@ aws_secret_access_key: "******"
 aws_region: us-west-2
 s3_bucket: bucket-name
 
+# Enterprise or OSS?
+enterprise_dcos: false
+
 # This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
 # options: disabled, permissive, strict
 security: permissive
@@ -53,9 +56,6 @@ security: permissive
 # options: empty, file
 rexray_config_method: empty
 
-# Enterprise or OSS?
-enterprise_dcos: true
-
 # Customer Key (only for Mesosphere Enterprise DC/OS)
 customer_key: "########-####-####-####-############"
 
@@ -64,11 +64,13 @@ superuser_username: admin
 superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
 ```
 
-- Copy `terraform/aws.example.tf` to `./aws.tf`
+- Copy the terraform template to root: `cp terraform/aws.example.tf ./aws.tf`
 
 - Run `terraform get` to retrieve the modules
 
 - Run `terraform apply` to create the nodes on AWS. (Note: That command will automatically trigger a script `prepare-ansible.sh` to retrieve the IP configuration for your nodes.)
+
+- Run `ansible all -m ping` to check SSH connectivity
 
 - Run `ansible-playbook install.yml` to apply the Ansible playbook
 

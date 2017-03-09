@@ -168,5 +168,5 @@ output "internal_masters_dns_name" {
 }
 
 output "external_agents_dns_name" {
-  value = "${aws_elb.internal_masters.dns_name}"
+  value = "${aws_elb.external_agents.dns_name}"
 }

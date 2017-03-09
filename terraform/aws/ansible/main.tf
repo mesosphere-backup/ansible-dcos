@@ -14,6 +14,6 @@ resource "null_resource" "cluster" {
   }
 
   provisioner "local-exec" {
-      command = "bash prepare-ansible.sh"
+      command = "sleep 5 && bash prepare-ansible.sh"
   }
 }

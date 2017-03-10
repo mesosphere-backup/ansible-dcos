@@ -20,7 +20,7 @@ This ansible playbook installs DC/OS and is supposed to run on CentOS 7. The ins
 
 - Create the `group_vars/all` directory from the example: `cp -r group_vars/all.example group_vars/all`
 
-- The file `group_vars/all/setup.yaml` is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the example below:
+- The file `group_vars/all/setup.yaml` is for configuring DC/OS. You can run the wizard `bash ./configure-dcos.sh` to create this file and match your preferred configuration. The variables are explained within the example below:
 
 ```
 ---
@@ -74,7 +74,7 @@ superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwA
 
 - Run `ansible-playbook install.yml` to apply the Ansible playbook
 
-- Run `ansible-playbook configure.yml` to apply additional roles (e.g. Install Marathon-LB)
+- Run `ansible-playbook configure.yml` to apply additional roles (e.g. Install Marathon-LB, configure LDAP)
 
 ## Steps for uninstallation
 

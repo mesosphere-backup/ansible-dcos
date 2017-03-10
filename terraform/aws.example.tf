@@ -53,11 +53,6 @@ variable "azs_master" {
   }
 }
 
-variable "route53_zone_id" {
-  description = "Zone ID for the Route 53 zone "
-  default = "ZC91G0Y5XZWR0"
-}
-
 # amis for centoS
 variable "amis" {
   default = {
@@ -83,7 +78,7 @@ variable "admin_ip" {
 }
 
 variable "key_name" {
-  description = "Name of existing AWS key pair to use"
+  description = "Name of existing AWS key pair to use (e.g. default)"
 }
 
 variable "prefix" {
@@ -92,7 +87,6 @@ variable "prefix" {
 
 variable "owner" {
   description = "AWS tag of the owner (e.g. Slack username)"
-  default = "username"
 }
 
 variable "expiration" {

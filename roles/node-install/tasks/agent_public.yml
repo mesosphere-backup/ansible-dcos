@@ -6,14 +6,14 @@
   register: az_id
   tags: register
 
-- name: set mesos attribute for availability zone for public agents
+- name: set mesos attribute for availability zone for public agent
   lineinfile:
     dest: /var/lib/dcos/mesos-slave-common
     regexp: ^MESOS_ATTRIBUTES='az_id
     line: "MESOS_ATTRIBUTES='az_id:{{ az_id.content }};public_ip:true;'"
     create: yes
 
-- name: install agent
+- name: install public agent
   shell: bash dcos_install.sh slave_public
   args:
     chdir: "{{ path_tmp }}"

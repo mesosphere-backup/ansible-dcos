@@ -1,12 +1,9 @@
 {
-  "port": 389,
-  "host": "crowd-ldap-int.ext.management.orgul.io",
-  "lookup-dn": "uid=dcos,ou=users,dc=crowd",
+  "use-ldaps": false,
   "enforce-starttls": false,
-  "user-search": {
-    "search-base": "ou=users,dc=crowd",
-    "search-filter-template": "(uid=%(username)s)"
-  },
+  "port": 389,
   "lookup-password": "{{ ldap_password }}",
-  "use-ldaps": false
+  "lookup-dn": "cn=Administrator,cn=Users,dc=mesosphere,dc=com",
+  "dntemplate": "cn=%(username)s,cn=Users,dc=mesosphere,dc=com",
+  "host": "ads1.mesosphere.com"
 }

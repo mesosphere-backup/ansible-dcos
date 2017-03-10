@@ -7,6 +7,6 @@
   become: true
 
   roles:
-    - ldap
     - cli
+    - ldap
     - marathon-lb

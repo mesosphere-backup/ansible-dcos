@@ -24,8 +24,6 @@ else
 
 	# Set defaults
 	echo "system_updates: false" >> $setup_dest
-	echo "superuser_username: admin" >> $setup_dest
-	echo "superuser_password_hash: \"\$6\$rounds=656000\$8CXbMqwuglDt3Yai\$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ.\" # Password: admin" >> $setup_dest
 
 	echo "Please name your cluster (e.g. dcos-ansible-test) no pipes (|)"
 	read cluster_name
@@ -41,6 +39,9 @@ else
 				echo "Enterprise DC/OS Selected"
 
 				echo "enterprise_dcos: true" >> $setup_dest
+
+				echo "superuser_username: admin" >> $setup_dest
+				echo "superuser_password_hash: \"\$6\$rounds=656000\$8CXbMqwuglDt3Yai\$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ.\" # Password: admin" >> $setup_dest
 
 				echo "Please input download URL starting with http://downloads..."
 				read download_url
@@ -75,9 +76,6 @@ else
 				echo "OSS DC/OS Selected"
 
 				echo "enterprise_dcos: false" >> $setup_dest
-				echo "customer_key: \"00000000-0000-0000-0000-000000000000\"" >> $setup_dest
-				echo "security: permissive"  >> $setup_dest
-				echo "rexray_config_method: empty" >> $setup_dest
 
 				echo "Please input download URL starting with http://downloads..."
 				read download_url
@@ -88,9 +86,9 @@ else
 			*) echo invalid option;;
 		esac
 	done
-	echo "Exhibitor backend (aws_s3, zookeeper, shared_filesystem, static) - if unsure select static"
+	echo "Exhibitor backend (static, aws_s3) - if unsure select static"
 	echo "Please select your choice: "
-	options=("aws_s3" "zookeeper" "shared_filesystem" "static")
+	options=("static" "aws_s3")
 	select opt in "${options[@]}"
 	do
 		case $opt in
@@ -114,20 +112,6 @@ else
 				read s3_bucket
 				echo "s3_bucket: \"$s3_bucket\"" >> $setup_dest
 
-				echo "s3_prefix:"
-				read s3_prefix
-				echo "s3_prefix: \"$s3_prefix\"" >> $setup_dest
-
-				break
-				;;
-			"zookeeper")
-				echo "exhibitor: $opt" >> $setup_dest
-				echo "Zookeeper is hosted from workstation node, not recommended for production use without modification"
-				break
-				;;
-			"shared_filesystem")
-				echo "exhibitor: $opt" >> $setup_dest
-				echo "Shared Filesystem is hosted from workstation node, not recommended for production use without modification"
 				break
 				;;
 			"static")

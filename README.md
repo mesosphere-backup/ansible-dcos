@@ -68,7 +68,9 @@ superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwA
 
 - Run `terraform get` to retrieve the modules
 
-- Run `terraform apply` to create the nodes on AWS. (Note: That command will automatically trigger a script `prepare-ansible.sh` to retrieve the IP configuration for your nodes.)
+- Run `terraform apply` to create the nodes on AWS
+
+- Run `bash prepare-ansible.sh` to retrieve the IP configuration for your nodes from Terraform
 
 - Run `ansible all -m ping` to check SSH connectivity
 

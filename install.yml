@@ -24,11 +24,3 @@
 
   roles:
     - node-install
-
-- name: deploy internal lb dns name
-  hosts: masters
-  serial: 1
-  become: true
-
-  roles:
-    - dnsfix-1.8

@@ -22,7 +22,7 @@
 
 - name: install docker packages
   yum:
-    name: docker-engine-1.11.2-1.el7.centos
+    name: docker-engine-1.13.1
     update_cache: yes
     state: present
 
@@ -65,7 +65,7 @@
     enabled: false
     state: stopped
   ignore_errors: yes
-  
+
 - name: enable ntpd
   service:
     name: ntpd

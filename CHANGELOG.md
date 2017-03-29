@@ -1,5 +1,10 @@
 # Changelog
 
+## v0.2.1-alpha
+
+* Tested with DC/OS 1.9
+* Install Docker 1.13
+
 ## v0.2.0-alpha
 
 * Terraform

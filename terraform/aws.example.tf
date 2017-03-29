@@ -1,4 +1,35 @@
-# define instance count for each node type
+variable "prefix" {
+  description = "Used for naming instances in AWS (e.g. my-dcos)"
+  default = "ansible-dcos-01"
+}
+
+variable "aws_access_key_id" {
+  description = "AWS Access Key ID"
+}
+
+variable "aws_secret_access_key" {
+  description = "AWS Secret Access Key"
+}
+
+variable "ssh_key_name" {
+  description = "Name of existing AWS key pair to use (e.g. default)"
+  default = "default"
+}
+
+variable "admin_ip" {
+  description = "Restrict access to the cluster with an IP range (e.g. 1.2.3.4/32)"
+  default = "0.0.0.0/0"
+}
+
+variable "owner" {
+  description = "AWS tag of the owner (e.g. Slack username)"
+  default = "username"
+}
+
+variable "expiration" {
+  description = "AWS tag of the expiration time (e.g. 8hours)"
+  default = "8hours"
+}
 
 variable "workstation_instance_count" {
   description = "Number of workstation nodes to launch"
@@ -18,14 +49,6 @@ variable "agent_instance_count" {
 variable "public_agent_instance_count" {
   description = "Number of public agent nodes to launch [min 1]"
   default = 1
-}
-
-variable "access_key" {
-  description = "AWS access key"
-}
-
-variable "secret_key" {
-  description = "AWS secret key"
 }
 
 variable "region" {
@@ -53,7 +76,6 @@ variable "azs_master" {
   }
 }
 
-# amis for centoS
 variable "amis" {
   default = {
     eu-central-1 = "ami-9bf712f4"
@@ -63,41 +85,21 @@ variable "amis" {
   }
 }
 
-variable "subnet_range" {
-  description = "Subnet IP range"
-  default = "172.31.0.0/16"
-}
+variable "workstation_type" { default = "m3.xlarge" }
+variable "master_type" { default = "m4.2xlarge" }
+variable "agent_type" { default = "m4.2xlarge" }
+variable "public_agent_type" { default = "m3.xlarge" }
+variable "workstation_volume_size" { default = "60" }
+variable "master_volume_size" { default = "100" }
+variable "agent_volume_size" { default = "100" }
+variable "public_agent_volume_size" { default = "100" }
 
-variable "subnet_dns" {
-  description = "Subnet DNS"
-  default = "172.31.0.2"
-}
+variable "subnet_dns" { default = "172.31.0.2" }
+variable "subnet_range" { default = "172.31.0.0/16" }
 
-variable "admin_ip" {
-  default = "0.0.0.0/0"
-}
-
-variable "key_name" {
-  description = "Name of existing AWS key pair to use (e.g. default)"
-}
-
-variable "prefix" {
-  description = "Used for naming instances in AWS (e.g. my-dcos)"
-}
-
-variable "owner" {
-  description = "AWS tag of the owner (e.g. Slack username)"
-}
-
-variable "expiration" {
-  description = "AWS tag of the expiration time"
-  default = "8hours"
-}
-
-# specify the provider and access details
 provider "aws" {
-  access_key = "${var.access_key}"
-  secret_key = "${var.secret_key}"
+  access_key = "${var.aws_access_key_id}"
+  secret_key = "${var.aws_secret_access_key}"
   region = "${var.region}"
 }
 
@@ -135,18 +137,6 @@ module "elb" {
   public_agent_instances = "${module.public_agent.instances}"
 }
 
-output "lb_external_masters" {
-  value = "${module.elb.external_masters_dns_name}"
-}
-
-output "lb_internal_masters" {
-  value = "${module.elb.internal_masters_dns_name}"
-}
-
-output "lb_external_agents" {
-  value = "${module.elb.external_agents_dns_name}"
-}
-
 module "workstation" {
   source ="./terraform/aws/instance"
   instance_name = "${var.prefix}-workstation"
@@ -154,22 +144,14 @@ module "workstation" {
   amis = "${var.amis}"
   azs = "${var.azs_master}"
   region = "${var.region}"
-  key_name = "${var.key_name}"
+  key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
   subnet_id = "${module.vpc.subnet_id}"
   iam_instance_profile = ""
-  instance_type = "m3.xlarge"
-  volume_size = "60"
+  instance_type = "${var.workstation_type}"
+  volume_size = "${var.workstation_volume_size}"
   owner = "${var.owner}"
   expiration = "${var.expiration}"
-}
-
-output "workstation_public_ips" {
-    value = "${module.workstation.public_ips}"
-}
-
-output "workstation_private_ips" {
-    value = "${module.workstation.private_ips}"
 }
 
 module "master" {
@@ -179,22 +161,14 @@ module "master" {
   amis = "${var.amis}"
   azs = "${var.azs_master}"
   region = "${var.region}"
-  key_name = "${var.key_name}"
+  key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
   subnet_id = "${module.vpc.subnet_id}"
   iam_instance_profile = ""
-  instance_type = "m4.2xlarge"
-  volume_size = "100"
+  instance_type = "${var.master_type}"
+  volume_size = "${var.master_volume_size}"
   owner = "${var.owner}"
   expiration = "${var.expiration}"
-}
-
-output "master_public_ips" {
-    value = "${module.master.public_ips}"
-}
-
-output "master_private_ips" {
-    value = "${module.master.private_ips}"
 }
 
 module "agent" {
@@ -204,18 +178,14 @@ module "agent" {
   amis = "${var.amis}"
   azs = "${var.azs}"
   region = "${var.region}"
-  key_name = "${var.key_name}"
+  key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
   subnet_id = "${module.vpc.subnet_id}"
   iam_instance_profile = "${module.iam.agent_profile}"
-  instance_type = "m4.2xlarge"
-  volume_size = "100"
+  instance_type = "${var.agent_type}"
+  volume_size = "${var.agent_volume_size}"
   owner = "${var.owner}"
   expiration = "${var.expiration}"
-}
-
-output "agent_public_ips" {
-    value = "${module.agent.public_ips}"
 }
 
 module "public_agent" {
@@ -225,36 +195,48 @@ module "public_agent" {
   amis = "${var.amis}"
   azs = "${var.azs}"
   region = "${var.region}"
-  key_name = "${var.key_name}"
+  key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
   subnet_id = "${module.vpc.subnet_id}"
   iam_instance_profile = "${module.iam.agent_profile}"
-  instance_type = "m4.2xlarge"
-  volume_size = "100"
+  instance_type = "${var.public_agent_type}"
+  volume_size = "${var.public_agent_volume_size}"
   owner = "${var.owner}"
   expiration = "${var.expiration}"
 }
 
-output "public_agent_public_ips" {
-    value = "${module.public_agent.public_ips}"
-}
+output "lb_external_masters" { value = "${module.elb.external_masters_dns_name}" }
+output "lb_internal_masters" { value = "${module.elb.internal_masters_dns_name}" }
+output "lb_external_agents" { value = "${module.elb.external_agents_dns_name}" }
+output "workstation_public_ips" { value = "${module.workstation.public_ips}" }
+output "workstation_private_ips" { value = "${module.workstation.private_ips}" }
+output "master_public_ips" { value = "${module.master.public_ips}" }
+output "master_private_ips" { value = "${module.master.private_ips}" }
+output "agent_public_ips" { value = "${module.agent.public_ips}" }
+output "public_agent_public_ips" { value = "${module.public_agent.public_ips}" }
+output "prefix" { value = "${var.prefix}" }
+output "dns" { value = "${var.subnet_dns}" }
+output "dns_search" { value = "${var.region}.compute.internal" }
 
-module "ansible" {
-  source = "./terraform/aws/ansible"
-  count_m = "${module.master.public_ips}"
-  count_a = "${module.agent.public_ips}"
-  count_p = "${module.public_agent.public_ips}"
-  count_w = "${module.workstation.public_ips}"
-}
+/*resource "null_resource" "cluster" {
 
-output "prefix" {
-  value = "${var.prefix}"
-}
+  # Changes to any instance of the cluster requires adjusting the ansible configuration
+  triggers {
+    lb_external_masters = "${module.elb.external_masters_dns_name}"
+    lb_internal_masters = "${module.elb.internal_masters_dns_name}"
+    lb_external_agents = "${module.elb.external_agents_dns_name}"
+    workstation_public_ips = "${module.workstation.public_ips}"
+    workstation_private_ips = "${module.workstation.private_ips}"
+    master_public_ips = "${module.master.public_ips}"
+    master_private_ips = "${module.master.private_ips}"
+    agent_public_ips = "${module.agent.public_ips}"
+    public_agent_public_ips = "${module.public_agent.public_ips}"
+    prefix = "${var.prefix}"
+    dns = "${var.subnet_dns}"
+    dns_search = "${var.region}.compute.internal"
+  }
 
-output "dns" {
-    value = "${var.subnet_dns}"
-}
-
-output "dns_search" {
-    value = "${var.region}.compute.internal"
-}
+  provisioner "local-exec" {
+      command = "sleep 5 && bash prepare-ansible.sh"
+  }
+}*/

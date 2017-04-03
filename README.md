@@ -1,89 +1,46 @@
-# ansible-dcos
+# terraform-ansible-dcos
+
+## Overview
 
 This ansible playbook installs DC/OS and is supposed to run on CentOS 7. The installation steps are based on the [Advanced Installation Guide](https://docs.mesosphere.com/latest/administration/installing/custom/advanced/) of DC/OS.
 
-## Steps for installation
+## Getting Started
 
-- Clone or fork this repo: `git clone https://github.com/mesosphere/ansible-dcos`
-
-- (on a MacOS) `brew install terraform` && `brew install ansible`
-
-- (on Linux) Manually install Terraform and Ansible before continuing
-
-- Create an SSH keypair in AWS CLI (IAM) and download .pem file
-
-- Copy `{keypair}.pem` file to `~/.ssh` and `chmod 0600 {keypair}.pem`
-
-- Execute `ssh-add {keypair}.pem`
-
-- Create the ansible configuration file: `cp ./ansible.cfg.example ./ansible.cfg`
-
-- Create the `group_vars/all` directory from the example: `cp -r group_vars/all.example group_vars/all`
-
-- The file `group_vars/all/setup.yaml` is for configuring DC/OS. You can run the wizard `bash ./configure-dcos.sh` to create this file and match your preferred configuration. The variables are explained within the example below:
+All development is done on the master branch. Tested versions are identified via git tags. To get started, you can clone or fork this repo:
 
 ```
----
-# Name of the DC/OS Cluster
-cluster_name: demo
-
-# Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
-
-# Install latest operating system updates
-# options: true, false
-system_updates: true
-
-# Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static
-exhibitor: static
-
-# AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: "******"
-aws_secret_access_key: "******"
-aws_region: us-west-2
-s3_bucket: bucket-name
-
-# Enterprise or OSS?
-enterprise_dcos: false
-
-# This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
-# options: disabled, permissive, strict
-security: permissive
-
-# Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
-# Note: Set rexray_config_method: file and edit ./roles/workstation/templates/rexray.yaml.j2 for a custom rexray configuration
-# options: empty, file
-rexray_config_method: empty
-
-# Customer Key (only for Mesosphere Enterprise DC/OS)
-customer_key: "########-####-####-####-############"
-
-# DC/OS credentials (only for Mesosphere Enterprise DC/OS)
-superuser_username: admin
-superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
+git clone https://github.com/mesosphere/terraform-ansible-dcos
 ```
 
-- Copy the terraform template to root: `cp terraform/aws.example.tf ./aws.tf`
+Use `git tag` to list all versions:
 
-- Run `terraform get` to retrieve the modules
+```
+git tag
+v0.1.0-alpha
+v0.2.0-alpha
+```
 
-- Run `terraform apply` to create the nodes on AWS
+Check the version out with:
 
-- Run `bash prepare-ansible.sh` to retrieve the IP configuration for your nodes from Terraform
+```
+git checkout v0.2.0-alpha
+```
 
-- Run `ansible all -m ping` to check SSH connectivity
+Here are some guides to follow:
 
-- Run `ansible-playbook install.yml` to apply the Ansible playbook
+* [Install DC/OS on AWS with Terraform](docs/INSTALL_AWS.md)
+* [Install DC/OS On-Premises](docs/INSTALL_ONPREM.md)
 
-- Run `ansible-playbook configure.yml` to apply additional roles (e.g. Install Marathon-LB, configure LDAP)
+## Documentation
 
-## Steps for uninstallation
+All documentation for this project is located in the [docs](docs/) directory at the root of this repository.
 
-This uninstall playbook runs a cleanup script on the nodes.
+## License
+[DC/OS][github-dcos], along with this project, are both open source software released under the
+[Apache Software License, Version 2.0](LICENSE).
 
-- Run `ansible-playbook uninstall.yml`
+## Acknowledgements
+  * Current maintainer(s): [Jan Repnak][github-jrx]
 
-You can delete the AWS stack by running the command below.
-
-- Run `terraform destroy`
+[github-dcos]: https://github.com/dcos/dcos
+[github-jrx]: https://github.com/jrx

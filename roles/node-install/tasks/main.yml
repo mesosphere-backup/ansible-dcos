@@ -5,7 +5,7 @@
   file: path={{ path_tmp }} state=directory mode=0755
 
 - name: download installation file from the workstation
-  get_url: url="http://{{ workstation_ip }}:{{ port_webserver }}/dcos_install.sh" dest={{ path_tmp }}/dcos_install.sh mode=0440
+  get_url: url="http://{{ workstation_ip }}:{{ port_webserver }}/dcos_install.sh" dest={{ path_tmp }}/dcos_install.sh mode=0440 force=yes
 
 - include: master.yml
   when: "'masters' in group_names"

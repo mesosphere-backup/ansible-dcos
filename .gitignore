@@ -2,7 +2,6 @@
 .DS_Store
 
 # ansible
-ansible.cfg
 hosts
 group_vars/all
 *.retry

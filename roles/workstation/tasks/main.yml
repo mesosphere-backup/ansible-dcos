@@ -36,7 +36,7 @@
   file: path={{ path_tmp }}/genconf/ state=directory mode=0755
 
 - name: download installation file
-  get_url: url="{{ dcos_download }}" dest={{ path_tmp }}/dcos_generate_config.sh mode=0440
+  get_url: url="{{ dcos_download }}" dest={{ path_tmp }}/dcos_generate_config.sh mode=0440 force=yes
 
 - name: set IP detection script for AWS
   template: src=ip-detect-aws.j2 dest={{ path_tmp }}/genconf/ip-detect mode=0644

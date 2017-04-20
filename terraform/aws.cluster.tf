@@ -5,10 +5,12 @@ variable "prefix" {
 
 variable "aws_access_key_id" {
   description = "AWS Access Key ID"
+  default = "YOUR_AWS_ACCESS_KEY_ID"
 }
 
 variable "aws_secret_access_key" {
   description = "AWS Secret Access Key"
+  default = "YOUR_AWS_SECRET_ACCESS_KEY"
 }
 
 variable "ssh_key_name" {
@@ -18,7 +20,7 @@ variable "ssh_key_name" {
 
 variable "admin_ip" {
   description = "Restrict access to the cluster with an IP range (e.g. 1.2.3.4/32)"
-  default = "0.0.0.0/0"
+  default = ["0.0.0.0/0"]
 }
 
 variable "owner" {

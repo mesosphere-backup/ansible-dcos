@@ -1,5 +1,5 @@
 variable "prefix" {}
-variable "admin_ip" {}
+variable "admin_ip" { type = "list"}
 variable "subnet_range" {}
 variable "vpc_id" {}
 

@@ -28,8 +28,8 @@ git checkout v0.2.0-alpha
 
 Here are some guides to follow:
 
-* [Install DC/OS on AWS with Terraform](docs/INSTALL_AWS.md)
 * [Install DC/OS On-Premises](docs/INSTALL_ONPREM.md)
+* [Install DC/OS on AWS with Terraform](docs/INSTALL_AWS.md)
 
 ## Documentation
 

@@ -12,7 +12,7 @@ brew install ansible
 Start by coping the AWS example template to the root directory:
 
 ```
-cp terraform/aws.cluster.tf ./cluster.tf`
+cp terraform/aws.cluster.tf ./cluster.tf
 ```
 
 You can now edit the variables inside of the file `cluster.tf` to change the configuration of the machines.
@@ -68,7 +68,7 @@ terraform get
 terraform apply
 ```
 
-## Setup Ansible
+## Install DC/OS
 
 Once the components are created, we can run the Ansible script to install DC/OS on the instances.
 

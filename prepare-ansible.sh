@@ -46,12 +46,13 @@ sed -i '' "s/1.0.0.1/$workstation_private_ips/g" $network_dest
 sed -i '' "s/1.0.0.2/$master_private_ips/g" $network_dest
 
 sed -i '' "s/8.8.4.4/$dns/g" $network_dest
+sed -i '' "/  - 8.8.8.8/d" $network_dest
 sed -i '' "s/None/$dns_search/g" $network_dest
 sed -i '' "s/masterlb.internal/$lb_internal_masters/g" $network_dest
 
 # set prefix name for S3 bucket
 
 escape prefix
-echo ""
+echo ""  >> $network_dest
 echo "# Prefix to store exhibitor state in s3 bucket (must be unique per cluster)" >> $network_dest
 echo "s3_prefix: \"$prefix\"" >> $network_dest

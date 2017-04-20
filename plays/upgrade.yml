@@ -2,7 +2,7 @@
 # This playbook deploys DC/OS
 
 - name: generate upgrade configuration
-  hosts: workstations
+  hosts: bootstraps
   serial: 20
   become: true
 
@@ -11,7 +11,7 @@
     installed_cluster_version: 1.8.8
 
   roles:
-    - workstation
+    - bootstrap
 
 - name: upgrade masters
   hosts: masters

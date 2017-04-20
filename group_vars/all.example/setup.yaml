@@ -27,7 +27,7 @@ enterprise_dcos: false
 security: permissive
 
 # Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
-# Note: Set rexray_config_method: file and edit ./roles/workstation/templates/rexray.yaml.j2 for a custom rexray configuration
+# Note: Set rexray_config_method: file and edit ./roles/bootstrap/templates/rexray.yaml.j2 for a custom rexray configuration
 # options: empty, file
 rexray_config_method: empty
 

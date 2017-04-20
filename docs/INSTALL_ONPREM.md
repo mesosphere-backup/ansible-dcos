@@ -5,7 +5,7 @@
 - Copy `./hosts.example` to `./hosts` and fill in the (public) IP addresses of your cluster. For example:
 
 ```
-[workstations]
+[bootstraps]
 1.0.0.1
 
 [masters]
@@ -19,7 +19,7 @@
 1.0.0.5
 
 [common:children]
-workstations
+bootstraps
 masters
 agents
 agents_public
@@ -35,8 +35,8 @@ agents_public
 # options: eth0, eth1, aws, gce
 ip_detect: aws
 
-# (internal) IP Address of the Workstation
-workstation_ip: 1.0.0.1
+# (internal) IP Address of the bootstrap
+bootstrap_ip: 1.0.0.1
 
 # (internal) IP Addresses for the Master Nodes
 master_list: |
@@ -86,7 +86,7 @@ enterprise_dcos: false
 security: permissive
 
 # Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
-# Note: Set rexray_config_method: file and edit ./roles/workstation/templates/rexray.yaml.j2 for a custom rexray configuration
+# Note: Set rexray_config_method: file and edit ./roles/bootstrap/templates/rexray.yaml.j2 for a custom rexray configuration
 # options: empty, file
 rexray_config_method: empty
 

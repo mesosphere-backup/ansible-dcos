@@ -15,7 +15,7 @@
         - /etc/mesosphere
         - /tmp/dcos/
 
-- hosts: workstations
+- hosts: bootstraps
   become: true
   tasks:
 

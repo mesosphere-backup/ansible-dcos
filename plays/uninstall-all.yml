@@ -33,7 +33,7 @@
       shell: systemctl daemon-reload
       ignore_errors: true
 
-- hosts: workstations
+- hosts: bootstraps
   become: true
   tasks:
 

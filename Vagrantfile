@@ -7,8 +7,8 @@ cat <<EOF > group_vars/all/networking.yaml
 # options: eth0, eth1, aws, gce
 ip_detect: eth1
 
-# (internal) IP Address of the Workstation
-workstation_ip: 192.168.33.10
+# (internal) IP Address of the bootstrap
+bootstrap_ip: 192.168.33.10
 
 # (internal) IP Addresses for the Master Nodes
 master_list: |
@@ -27,10 +27,10 @@ EOF
 
 # Define hosts file
 ANSIBLE_GROUPS = {
-  "workstations" => ["ws1"],
+  "bootstraps" => ["b1"],
   "masters" => ["m1"],
   "agents" => ["a1"],
-  "common:children" => ["workstations", "masters", "agents"]
+  "common:children" => ["bootstraps", "masters", "agents"]
 }
 
 # Create machines
@@ -38,14 +38,14 @@ Vagrant.configure(2) do |config|
 
     config.vm.box = "centos/7"
 
-    config.vm.define "ws1" do |ws1|
-        ws1.vm.network "private_network", ip: "192.168.33.10"
-        ws1.vm.hostname = "ws1"
+    config.vm.define "b1" do |b1|
+        b1.vm.network "private_network", ip: "192.168.33.10"
+        b1.vm.hostname = "b1"
         config.vm.provider :virtualbox do |vb|
           vb.customize ["modifyvm", :id, "--memory", "1024"]
           vb.customize ["modifyvm", :id, "--cpus", "1"]
         end
-        ws1.vm.provision "ansible" do |ansible|
+        b1.vm.provision "ansible" do |ansible|
             ansible.playbook = "install.yml"
             ansible.groups = ANSIBLE_GROUPS
         end

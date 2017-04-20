@@ -3,8 +3,8 @@
 # options: eth0, eth1, aws, gce
 ip_detect: aws
 
-# (internal) IP Address of the Workstation
-workstation_ip: 1.0.0.1
+# (internal) IP Address of the bootstrap
+bootstrap_ip: 1.0.0.1
 
 # (internal) IP Addresses for the Master Nodes
 master_list: |

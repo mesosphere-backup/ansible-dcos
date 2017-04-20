@@ -10,12 +10,12 @@
     - common
 
 - name: generate the DC/OS configuration
-  hosts: workstations
+  hosts: bootstraps
   serial: 20
   become: true
 
   roles:
-    - workstation
+    - bootstrap
 
 - name: deploy nodes
   hosts: [ masters, agents, agents_public]

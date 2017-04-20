@@ -16,12 +16,12 @@ hosts_dest="./hosts"
 
 cp -R $hosts_src $hosts_dest
 
-escape workstation_public_ips
+escape bootstrap_public_ips
 escape master_public_ips
 escape agent_public_ips
 escape public_agent_public_ips
 
-sed -i '' "s/1.0.0.1/$workstation_public_ips/g" $hosts_dest
+sed -i '' "s/1.0.0.1/$bootstrap_public_ips/g" $hosts_dest
 sed -i '' "s/1.0.0.2/$master_public_ips/g" $hosts_dest
 sed -i '' "s/1.0.0.3/$agent_public_ips/g" $hosts_dest
 sed -i '' "/1.0.0.4/d" $hosts_dest
@@ -35,14 +35,14 @@ network_dest="./group_vars/all/networking.yaml"
 mkdir -p ./group_vars/all/
 cp -R $network_src $network_dest
 
-escape workstation_private_ips
+escape bootstrap_private_ips
 escape master_private_ips
 
 escape dns
 escape dns_search
 escape lb_internal_masters
 
-sed -i '' "s/1.0.0.1/$workstation_private_ips/g" $network_dest
+sed -i '' "s/1.0.0.1/$bootstrap_private_ips/g" $network_dest
 sed -i '' "s/1.0.0.2/$master_private_ips/g" $network_dest
 
 sed -i '' "s/8.8.4.4/$dns/g" $network_dest

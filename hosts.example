@@ -1,4 +1,4 @@
-[workstations]
+[bootstraps]
 1.0.0.1
 
 [masters]
@@ -12,7 +12,7 @@
 1.0.0.5
 
 [common:children]
-workstations
+bootstraps
 masters
 agents
 agents_public

@@ -31,8 +31,8 @@ variable "expiration" {
   default = "8hours"
 }
 
-variable "workstation_instance_count" {
-  description = "Number of workstation nodes to launch"
+variable "bootstrap_instance_count" {
+  description = "Number of bootstrap nodes to launch"
   default = 1
 }
 
@@ -85,11 +85,11 @@ variable "amis" {
   }
 }
 
-variable "workstation_type" { default = "m3.xlarge" }
+variable "bootstrap_type" { default = "m3.xlarge" }
 variable "master_type" { default = "m4.2xlarge" }
 variable "agent_type" { default = "m4.2xlarge" }
 variable "public_agent_type" { default = "m3.xlarge" }
-variable "workstation_volume_size" { default = "60" }
+variable "bootstrap_volume_size" { default = "60" }
 variable "master_volume_size" { default = "100" }
 variable "agent_volume_size" { default = "100" }
 variable "public_agent_volume_size" { default = "100" }
@@ -137,10 +137,10 @@ module "elb" {
   public_agent_instances = "${module.public_agent.instances}"
 }
 
-module "workstation" {
+module "bootstrap" {
   source ="./terraform/aws/instance"
-  instance_name = "${var.prefix}-workstation"
-  instance_count = "${var.workstation_instance_count}"
+  instance_name = "${var.prefix}-bootstrap"
+  instance_count = "${var.bootstrap_instance_count}"
   amis = "${var.amis}"
   azs = "${var.azs_master}"
   region = "${var.region}"
@@ -148,8 +148,8 @@ module "workstation" {
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
   subnet_id = "${module.vpc.subnet_id}"
   iam_instance_profile = ""
-  instance_type = "${var.workstation_type}"
-  volume_size = "${var.workstation_volume_size}"
+  instance_type = "${var.bootstrap_type}"
+  volume_size = "${var.bootstrap_volume_size}"
   owner = "${var.owner}"
   expiration = "${var.expiration}"
 }
@@ -208,8 +208,8 @@ module "public_agent" {
 output "lb_external_masters" { value = "${module.elb.external_masters_dns_name}" }
 output "lb_internal_masters" { value = "${module.elb.internal_masters_dns_name}" }
 output "lb_external_agents" { value = "${module.elb.external_agents_dns_name}" }
-output "workstation_public_ips" { value = "${module.workstation.public_ips}" }
-output "workstation_private_ips" { value = "${module.workstation.private_ips}" }
+output "bootstrap_public_ips" { value = "${module.bootstrap.public_ips}" }
+output "bootstrap_private_ips" { value = "${module.bootstrap.private_ips}" }
 output "master_public_ips" { value = "${module.master.public_ips}" }
 output "master_private_ips" { value = "${module.master.private_ips}" }
 output "agent_public_ips" { value = "${module.agent.public_ips}" }
@@ -225,8 +225,8 @@ output "dns_search" { value = "${var.region}.compute.internal" }
     lb_external_masters = "${module.elb.external_masters_dns_name}"
     lb_internal_masters = "${module.elb.internal_masters_dns_name}"
     lb_external_agents = "${module.elb.external_agents_dns_name}"
-    workstation_public_ips = "${module.workstation.public_ips}"
-    workstation_private_ips = "${module.workstation.private_ips}"
+    bootstrap_public_ips = "${module.bootstrap.public_ips}"
+    bootstrap_private_ips = "${module.bootstrap.private_ips}"
     master_public_ips = "${module.master.public_ips}"
     master_private_ips = "${module.master.private_ips}"
     agent_public_ips = "${module.agent.public_ips}"

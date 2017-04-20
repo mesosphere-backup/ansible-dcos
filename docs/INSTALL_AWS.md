@@ -20,7 +20,7 @@
 cluster_name: demo
 
 # Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+dcos_download: https://downloads.dcos.io/dcos/stable/commit/0ce03387884523f02624d3fb56c7fbe2e06e181b/dcos_generate_config.sh
 
 # Install latest operating system updates
 # options: true, false

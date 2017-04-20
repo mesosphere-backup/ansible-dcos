@@ -3,7 +3,7 @@ variable "prefix" {}
 # Define IAM role to create external volumes on AWS
 resource "aws_iam_instance_profile" "agent_profile" {
   name = "${var.prefix}-agent_profile"
-  roles = ["${aws_iam_role.agent_role.name}"]
+  role = "${aws_iam_role.agent_role.name}"
 
   lifecycle {
     create_before_destroy = true

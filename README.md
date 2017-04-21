@@ -26,10 +26,14 @@ Check the version out with:
 git checkout v0.2.0-alpha
 ```
 
-Here are some guides to follow:
+Here are some guides to follow to install the DC/OS cluster:
 
 * [Install DC/OS On-Premises](docs/INSTALL_ONPREM.md)
 * [Install DC/OS on AWS with Terraform](docs/INSTALL_AWS.md)
+
+The guides to operate the cluster are located here:
+
+* [Upgrade DC/OS](docs/UPGRADE.md)
 
 ## Documentation
 

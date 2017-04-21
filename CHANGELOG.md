@@ -4,6 +4,7 @@
 
 * Tested with DC/OS 1.9
 * Install Docker 1.13
+* Improved documentation
 
 ## v0.2.0-alpha
 

@@ -148,7 +148,7 @@ module "bootstrap" {
   region = "${var.region}"
   key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
-  subnet_id = "${module.vpc.subnet_id}"
+  subnets = "${module.vpc.subnets}"
   iam_instance_profile = ""
   instance_type = "${var.bootstrap_type}"
   volume_size = "${var.bootstrap_volume_size}"
@@ -165,7 +165,7 @@ module "master" {
   region = "${var.region}"
   key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
-  subnet_id = "${module.vpc.subnet_id}"
+  subnets = "${module.vpc.subnets}"
   iam_instance_profile = ""
   instance_type = "${var.master_type}"
   volume_size = "${var.master_volume_size}"
@@ -182,7 +182,7 @@ module "agent" {
   region = "${var.region}"
   key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
-  subnet_id = "${module.vpc.subnet_id}"
+  subnets = "${module.vpc.subnets}"
   iam_instance_profile = "${module.iam.agent_profile}"
   instance_type = "${var.agent_type}"
   volume_size = "${var.agent_volume_size}"
@@ -199,7 +199,7 @@ module "public_agent" {
   region = "${var.region}"
   key_name = "${var.ssh_key_name}"
   vpc_security_group_ids = ["${module.security-groups.internal_sg}","${module.security-groups.admin_sg}"]
-  subnet_id = "${module.vpc.subnet_id}"
+  subnets = "${module.vpc.subnets}"
   iam_instance_profile = "${module.iam.agent_profile}"
   instance_type = "${var.public_agent_type}"
   volume_size = "${var.public_agent_volume_size}"

@@ -37,10 +37,6 @@ resource "aws_route" "internet_access" {
   gateway_id             = "${aws_internet_gateway.default.id}"
 }
 
-output "subnet_id" {
-  value = "${element(aws_subnet.dcos_subnet.*.id, 0)}"
-}
-
 output "subnets" {
   value = ["${aws_subnet.dcos_subnet.*.id}"]
 }

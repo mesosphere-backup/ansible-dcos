@@ -5,7 +5,7 @@ variable "instance_count" {}
 variable "instance_name" {}
 variable "key_name" {}
 variable "vpc_security_group_ids" { type = "list" }
-variable "subnet_id" {}
+variable "subnets" { type = "list" }
 variable "instance_type" {}
 variable "volume_size" {}
 variable "owner" {}
@@ -22,8 +22,8 @@ resource "aws_instance" "instance" {
   associate_public_ip_address = true
   iam_instance_profile = "${var.iam_instance_profile}"
 
-  availability_zone = "${element(split(",", lookup(var.azs, var.region)), 0)}"
-  subnet_id = "${var.subnet_id}"
+  availability_zone = "${element(split(",", lookup(var.azs, var.region)), count.index % length(split(",", lookup(var.azs, var.region))))}"
+  subnet_id = "${var.subnets[count.index % length(split(",", lookup(var.azs, var.region)))]}"
 
   tags {
           Name = "${var.instance_name}-${count.index}"

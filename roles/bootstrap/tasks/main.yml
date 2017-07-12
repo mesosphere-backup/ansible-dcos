@@ -42,6 +42,10 @@
   template: src=ip-detect-aws.j2 dest={{ path_tmp }}/genconf/ip-detect mode=0644
   when: ip_detect == "aws"
 
+- name: set Public IP detection script for AWS
+  template: src=ip-detect-public-aws.j2 dest={{ path_tmp }}/genconf/ip-detect-public mode=0644
+  when: ip_detect == "aws"
+
 - name: set IP detection script for GCE
   template: src=ip-detect-gce.j2 dest={{ path_tmp }}/genconf/ip-detect mode=0644
   when: ip_detect == "gce"

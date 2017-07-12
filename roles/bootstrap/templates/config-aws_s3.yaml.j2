@@ -16,6 +16,8 @@ resolvers:
 {{ resolvers }}
 dns_search: {{ dns_search }}
 
+ip_detect_public_filename: /genconf/ip-detect-public
+
 {% if enterprise_dcos == true %}
 superuser_username: {{ superuser_username }}
 superuser_password_hash: {{ superuser_password_hash }}

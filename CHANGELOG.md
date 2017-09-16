@@ -1,6 +1,6 @@
 # Changelog
 
-## v.2.2-alpha
+## v0.3.0-alpha
 
 * Tested with DC/OS 1.10
 * Updated configuration for rexray 0.9.0

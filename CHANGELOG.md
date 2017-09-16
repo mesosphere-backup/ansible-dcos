@@ -8,6 +8,7 @@
 * Adds support for public ip detection on aws
 * Fixes uninstall script and sets temporary nameserver
 * Fix for #8 Default bootstrap folder is not part of /tmp
+* Terraform: New AMIs for Centos 7.3
 
 ## v0.2.1-alpha
 

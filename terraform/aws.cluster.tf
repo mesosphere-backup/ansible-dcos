@@ -44,12 +44,12 @@ variable "master_instance_count" {
 }
 
 variable "agent_instance_count" {
-  description = "Number of agent nodes to launch [min 3]"
-  default = 4
+  description = "Number of agent nodes to launch"
+  default = 6
 }
 
 variable "public_agent_instance_count" {
-  description = "Number of public agent nodes to launch [min 1]"
+  description = "Number of public agent nodes to launch"
   default = 1
 }
 
@@ -80,17 +80,17 @@ variable "azs_master" {
 
 variable "amis" {
   default = {
-    eu-central-1 = "ami-9bf712f4"
-    eu-west-1 = "ami-7abd0209"
-    us-west-2 = "ami-d2c924b2"
-    us-east-1 = "ami-6d1c2007"
+    eu-central-1 = "ami-fa2df395"
+    eu-west-1 = "ami-f5d7f195"
+    us-west-2 = "ami-f4533694"
+    us-east-1 = "ami-46c1b650"
   }
 }
 
-variable "bootstrap_type" { default = "m3.xlarge" }
+variable "bootstrap_type" { default = "m4.large" }
 variable "master_type" { default = "m4.2xlarge" }
 variable "agent_type" { default = "m4.2xlarge" }
-variable "public_agent_type" { default = "m3.xlarge" }
+variable "public_agent_type" { default = "m4.xlarge" }
 variable "bootstrap_volume_size" { default = "60" }
 variable "master_volume_size" { default = "100" }
 variable "agent_volume_size" { default = "100" }

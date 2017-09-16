@@ -3,7 +3,7 @@
   tasks:
 
     - name: DC/OS uninstall
-      shell: sudo -i /opt/mesosphere/bin/pkgpanda uninstall
+      shell: /opt/mesosphere/bin/dcos-path/dcos-shell /opt/mesosphere/bin/pkgpanda uninstall
       ignore_errors: true
 
     - name: remove DC/OS configuration
@@ -34,6 +34,9 @@
     - name: reload systemd
       shell: systemctl daemon-reload
       ignore_errors: true
+
+    - name: reset nameserver
+      shell: "echo 'nameserver 8.8.8.8' > /etc/resolv.conf"
 
 - hosts: bootstraps
   become: true

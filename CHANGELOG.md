@@ -6,6 +6,7 @@
 * Updated configuration for rexray 0.9.0
 * Removed rarely used scripts and plays
 * Adds support for public ip detection on aws
+* Fixes uninstall script and sets temporary nameserver
 * Fix for #8 Default bootstrap folder is not part of /tmp
 
 ## v0.2.1-alpha

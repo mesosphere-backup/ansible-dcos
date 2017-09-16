@@ -1,5 +1,5 @@
 ---
-path_tmp: /tmp/dcos-install
+path_bootstrap: /var/lib/dcos-bootstrap
 port_webserver: 8080
 upgrade: false
 

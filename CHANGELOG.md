@@ -3,8 +3,10 @@
 ## v.2.2-alpha
 
 * Tested with DC/OS 1.10
-* Updated configuration for rexray 0.9.0 
+* Updated configuration for rexray 0.9.0
 * Removed rarely used scripts and plays
+* Adds support for public ip detection on aws
+* Fix for #8 Default bootstrap folder is not part of /tmp
 
 ## v0.2.1-alpha
 

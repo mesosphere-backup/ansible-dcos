@@ -45,5 +45,5 @@
         state: absent
 
     - name: Clear install directory
-      file: path=/tmp/dcos-install/ state=absent
+      file: path=/var/lib/dcos-bootstrap state=absent
       ignore_errors: true

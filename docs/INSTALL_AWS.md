@@ -80,7 +80,7 @@ The variables for Ansible are defined in the folder `group_vars/all`. Copy over 
 cp -R group_vars/all.example/ group_vars/all/
 ```
 
-The now created file `group_vars/all/setup.yaml` is for configuring DC/OS. You can also run the wizard `bash ./configure-dcos.sh` to create this file and match your preferred configuration. The variables are explained within the file. In order to setup DC/OS for AWS, you should change at the following variables:
+The now created file `group_vars/all/setup.yaml` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for AWS, you should change at least the following variables:
 
 Change the exhibitor backend to `aws_s3`. So the master discovery is done by using an S3 bucket:
 
@@ -114,7 +114,7 @@ ansible all -m ping
 Finally, you can install DC/OS by running:
 
 ```
-ansible-playbook install.yml
+ansible-playbook plays/install.yml
 ```
 
 ## Access the cluster

@@ -1,6 +1,0 @@
----
-cli_download: https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-1.9/dcos
-cli_dest: /usr/bin
-superuser_username: admin
-superuser_password: admin
-superuser_token: ""

@@ -62,7 +62,7 @@ exhibitor_address: masterlb.internal
 cluster_name: demo
 
 # Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/commit/0ce03387884523f02624d3fb56c7fbe2e06e181b/dcos_generate_config.sh
+dcos_download: https://downloads.dcos.io/dcos/stable/1.10.0/dcos_generate_config.sh
 
 # Install latest operating system updates
 # options: true, false
@@ -100,4 +100,4 @@ superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwA
 
 - Run `ansible all -m ping` to check SSH connectivity
 
-- Run `ansible-playbook install.yml` to apply the Ansible playbook
+- Run `ansible-playbook plays/install.yml` to apply the Ansible playbook

@@ -1,5 +1,11 @@
 # Changelog
 
+## v.2.2-alpha
+
+* Tested with DC/OS 1.10
+* Updated configuration for rexray 0.9.0 
+* Removed rarely used scripts and plays
+
 ## v0.2.1-alpha
 
 * Tested with DC/OS 1.9

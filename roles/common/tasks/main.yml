@@ -46,6 +46,7 @@
     - curl
     - ipset
     - ntp
+    - firewalld
 
 - name: disable selinux
   selinux: policy=targeted state=permissive

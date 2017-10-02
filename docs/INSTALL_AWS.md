@@ -74,13 +74,13 @@ Once the components are created, we can run the Ansible script to install DC/OS 
 
 You have to add the private SSH key (defined in Terraform with variable `ssh_key_name`) to access the instances. Copy the `YOURKEYNAME.pem` file to `~/.ssh` and `chmod 0600 YOURKEYNAME.pem`. After that execute `ssh-add YOURKEYNAME.pem`.
 
-The variables for Ansible are defined in the folder `group_vars/all`. Copy over the example directory, by running:
+The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the example file, by running:
 
 ```
-cp -R group_vars/all.example/ group_vars/all/
+cp group_vars/all.example group_vars/all
 ```
 
-The now created file `group_vars/all/setup.yaml` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for AWS, you should change at least the following variables:
+The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for AWS, you should change at least the following variables:
 
 Change the exhibitor backend to `aws_s3`. So the master discovery is done by using an S3 bucket:
 
@@ -99,22 +99,16 @@ aws_region: YOUR_BUCKET_REGION
 s3_bucket: YOUR_BUCKET_NAME
 ```
 
-Ansible also needs to know how to find the instances that got created via Terraform. For that run the following:
+Ansible also needs to know how to find the instances that got created via Terraform.  For that we you a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
 
 ```
-bash prepare-ansible.sh
-```
-
-Now check that all instances are reachable via Ansible:
-
-```
-ansible all -m ping
+ansible all -i inventory.py -m ping
 ```
 
 Finally, you can install DC/OS by running:
 
 ```
-ansible-playbook plays/install.yml
+ansible-playbook -i inventory.py plays/install.yml
 ```
 
 ## Access the cluster

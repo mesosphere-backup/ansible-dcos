@@ -2,7 +2,7 @@
 .DS_Store
 
 # ansible
-hosts
+hosts.yaml
 group_vars/all
 *.retry
 /tmp
@@ -16,6 +16,7 @@ group_vars/all
 *.tfstate
 *.tfstate.backup
 terraform.tfvars
+.terraform.tfstate.lock.info
 
 # terraform gce
 /account.json

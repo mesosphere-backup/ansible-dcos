@@ -5,8 +5,45 @@
   yum:
     name: "*"
     state: latest
-    exclude: docker-engine
+    exclude: docker-engine,docker-engine-selinux
   when: system_updates
+
+- name: install system utilities
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - tar
+    - xz
+    - unzip
+    - curl
+    - ipset
+    - ntp
+    - firewalld
+
+- name: disable selinux
+  selinux: policy=targeted state=permissive
+
+- name: create group 'nogroup'
+  group: name=nogroup state=present
+
+- name: disable IPv6 for all interfaces
+  sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
+
+- name: disable IPv6 for default interface
+  sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
+
+- name: enable ntpd
+  service:
+    name: ntpd
+    enabled: yes
+    state: started
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    enabled: false
+    state: stopped
 
 - name: enable overlay module
   template: src=overlay.conf.j2 dest=/etc/modules-load.d/overlay.conf mode=0644
@@ -34,41 +71,3 @@
 
 - name: allow the default user to use docker
   user: name="{{ ansible_ssh_user }}" groups=docker append=yes
-
-- name: install system utilities
-  yum:
-    name: "{{ item }}"
-    state: latest
-  with_items:
-    - tar
-    - xz
-    - unzip
-    - curl
-    - ipset
-    - ntp
-    - firewalld
-
-- name: disable selinux
-  selinux: policy=targeted state=permissive
-
-- name: create group 'nogroup'
-  group: name=nogroup state=present
-
-- name: disable IPv6 for all interfaces
-  sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
-
-- name: disable IPv6 for default interface
-  sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
-
-- name: disable firewalld
-  service:
-    name: firewalld
-    enabled: false
-    state: stopped
-  ignore_errors: yes
-
-- name: enable ntpd
-  service:
-    name: ntpd
-    enabled: yes
-    state: started

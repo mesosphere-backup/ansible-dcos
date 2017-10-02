@@ -1,103 +1,71 @@
 ## Steps for manual installation (not using terraform)
 
-- Execute `ssh-add {keypair}.pem` for accessing your cluster nodes
+- Execute `ssh-add {keypair}.pem` to be able to access your cluster nodes via SSH
 
-- Copy `./hosts.example` to `./hosts` and fill in the (public) IP addresses of your cluster. For example:
-
-```
-[bootstraps]
-1.0.0.1
-
-[masters]
-1.0.0.2
-
-[agents]
-1.0.0.3
-1.0.0.4
-
-[agents_public]
-1.0.0.5
-
-[common:children]
-bootstraps
-masters
-agents
-agents_public
-```
-
-- Copy the directory `group_vars/all.example` to `group_vars/all`.
-
-- Within the file `group_vars/all/networking.yaml` you have to define all the (internal/private) IPs of your Cluster. An example is listed below:
+- Copy `./hosts.example.yaml` to `./hosts.yaml` and fill in the public IP addresses of your cluster so that Ansible can reach them and additionally set for the variables `bootstrap_ip` and `master_list` the private/internal IP addresses for cluster-internal communication. For example:
 
 ```
 ---
-# Choose the IP Detect Script
-# options: eth0, eth1, aws, gce
-ip_detect: aws
+# Example for an ansible inventory file
+all:
+  children:
+    bootstraps:
+      hosts:
+        # Public IP Address of the Bootstrap Node
+        1.0.0.1:
+    masters:
+      hosts:
+        # Public IP Addresses for the Master Nodes
+        1.0.0.2:
+    agents:
+      hosts:
+        # Public IP Addresses for the Agent Nodes
+        1.0.0.3:
+        1.0.0.4:
+    agents_public:
+      hosts:
+        # Public IP Addresses for the Public Agent Nodes
+        1.0.0.5:
+  vars:
+    # Choose the IP Detect Script
+    # options: eth0, eth1, aws, gce
+    ip_detect: eth0
 
-# (internal) IP Address of the bootstrap
-bootstrap_ip: 1.0.0.1
+    # (internal/private) IP Address of the Bootstrap Node
+    bootstrap_ip: 2.0.0.1
 
-# (internal) IP Addresses for the Master Nodes
-master_list: |
-  - 1.0.0.2
+    # (internal/private) IP Addresses for the Master Nodes
+    master_list:
+      - 2.0.0.2
 
-# DNS Resolvers
-resolvers: |
-  - 8.8.4.4
-  - 8.8.8.8
+    # DNS Resolvers
+    resolvers:
+      - 8.8.4.4
+      - 8.8.8.8
 
-# DNS Search Domain
-dns_search: None
+    # DNS Search Domain
+    dns_search: None
 
-# Internal Loadbalancer DNS for Masters
-exhibitor_address: masterlb.internal
+    # Internal Loadbalancer DNS for Masters (only needed for exhibitor: aws_s3)
+    exhibitor_address: masterlb.internal
 ```
 
-- There is another file called `group_vars/all/setup.yaml`. This file is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the example below:
+The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the example file, by running:
 
 ```
----
-# Name of the DC/OS Cluster
-cluster_name: demo
-
-# Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/1.10.0/dcos_generate_config.sh
-
-# Install latest operating system updates
-# options: true, false
-system_updates: true
-
-# Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static
-exhibitor: static
-
-# AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: "******"
-aws_secret_access_key: "******"
-aws_region: us-west-2
-s3_bucket: bucket-name
-
-# Enterprise or OSS?
-enterprise_dcos: false
-
-# This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
-# options: disabled, permissive, strict
-security: permissive
-
-# Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
-# Note: Set rexray_config_method: file and edit ./roles/bootstrap/templates/rexray.yaml.j2 for a custom rexray configuration
-# options: empty, file
-rexray_config_method: empty
-
-# Customer Key (only for Mesosphere Enterprise DC/OS)
-customer_key: "########-####-####-####-############"
-
-# DC/OS credentials (only for Mesosphere Enterprise DC/OS)
-superuser_username: admin
-superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
+cp group_vars/all.example group_vars/all
 ```
 
-- Run `ansible all -m ping` to check SSH connectivity
+The now created file `group_vars/all` is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the file.
 
-- Run `ansible-playbook plays/install.yml` to apply the Ansible playbook
+To check that all instances are reachable via Ansible, run the following:
+
+```
+ansible all -m ping
+```
+
+Finally, you can install DC/OS by applying the Absible playbook:
+
+```
+ansible-playbook plays/install.yml
+```

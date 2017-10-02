@@ -1,0 +1,43 @@
+---
+# Example for an ansible inventory file
+all:
+  children:
+    bootstraps:
+      hosts:
+        # Public IP Address of the Bootstrap Node
+        1.0.0.1:
+    masters:
+      hosts:
+        # Public IP Addresses for the Master Nodes
+        1.0.0.2:
+    agents:
+      hosts:
+        # Public IP Addresses for the Agent Nodes
+        1.0.0.3:
+        1.0.0.4:
+    agents_public:
+      hosts:
+        # Public IP Addresses for the Public Agent Nodes
+        1.0.0.5:
+  vars:
+    # Choose the IP Detect Script
+    # options: eth0, eth1, aws, gce
+    ip_detect: eth0
+
+    # (internal/private) IP Address of the Bootstrap Node
+    bootstrap_ip: 2.0.0.1
+
+    # (internal/private) IP Addresses for the Master Nodes
+    master_list:
+      - 2.0.0.2
+
+    # DNS Resolvers
+    resolvers:
+      - 8.8.4.4
+      - 8.8.8.8
+
+    # DNS Search Domain
+    dns_search: None
+
+    # Internal Loadbalancer DNS for Masters (only needed for exhibitor: aws_s3)
+    exhibitor_address: masterlb.internal

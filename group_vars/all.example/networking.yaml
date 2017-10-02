@@ -8,12 +8,12 @@ bootstrap_ip: 1.0.0.1
 
 # (internal) IP Addresses for the Master Nodes
 master_list: |
-  - 1.0.0.2
+  1.0.0.2
 
 # DNS Resolvers
 resolvers: |
-  - 8.8.4.4
-  - 8.8.8.8
+  8.8.4.4
+  8.8.8.8
 
 # DNS Search Domain
 dns_search: None

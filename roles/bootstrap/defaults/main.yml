@@ -20,6 +20,6 @@ superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwA
 
 ip_detect: eth0
 resolvers: |
-  - 8.8.4.4
-  - 8.8.8.8
+  8.8.4.4
+  8.8.8.8
 dns_search: None

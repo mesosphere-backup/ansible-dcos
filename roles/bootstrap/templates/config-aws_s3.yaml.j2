@@ -13,7 +13,10 @@ s3_prefix: {{ s3_prefix }}
 master_discovery: master_http_loadbalancer
 num_masters: {{ groups['masters'] | length }}
 resolvers:
-{{ resolvers }}
+{% for resolver in resolvers %}
+- {{ resolver }}{{ '\n' }}
+{%- endfor %}
+
 dns_search: {{ dns_search }}
 
 ip_detect_public_filename: /genconf/ip-detect-public

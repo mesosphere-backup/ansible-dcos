@@ -1,5 +1,11 @@
 # Changelog
 
+## v0.4.0-alpha
+* #5 Adds Dynamic Inventory to read from Terraform state
+* Simplified directory structure for variables
+* Makes Docker version configurable
+* Installs firewalld in order to proper disable it afterwards
+
 ## v0.3.0-alpha
 
 * Tested with DC/OS 1.10

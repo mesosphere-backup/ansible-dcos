@@ -219,26 +219,3 @@ output "public_agent_public_ips" { value = "${module.public_agent.public_ips}" }
 output "prefix" { value = "${var.prefix}" }
 output "dns" { value = "${var.subnet_dns}" }
 output "dns_search" { value = "${var.region}.compute.internal" }
-
-/*resource "null_resource" "cluster" {
-
-  # Changes to any instance of the cluster requires adjusting the ansible configuration
-  triggers {
-    lb_external_masters = "${module.elb.external_masters_dns_name}"
-    lb_internal_masters = "${module.elb.internal_masters_dns_name}"
-    lb_external_agents = "${module.elb.external_agents_dns_name}"
-    bootstrap_public_ips = "${module.bootstrap.public_ips}"
-    bootstrap_private_ips = "${module.bootstrap.private_ips}"
-    master_public_ips = "${module.master.public_ips}"
-    master_private_ips = "${module.master.private_ips}"
-    agent_public_ips = "${module.agent.public_ips}"
-    public_agent_public_ips = "${module.public_agent.public_ips}"
-    prefix = "${var.prefix}"
-    dns = "${var.subnet_dns}"
-    dns_search = "${var.region}.compute.internal"
-  }
-
-  provisioner "local-exec" {
-      command = "sleep 5 && bash prepare-ansible.sh"
-  }
-}*/

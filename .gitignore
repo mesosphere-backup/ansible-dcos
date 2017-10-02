@@ -19,3 +19,6 @@ terraform.tfvars
 
 # terraform gce
 /account.json
+
+# ide
+.idea

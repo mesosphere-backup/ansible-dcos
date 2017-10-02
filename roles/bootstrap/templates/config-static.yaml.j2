@@ -5,9 +5,15 @@ cluster_name: '{{ cluster_name }}'
 exhibitor_storage_backend: static
 master_discovery: static
 master_list:
-{{ master_list }}
+{% for master in master_list %}
+- {{ master }}{{ '\n' }}
+{%- endfor %}
+
 resolvers:
-{{ resolvers }}
+{% for resolver in resolvers %}
+- {{ resolver }}{{ '\n' }}
+{%- endfor %}
+
 dns_search: {{ dns_search }}
 
 {% if enterprise_dcos == true %}

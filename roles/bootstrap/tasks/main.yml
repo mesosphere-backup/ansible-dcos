@@ -72,7 +72,7 @@
     chdir: "{{ path_bootstrap }}"
   when: upgrade == false
 
-- include: upgrade.yml
+- import_tasks: upgrade.yml
   when: upgrade == true
 
 - name: start web server to serve the bootstrap files

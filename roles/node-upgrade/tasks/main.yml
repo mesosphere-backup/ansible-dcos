@@ -7,11 +7,11 @@
 - name: download installation file from the bootstrap
   get_url: url="http://{{ bootstrap_ip }}:{{ port_webserver }}/upgrade/latest/dcos_node_upgrade.sh" dest={{ path_tmp }}/dcos_node_upgrade.sh mode=0440 force=true
 
-- include: master.yml
+- import_tasks: master.yml
   when: "'masters' in group_names"
 
-- include: agent.yml
+- import_tasks: agent.yml
   when: "'agents' in group_names"
 
-- include: agent.yml
+- import_tasks: agent.yml
   when: "'agents_public' in group_names"

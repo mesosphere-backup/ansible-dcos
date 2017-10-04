@@ -8,6 +8,7 @@
 
   roles:
     - common
+    - docker
 
 - name: generate the DC/OS configuration
   hosts: bootstraps

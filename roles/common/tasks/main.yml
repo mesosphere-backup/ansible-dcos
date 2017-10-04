@@ -42,32 +42,5 @@
 - name: disable firewalld
   service:
     name: firewalld
-    enabled: false
+    enabled: no
     state: stopped
-
-- name: enable overlay module
-  template: src=overlay.conf.j2 dest=/etc/modules-load.d/overlay.conf mode=0644
-
-- name: enable docker yum repo
-  template: src=docker.repo.j2 dest=/etc/yum.repos.d/docker.repo mode=0644
-
-- name: create docker systemd directory
-  file: path=/etc/systemd/system/docker.service.d/ state=directory mode=0755
-
-- name: configure docker to use overlay driver
-  template: src=override.conf.j2 dest=/etc/systemd/system/docker.service.d/override.conf mode=0644
-
-- name: install docker packages
-  yum:
-    name: docker-engine-1.13.1
-    update_cache: yes
-    state: present
-
-- name: enable docker
-  service:
-    name: docker
-    enabled: yes
-    state: started
-
-- name: allow the default user to use docker
-  user: name="{{ ansible_ssh_user }}" groups=docker append=yes

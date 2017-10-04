@@ -1,6 +1,7 @@
 # Changelog
 
 ## v0.4.0-alpha
+
 * #5 Adds Dynamic Inventory to read from Terraform state
 * Simplified directory structure for variables
 * Moves Docker to it's own Ansible role, set sane defaults and makes the version configurable

@@ -1,9 +1,18 @@
 ---
-# This playbook deploys DC/OS
+# This playbook performs a DC/OS upgrade
+
+- name: setup the system requirements on all nodes
+  hosts: all
+  serial: 20
+  become: true
+
+  roles:
+    - common
+    - docker
 
 - name: generate upgrade configuration
   hosts: bootstraps
-  serial: 20
+  serial: 1
   become: true
 
   vars:

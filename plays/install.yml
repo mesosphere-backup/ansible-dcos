@@ -12,7 +12,7 @@
 
 - name: generate the DC/OS configuration
   hosts: bootstraps
-  serial: 20
+  serial: 1
   become: true
 
   roles:

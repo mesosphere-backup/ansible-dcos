@@ -16,16 +16,14 @@ Use `git tag` to list all versions:
 
 ```
 git tag
-v0.1.0-alpha
-v0.2.0-alpha
-v0.2.1-alpha
 v0.3.0-alpha
+v0.4.0-alpha
 ```
 
 Check out the latest version with:
 
 ```
-git checkout v0.3.0-alpha
+git checkout v0.4.0-alpha
 ```
 
 Here are some guides to follow to install the DC/OS cluster:

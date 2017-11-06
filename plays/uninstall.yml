@@ -30,6 +30,7 @@
         - /etc/systemd/system/multi-user.target.wants/dcos.target
         - /etc/systemd/system/dcos.target
         - /etc/systemd/system/dcos.target.wants
+      ignore_errors: true
 
     - name: reload systemd
       shell: systemctl daemon-reload

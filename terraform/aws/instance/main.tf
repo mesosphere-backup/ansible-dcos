@@ -21,6 +21,7 @@ resource "aws_instance" "instance" {
   vpc_security_group_ids = ["${var.vpc_security_group_ids}"]
   associate_public_ip_address = true
   iam_instance_profile = "${var.iam_instance_profile}"
+  source_dest_check = false
 
   availability_zone = "${element(split(",", lookup(var.azs, var.region)), count.index % length(split(",", lookup(var.azs, var.region))))}"
   subnet_id = "${var.subnets[count.index % length(split(",", lookup(var.azs, var.region)))]}"

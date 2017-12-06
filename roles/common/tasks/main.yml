@@ -20,6 +20,7 @@
     - ipset
     - ntp
     - firewalld
+    - dnsmasq
 
 - name: disable selinux
   selinux: policy=targeted state=permissive
@@ -42,5 +43,11 @@
 - name: disable firewalld
   service:
     name: firewalld
+    enabled: no
+    state: stopped
+
+- name: disable dnsmasq
+  service:
+    name: dnsmasq
     enabled: no
     state: stopped

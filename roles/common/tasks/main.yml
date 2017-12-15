@@ -28,12 +28,6 @@
 - name: create group 'nogroup'
   group: name=nogroup state=present
 
-- name: disable IPv6 for all interfaces
-  sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
-
-- name: disable IPv6 for default interface
-  sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
-
 - name: enable ntpd
   service:
     name: ntpd

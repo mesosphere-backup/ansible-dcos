@@ -1,8 +1,0 @@
----
-# This playbook installs the master nodes
-
-- name: install master
-  shell: bash dcos_install.sh master
-  args:
-    chdir: "{{ path_tmp }}"
-  ignore_errors: yes

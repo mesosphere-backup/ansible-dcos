@@ -7,11 +7,33 @@
 - name: download installation file from the bootstrap
   get_url: url="http://{{ bootstrap_ip }}:{{ port_webserver }}/dcos_install.sh" dest={{ path_tmp }}/dcos_install.sh mode=0440 force=yes
 
-- import_tasks: master.yml
-  when: "'masters' in group_names"
+- name: check if already installed
+  find:
+    paths: /opt/mesosphere
+    file_type: any
+    patterns: "*"
+  register: currently_installed
 
-- import_tasks: agent.yml
-  when: "'agents' in group_names"
+- name: install master
+  shell: bash dcos_install.sh master
+  args:
+    chdir: "{{ path_tmp }}"
+  when:
+    - currently_installed.matched|int == 0
+    - "'masters' in group_names"
 
-- import_tasks: agent_public.yml
-  when: "'agents_public' in group_names"
+- name: install agent
+  shell: bash dcos_install.sh slave
+  args:
+    chdir: "{{ path_tmp }}"
+  when:
+    - currently_installed.matched|int == 0
+    - "'agents' in group_names"
+
+- name: install public agent
+  shell: bash dcos_install.sh slave_public
+  args:
+    chdir: "{{ path_tmp }}"
+  when:
+    - currently_installed.matched|int == 0
+    - "'agents_public' in group_names"

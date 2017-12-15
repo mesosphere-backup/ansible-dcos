@@ -22,6 +22,7 @@ dns_search: {{ dns_search }}
 ip_detect_public_filename: /genconf/ip-detect-public
 
 {% if enterprise_dcos == true %}
+fault_domain_enabled: true
 superuser_username: {{ superuser_username }}
 superuser_password_hash: {{ superuser_password_hash }}
 customer_key: {{ customer_key }}

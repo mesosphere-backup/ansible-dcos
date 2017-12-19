@@ -44,7 +44,7 @@ All documentation for this project is located in the [docs](docs/) directory at 
 [Apache Software License, Version 2.0](LICENSE).
 
 ## Acknowledgements
-  * Current maintainer: [Jan Repnak][github-jrx], [Rimas Mocevicius][github-rimusz]
+  * Current maintainers: [Jan Repnak][github-jrx], [Rimas Mocevicius][github-rimusz]
 
 [mesosphere-install]: https://docs.mesosphere.com/latest/installing/custom/advanced/
 [github-dcos]: https://github.com/dcos/dcos

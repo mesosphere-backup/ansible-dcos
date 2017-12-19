@@ -1,0 +1,17 @@
+---
+# This playbook upgrades all nodes
+
+- name: create temporary install directory
+  file: path={{ path_tmp }} state=directory mode=0755
+
+- name: download installation file from the bootstrap
+  get_url: url="http://{{ bootstrap_ip }}:{{ port_webserver }}/upgrade/latest/dcos_node_upgrade.sh" dest={{ path_tmp }}/dcos_node_upgrade.sh mode=0440 force=true
+
+- import_tasks: master.yml
+  when: "'masters' in group_names"
+
+- import_tasks: agent.yml
+  when: "'agents' in group_names"
+
+- import_tasks: agent.yml
+  when: "'agents_public' in group_names"

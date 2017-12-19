@@ -1,0 +1,46 @@
+---
+# This playbook contains common plays that will be run on all nodes.
+
+- name: update all packages
+  yum:
+    name: "*"
+    state: latest
+    exclude: docker-engine,docker-engine-selinux
+  when: system_updates
+
+- name: install system utilities
+  yum:
+    name: "{{ item }}"
+    state: latest
+  with_items:
+    - tar
+    - xz
+    - unzip
+    - curl
+    - ipset
+    - ntp
+    - firewalld
+
+- name: disable selinux
+  selinux: policy=targeted state=permissive
+
+- name: create group 'nogroup'
+  group: name=nogroup state=present
+
+- name: disable IPv6 for all interfaces
+  sysctl: name="net.ipv6.conf.all.disable_ipv6" value=1 sysctl_set=yes
+
+- name: disable IPv6 for default interface
+  sysctl: name="net.ipv6.conf.default.disable_ipv6" value=1 sysctl_set=yes
+
+- name: enable ntpd
+  service:
+    name: ntpd
+    enabled: yes
+    state: started
+
+- name: disable firewalld
+  service:
+    name: firewalld
+    enabled: no
+    state: stopped

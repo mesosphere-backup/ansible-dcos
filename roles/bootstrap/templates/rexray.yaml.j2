@@ -1,0 +1,13 @@
+rexray_config:
+  rexray:
+    loglevel: info
+    service: ebs
+  libstorage:
+    integration:
+      volume:
+        operations:
+          unmount:
+            ignoreusedcount: true
+    server:
+      tasks:
+        logTimeout: 5m

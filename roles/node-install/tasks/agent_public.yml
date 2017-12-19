@@ -1,0 +1,22 @@
+---
+# This playbook installs the public agents nodes
+
+- name: read availability zone
+  uri: url="http://169.254.169.254/latest/meta-data/placement/availability-zone" return_content=yes
+  register: az_id
+  tags: register
+  when: exhibitor == "aws_s3"
+
+- name: set mesos attribute for availability zone for public agent
+  lineinfile:
+    dest: /var/lib/dcos/mesos-slave-common
+    regexp: ^MESOS_ATTRIBUTES='az_id
+    line: "MESOS_ATTRIBUTES='az_id:{{ az_id.content }};public_ip:true;'"
+    create: yes
+  when: exhibitor == "aws_s3"
+
+- name: install public agent
+  shell: bash dcos_install.sh slave_public
+  args:
+    chdir: "{{ path_tmp }}"
+  ignore_errors: yes

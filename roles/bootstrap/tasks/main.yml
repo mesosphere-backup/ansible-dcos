@@ -1,0 +1,87 @@
+---
+# This playbook generates the DC/OS installation/configuration files
+
+- name: make sure docker-python RPM is not installed
+  yum:
+    name: docker-python
+    state: absent
+
+- name: make sure epel-release is installed
+  yum:
+    name: epel-release
+    state: present
+
+- name: make sure pip is installed
+  yum:
+    name: python-pip
+    state: present
+
+- name: make sure required PyPi packages are installed
+  pip: name={{ item }} state=present
+  with_items:
+    - docker-py==1.10.6
+
+- name: stop web server
+  docker_container:
+    name: dcos_nginx
+    state: absent
+
+- name: clear install directory
+  file: path={{ path_bootstrap }} state=absent
+
+- name: create install directory
+  file: path={{ path_bootstrap }} state=directory mode=0755
+
+- name: create install directory/genconf
+  file: path={{ path_bootstrap }}/genconf/ state=directory mode=0755
+
+- name: download installation file
+  get_url: url="{{ dcos_download }}" dest={{ path_bootstrap }}/dcos_generate_config.sh mode=0440 force=yes
+
+- name: set IP detection script for AWS
+  template: src=ip-detect-aws.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect == "aws"
+
+- name: set Public IP detection script for AWS
+  template: src=ip-detect-public-aws.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
+  when: ip_detect == "aws"
+
+- name: set IP detection script for GCE
+  template: src=ip-detect-gce.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect == "gce"
+
+- name: set IP detection script for eth0
+  template: src=ip-detect-eth0.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect == "eth0"
+
+- name: set IP detection script for eth1
+  template: src=ip-detect-eth1.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect == "eth1"
+
+- name: generate DC/OS configuration with exhibitor backend static
+  template: src=config-static.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
+  when: exhibitor == "static"
+
+- name: generate DC/OS configuration with exhibitor backend AWS S3
+  template: src=config-aws_s3.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
+  when: exhibitor == "aws_s3"
+
+- name: generate DC/OS bootstrap files
+  shell: "bash dcos_generate_config.sh"
+  args:
+    chdir: "{{ path_bootstrap }}"
+  when: upgrade == false
+
+- import_tasks: upgrade.yml
+  when: upgrade == true
+
+- name: start web server to serve the bootstrap files
+  docker_container:
+    name: dcos_nginx
+    image: nginx
+    state: started
+    recreate: yes
+    ports:
+    - "{{ port_webserver }}:80"
+    volumes:
+    - "{{ path_bootstrap }}/genconf/serve:/usr/share/nginx/html:ro"

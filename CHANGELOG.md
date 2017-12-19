@@ -1,5 +1,12 @@
 # Changelog
 
+## v0.5.0-dcos-1.10
+
+* Installs and disables dnsmasq
+* Disables source/dest for AWS instances check in order to get CNI/Calico working properly
+* Tested with DC/OS 1.10.2
+* Migrated repo to https://github.com/dcos-labs/terraform-ansible-dcos
+
 ## v0.4.0-alpha
 
 * #5 Adds Dynamic Inventory to read from Terraform state

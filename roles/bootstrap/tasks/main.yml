@@ -1,7 +1,11 @@
 ---
 # This playbook generates the DC/OS installation/configuration files
 
+<<<<<<< HEAD
 - name: make sure docker-python is not installed via yum
+=======
+- name: make sure docker-python RPM is not installed
+>>>>>>> 6cb1a36887eb2a51f440599f7a0b0aa5cc1a5139
   yum:
     name: docker-python
     state: absent
@@ -16,8 +20,20 @@
     name: python-pip
     state: present
 
+<<<<<<< HEAD
 - name: make sure docker-py is installed via pip
   pip: name="docker-py==1.10.6" state=present
+=======
+- name: make sure required PyPi packages are installed
+  pip: name={{ item }} state=present
+  with_items:
+    - docker-py==1.10.6
+
+- name: stop web server
+  docker_container:
+    name: dcos_nginx
+    state: absent
+>>>>>>> 6cb1a36887eb2a51f440599f7a0b0aa5cc1a5139
 
 - name: clear install directory
   file: path={{ path_bootstrap }} state=absent
@@ -74,7 +90,10 @@
     image: nginx
     state: started
     recreate: yes
+<<<<<<< HEAD
     restart: yes
+=======
+>>>>>>> 6cb1a36887eb2a51f440599f7a0b0aa5cc1a5139
     ports:
     - "{{ port_webserver }}:80"
     volumes:

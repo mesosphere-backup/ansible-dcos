@@ -1,5 +1,12 @@
 ## Steps for manual installation (not using terraform)
 
+With the following guide, you are able to install a DC/OS cluster on premises. You need the Ansible tool installed.
+On MacOS, you can use [brew](https://brew.sh/) for that.
+
+```
+brew install ansible
+```
+
 - Execute `ssh-add {keypair}.pem` to be able to access your cluster nodes via SSH
 
 - Copy `./hosts.example.yaml` to `./hosts.yaml` and fill in the public IP addresses of your cluster so that Ansible can reach them and additionally set for the variables `bootstrap_ip` and `master_list` the private/internal IP addresses for cluster-internal communication. For example:

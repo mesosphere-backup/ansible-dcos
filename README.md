@@ -45,7 +45,10 @@ Add DC/OS agents:
 All documentation for this project is located in the [docs](docs/) directory at the root of this repository.
 
 ## Acknowledgements
-  * Current maintainers: [Jan Repnak][github-jrx], [Rimas Mocevicius][github-rimusz]
+
+Current maintainers:
+* [Jan Repnak][github-jrx]
+* [Rimas Mocevicius][github-rimusz]
 
 ## Roadmaps
 

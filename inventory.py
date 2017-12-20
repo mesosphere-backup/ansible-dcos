@@ -70,23 +70,23 @@ class TerraformInventory(object):
                 self.push_child(self.inventory, 'common', 'agents_public')
 
             # Add variables
-            elif entry == 'bootstrap_private_ips':
-                self.push_var(self.inventory, 'common', {"bootstrap_ip": terraform_data['bootstrap_private_ips']['value'][0]})
+            elif entry == 'Bootstrap Private IP Address':
+                self.push_var(self.inventory, 'common', {"bootstrap_ip": terraform_data['Bootstrap Private IP Address']['value']})
 
-            elif entry == 'master_private_ips':
-                self.push_var(self.inventory, 'common', {"master_list": terraform_data['master_private_ips']['value']})
+            elif entry == 'Mesos Master Private IP':
+                self.push_var(self.inventory, 'common', {"master_list": terraform_data['Mesos Master Private IP']['value']})
 
-            elif entry == 'dns':
-                self.push_var(self.inventory, 'common', {"resolvers": [ terraform_data['dns']['value'] ]})
+            elif entry == 'DNS Resolvers':
+                self.push_var(self.inventory, 'common', {"resolvers": terraform_data['DNS Resolvers']['value'] })
 
-            elif entry == 'dns_search':
-                self.push_var(self.inventory, 'common', {"dns_search": terraform_data['dns_search']['value'] })
+            elif entry == 'DNS Search':
+                self.push_var(self.inventory, 'common', {"dns_search": terraform_data['DNS Search']['value'] })
 
-            elif entry == 'lb_internal_masters':
-                self.push_var(self.inventory, 'common', {"exhibitor_address": terraform_data['lb_internal_masters']['value'] })
+            elif entry == 'Internal Master ELB Address':
+                self.push_var(self.inventory, 'common', {"exhibitor_address": terraform_data['Internal Master ELB Address']['value'] })
 
-            elif entry == 'prefix':
-                self.push_var(self.inventory, 'common', {"s3_prefix": terraform_data['prefix']['value']})
+            elif entry == 'Cluster Prefix':
+                self.push_var(self.inventory, 'common', {"s3_prefix": terraform_data['Cluster Prefix']['value']})
 
 
             # Add defaults

@@ -118,13 +118,13 @@ ansible-playbook -i inventory.py plays/install.yml
 If the installation was successful. You should be able to reach the Master load balancer. You can find the URL of the Master LB with the following command:
 
 ```
-terraform output lb_external_masters
+terraform output "Master ELB Address"
 ```
 
 The terraform script also created a load balancer for the public agents:
 
 ```
-terraform output lb_external_agents
+terraform output "Public Agent ELB Address"
 ```
 
 ## Destroy the cluster

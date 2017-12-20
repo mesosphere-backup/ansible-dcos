@@ -9,6 +9,12 @@ brew install ansible
 
 ## Setup infrastructure
 
+**Pull down the DC/OS terraform scripts below**
+
+```bash
+terraform init -from-module github.com/jrx/terraform-dcos//aws
+```
+
 **Configure your AWS ssh Keys**
 
 In the `variable.tf` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
@@ -18,6 +24,7 @@ When you have your key available, you can use ssh-add.
 ```bash
 ssh-add ~/.ssh/path_to_you_key.pem
 ```
+
 **Configure your IAM AWS Keys**
 
 You will need your AWS aws_access_key_id and aws_secret_access_key. If you dont have one yet, you can get them from the AWS documentation [here](
@@ -33,12 +40,6 @@ aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 ```
 
 ### Example Terraform Deployments
-
-**Pull down the DC/OS terraform scripts below**
-
-```bash
-terraform init -from-module github.com/jrx/terraform-dcos//aws
-```
 
 When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
@@ -66,7 +67,7 @@ $ cat desired_cluster_profile
 num_of_masters = "1"
 num_of_private_agents = "2"
 num_of_public_agents = "1"
-os = "centos_7.4"
+os = "centos_7.3"
 state = "none"
 ```
 

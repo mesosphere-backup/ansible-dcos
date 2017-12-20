@@ -9,63 +9,65 @@ brew install ansible
 
 ## Setup infrastructure
 
-Start by coping the AWS example template to the root directory:
+**Configure your AWS ssh Keys**
 
+In the `variable.tf` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
+
+When you have your key available, you can use ssh-add.
+
+```bash
+ssh-add ~/.ssh/path_to_you_key.pem
 ```
-cp terraform/aws.cluster.tf ./cluster.tf
-```
+**Configure your IAM AWS Keys**
 
-You can now edit the variables inside of the file `cluster.tf` to change the configuration of the machines.
+You will need your AWS aws_access_key_id and aws_secret_access_key. If you dont have one yet, you can get them from the AWS documentation [here](
+http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). When you finally get them, you can install it in your home directory. The default location is `$HOME/.aws/credentials` on Linux and OS X, or `"%USERPROFILE%\.aws\credentials"` for Windows users.
 
-In the following are some variables listed for that you should change the `default` values.
+Here is an example of the output when you're done:
 
-Define a prefix name for your cluster that is unique. So you are able to start more than one DC/OS cluster inside of your AWS account:
-
-```
-variable "prefix" {
-  description = "Used for naming instances in AWS (e.g. my-dcos)"
-  default = "ansible-dcos-01"
-}
-```
-
-Put in your AWS credentials in order that Terraform is able to access the AWS APIs:
-
-```
-variable "aws_access_key_id" {
-  description = "AWS Access Key ID"
-  default = "YOUR_AWS_ACCESS_KEY_ID"
-}
-
-variable "aws_secret_access_key" {
-  description = "AWS Secret Access Key"
-  default = "YOUR_AWS_SECRET_ACCESS_KEY"
-}
+```bash
+$ cat ~/.aws/credentials
+[default]
+aws_access_key_id = ACHEHS71DG712w7EXAMPLE
+aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 ```
 
-Define the name of SSH Key to access the created machines.
+### Example Terraform Deployments
 
-```
-variable "ssh_key_name" {
-  description = "Name of existing AWS key pair to use (e.g. default)"
-  default = "YOURKEYNAME"
-}
-```
+**Pull down the DC/OS terraform scripts below**
 
-You can also restrict the access to various DC/OS HTTP endpoints by defining an IP range for example from your office.
-
-```
-variable "admin_ip" {
-  description = "Restrict access to the cluster with an IP range (e.g. 1.2.3.4/32)"
-  default = ["0.0.0.0/0"]
-}
+```bash
+terraform init -from-module github.com/jrx/terraform-dcos//aws
 ```
 
-The first thing to run is the Terraform script to deploy the cluster components:
+When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
+For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile`:
+
+```bash
+$ cat desired_cluster_profile
+num_of_masters = "1"
+num_of_private_agents = "2"
+num_of_public_agents = "1"
+os = "centos_7.3"
+state = "none"
 ```
-terraform init
-terraform get
-terraform apply
+
+You can apply the profile with Terraform while referencing:
+
+```bash
+terraform apply -var-file desired_cluster_profile
+```
+
+When we view the file, you can see how you can save your state of your cluster:
+
+```bash
+$ cat desired_cluster_profile
+num_of_masters = "1"
+num_of_private_agents = "2"
+num_of_public_agents = "1"
+os = "centos_7.4"
+state = "none"
 ```
 
 ## Install DC/OS

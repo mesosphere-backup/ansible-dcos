@@ -50,23 +50,23 @@ class TerraformInventory(object):
         for entry in terraform_data:
 
             # Add group bootstraps
-            if entry == 'bootstrap_public_ips':
-                self.push_hosts(self.inventory, 'bootstraps', terraform_data['bootstrap_public_ips']['value'])
+            if entry == 'Bootstrap Public IP Address':
+                self.push_hosts(self.inventory, 'bootstraps', terraform_data['Bootstrap Public IP Address']['value'].split())
                 self.push_child(self.inventory, 'common', 'bootstraps')
 
             # Add group masters
-            if entry == 'master_public_ips':
-                self.push_hosts(self.inventory, 'masters', terraform_data['master_public_ips']['value'])
+            if entry == 'Mesos Master Public IP':
+                self.push_hosts(self.inventory, 'masters', terraform_data['Mesos Master Public IP']['value'])
                 self.push_child(self.inventory, 'common', 'masters')
 
             # Add group agents
-            if entry == 'agent_public_ips':
-                self.push_hosts(self.inventory, 'agents', terraform_data['agent_public_ips']['value'])
+            if entry == 'Private Agent Public IP Address':
+                self.push_hosts(self.inventory, 'agents', terraform_data['Private Agent Public IP Address']['value'])
                 self.push_child(self.inventory, 'common', 'agents')
 
             # Add group public agents
-            if entry == 'public_agent_public_ips':
-                self.push_hosts(self.inventory, 'agents_public', terraform_data['public_agent_public_ips']['value'])
+            if entry == 'Public Agent Public IP Address':
+                self.push_hosts(self.inventory, 'agents_public', terraform_data['Public Agent Public IP Address']['value'])
                 self.push_child(self.inventory, 'common', 'agents_public')
 
             # Add variables

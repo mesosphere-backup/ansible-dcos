@@ -13,10 +13,13 @@ group_vars/all
 # terraform
 .terraform
 /*.tf
+/*.tf.disabled
 *.tfstate
 *.tfstate.backup
 terraform.tfvars
 .terraform.tfstate.lock.info
+modules/
+scripts/
 
 # terraform gce
 /account.json

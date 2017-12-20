@@ -7,9 +7,9 @@ On MacOS, you can use [brew](https://brew.sh/) for that.
 brew install ansible
 ```
 
-- Execute `ssh-add {keypair}.pem` to be able to access your cluster nodes via SSH
+Execute `ssh-add {keypair}.pem` to be able to access your cluster nodes via SSH
 
-- Copy `./hosts.example.yaml` to `./hosts.yaml` and fill in the public IP addresses of your cluster so that Ansible can reach them and additionally set for the variables `bootstrap_ip` and `master_list` the private/internal IP addresses for cluster-internal communication. For example:
+Copy `./hosts.example.yaml` to `./hosts.yaml` and fill in the public IP addresses of your cluster so that Ansible can reach them and additionally set for the variables `bootstrap_ip` and `master_list` the private/internal IP addresses for cluster-internal communication. For example:
 
 ```
 ---

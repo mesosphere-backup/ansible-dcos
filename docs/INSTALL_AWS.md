@@ -9,13 +9,13 @@ brew install ansible
 
 ## Setup infrastructure
 
-**Pull down the DC/OS terraform scripts below**
+### Pull down the DC/OS terraform scripts below
 
 ```bash
 terraform init -from-module github.com/jrx/terraform-dcos//aws
 ```
 
-**Configure your AWS ssh Keys**
+### Configure your AWS ssh Keys
 
 In the `variable.tf` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
 
@@ -25,7 +25,7 @@ When you have your key available, you can use ssh-add.
 ssh-add ~/.ssh/path_to_you_key.pem
 ```
 
-**Configure your IAM AWS Keys**
+### Configure your IAM AWS Keys
 
 You will need your AWS aws_access_key_id and aws_secret_access_key. If you dont have one yet, you can get them from the AWS documentation [here](
 http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). When you finally get them, you can install it in your home directory. The default location is `$HOME/.aws/credentials` on Linux and OS X, or `"%USERPROFILE%\.aws\credentials"` for Windows users.
@@ -48,7 +48,7 @@ For example, you can see how you can save your state of your cluster in a file c
 ```bash
 $ cat desired_cluster_profile
 num_of_masters = "1"
-num_of_private_agents = "2"
+num_of_private_agents = "3"
 num_of_public_agents = "1"
 os = "centos_7.3"
 state = "none"

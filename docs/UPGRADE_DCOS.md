@@ -1,4 +1,4 @@
-# Upgrade DC/OS
+# Steps for DC/OS upgrade On-Premises and on Cloud Providers
 
 In order to upgrade a cluster, you have to set the download URL for the target version of DC/OS inside of the file `group_vars/all`. So for example if you want to upgrade to DC/OS 1.10.2, specify the download URL for this version like this:
 

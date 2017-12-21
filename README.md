@@ -2,7 +2,7 @@
 
 ## Overview
 
-Infrastructure for Cloud Providers is bootstraped with Terraform
+Infrastructure for Cloud Providers is bootstrapped with Terraform.
 
 Ansible playbook installs Open or Enterprise DC/OS and is supposed to run on CentOS 7. The installation steps are based on the [Advanced Installation Guide][mesosphere-install] of DC/OS.
 

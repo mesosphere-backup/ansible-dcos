@@ -1,4 +1,4 @@
-## Steps for manual (only Ansible) installation
+# Steps for DC/OS installation with Ansible On-Premises
 
 With the following guide, you are able to install a DC/OS cluster on premises. You need the Ansible tool installed.
 On MacOS, you can use [brew](https://brew.sh/) for that.

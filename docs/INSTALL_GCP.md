@@ -9,19 +9,19 @@ brew install ansible
 
 ## Setup infrastructure
 
-**Pull down the DC/OS terraform scripts below**
+### Pull down the DC/OS terraform scripts below
 
 ```bash
 terraform init -from-module github.com/jrx/terraform-dcos//gcp
 ```
 
-## Prerequisites
+### Prerequisites
 - [Terraform 0.11.x](https://www.terraform.io/downloads.html)
 - GCP Cloud Credentials. _[configure via: `gcloud auth login`](https://cloud.google.com/sdk/downloads)_
 - SSH Key
 - Existing Google Project.
 
-## Install Google SDK
+### Install Google SDK
 
 Run this command to authenticate to the Google Provider. This will bring down your keys locally on the machine for terraform to use.
 
@@ -30,7 +30,7 @@ $ gcloud auth login
 $ gcloud auth application-default login
 ```
 
-## Terraform variables
+### Terraform variables
 
 The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
 
@@ -38,7 +38,7 @@ The setup variables for Terraform are defined in the file `desired_cluster_profi
 cp desired_cluster_profile.example desired_cluster_profile
 ```
 
-## Configure your GCP SSH Keys
+### Configure your GCP SSH Keys
 
 Set the public key that you will be you will be using to your ssh-agent and set public key in terraform. This will allow you to log into to the cluster after DC/OS is deployed and also helps Terraform setup your cluster at deployment time.
 
@@ -51,7 +51,7 @@ Add your ssh key to `desired_cluster_profile` file:
 gce_ssh_pub_key_file = "INSERT_PUBLIC_KEY_PATH_HERE"
 ```
 
-## Configure a Pre-existing GCP Project
+### Configure a Pre-existing GCP Project
 
 ansible-dcos assumes a project already exist in GCP to start deploying your resources against.
 
@@ -69,7 +69,7 @@ For example, you can see how you can save your state of your cluster in a file c
 ```bash
 $ cat desired_cluster_profile
 num_of_masters = "1"
-num_of_private_agents = "2"
+num_of_private_agents = "3"
 num_of_public_agents = "1"
 os = "centos_7.3"
 state = "none"

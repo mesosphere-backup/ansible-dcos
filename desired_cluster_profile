@@ -1,5 +1,0 @@
-num_of_masters = "1"
-num_of_private_agents = "2"
-num_of_public_agents = "1"
-os = "centos_7.3"
-state = "none"

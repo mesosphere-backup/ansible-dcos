@@ -50,48 +50,46 @@ class TerraformInventory(object):
         for entry in terraform_data:
 
             # Add group bootstraps
-            if entry == 'Bootstrap Public IP Address':
-                self.push_hosts(self.inventory, 'bootstraps', terraform_data['Bootstrap Public IP Address']['value'].split())
+            if entry == 'bootstrap_public_ips':
+                self.push_hosts(self.inventory, 'bootstraps', terraform_data['bootstrap_public_ips']['value'].split())
                 self.push_child(self.inventory, 'common', 'bootstraps')
 
             # Add group masters
-            if entry == 'Mesos Master Public IP':
-                self.push_hosts(self.inventory, 'masters', terraform_data['Mesos Master Public IP']['value'])
+            elif entry == 'master_public_ips':
+                self.push_hosts(self.inventory, 'masters', terraform_data['master_public_ips']['value'])
                 self.push_child(self.inventory, 'common', 'masters')
 
             # Add group agents
-            if entry == 'Private Agent Public IP Address':
-                self.push_hosts(self.inventory, 'agents', terraform_data['Private Agent Public IP Address']['value'])
+            elif entry == 'agent_public_ips':
+                self.push_hosts(self.inventory, 'agents', terraform_data['agent_public_ips']['value'])
                 self.push_child(self.inventory, 'common', 'agents')
 
             # Add group public agents
-            if entry == 'Public Agent Public IP Address':
-                self.push_hosts(self.inventory, 'agents_public', terraform_data['Public Agent Public IP Address']['value'])
+            elif entry == 'public_agent_public_ips':
+                self.push_hosts(self.inventory, 'agents_public', terraform_data['public_agent_public_ips']['value'])
                 self.push_child(self.inventory, 'common', 'agents_public')
 
             # Add variables
-            elif entry == 'Bootstrap Private IP Address':
-                self.push_var(self.inventory, 'common', {"bootstrap_ip": terraform_data['Bootstrap Private IP Address']['value']})
+            elif entry == 'bootstrap_private_ips':
+                self.push_var(self.inventory, 'common', {"bootstrap_ip": terraform_data['bootstrap_private_ips']['value']})
 
-            elif entry == 'Mesos Master Private IP':
-                self.push_var(self.inventory, 'common', {"master_list": terraform_data['Mesos Master Private IP']['value']})
+            elif entry == 'master_private_ips':
+                self.push_var(self.inventory, 'common', {"master_list": terraform_data['master_private_ips']['value']})
 
-            elif entry == 'DNS Resolvers':
-                self.push_var(self.inventory, 'common', {"resolvers": terraform_data['DNS Resolvers']['value'] })
+            elif entry == 'dns_resolvers':
+                self.push_var(self.inventory, 'common', {"resolvers": terraform_data['dns_resolvers']['value'] })
 
-            elif entry == 'DNS Search':
-                self.push_var(self.inventory, 'common', {"dns_search": terraform_data['DNS Search']['value'] })
+            elif entry == 'dns_search':
+                self.push_var(self.inventory, 'common', {"dns_search": terraform_data['dns_search']['value'] })
 
-            elif entry == 'Internal Master ELB Address':
-                self.push_var(self.inventory, 'common', {"exhibitor_address": terraform_data['Internal Master ELB Address']['value'] })
+            elif entry == 'lb_internal_masters':
+                self.push_var(self.inventory, 'common', {"exhibitor_address": terraform_data['lb_internal_masters']['value'] })
 
-            elif entry == 'Cluster Prefix':
-                self.push_var(self.inventory, 'common', {"s3_prefix": terraform_data['Cluster Prefix']['value']})
+            elif entry == 'cluster_prefix':
+                self.push_var(self.inventory, 'common', {"s3_prefix": terraform_data['cluster_prefix']['value']})
 
-
-            # Add defaults
-            self.push_var(self.inventory, 'common', {"ip_detect": "aws"})
-
+            elif entry == 'ip_detect':
+                self.push_var(self.inventory, 'common', {"ip_detect": terraform_data['ip_detect']['value']})
 
     def json_format_dict(self, data, pretty=False):
         ''' Converts a dict to a JSON object and dumps it as a formatted string '''

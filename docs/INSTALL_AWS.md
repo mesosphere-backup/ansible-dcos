@@ -37,6 +37,7 @@ aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 **Pull down the DC/OS terraform scripts below**
 
 ```bash
+cp terraform/override.aws.tf ./override.tf
 terraform init -from-module github.com/jrx/terraform-dcos//aws
 ```
 

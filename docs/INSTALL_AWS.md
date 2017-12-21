@@ -12,8 +12,8 @@ brew install ansible
 ### Pull down the DC/OS terraform scripts below
 
 ```bash
-cp terraform/override.aws.tf ./override.tf
 terraform init -from-module github.com/jrx/terraform-dcos//aws
+cp terraform/override.aws.tf ./override.tf
 ```
 
 ### Configure your AWS ssh Keys

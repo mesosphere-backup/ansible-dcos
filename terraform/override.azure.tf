@@ -1,5 +1,3 @@
-# Common
-
 output "dns_resolvers" {
   value = "${var.dcos_resolvers}"
 }
@@ -7,8 +5,6 @@ output "dns_resolvers" {
 output "cluster_prefix" {
   value = "${data.template_file.cluster-name.rendered}"
 }
-
-# Azure
 
 output "bootstrap_public_ips" {
   value = "${azurerm_public_ip.bootstrap_public_ip.fqdn}"

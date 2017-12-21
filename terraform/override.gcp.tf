@@ -1,5 +1,3 @@
-# Common
-
 output "dns_resolvers" {
   value = "${var.dcos_resolvers}"
 }
@@ -8,11 +6,8 @@ output "cluster_prefix" {
   value = "${data.template_file.cluster-name.rendered}"
 }
 
-# Azure
-
 output "bootstrap_public_ips" {
   value = "${google_compute_instance.bootstrap.network_interface.0.access_config.0.assigned_nat_ip}"
-
 }
 
 output "bootstrap_private_ips" {

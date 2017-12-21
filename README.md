@@ -31,6 +31,7 @@ Here are guides to follow to install the DC/OS cluster:
 
 * [On-Premises with Ansible](docs/INSTALL_ONPREM.md)
 * [On AWS with Terraform/Ansible](docs/INSTALL_AWS.md)
+* [On GCP with Terraform/Ansible](docs/INSTALL_GCP.md)
 
 ## Operational tasks
 

@@ -43,7 +43,7 @@ aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 
 When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
-For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile`:
+For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile` (make a copy from `desired_cluster_profile.example`):
 
 ```bash
 $ cat desired_cluster_profile

@@ -30,6 +30,14 @@ $ gcloud auth login
 $ gcloud auth application-default login
 ```
 
+## Terraform variables
+
+The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
+
+```
+cp desired_cluster_profile.example desired_cluster_profile
+```
+
 ## Configure your GCP SSH Keys
 
 Set the public key that you will be you will be using to your ssh-agent and set public key in terraform. This will allow you to log into to the cluster after DC/OS is deployed and also helps Terraform setup your cluster at deployment time.

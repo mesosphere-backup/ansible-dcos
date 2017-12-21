@@ -139,5 +139,5 @@ terraform output "Public Agent ELB Address"
 To delete the AWS stack run the command:
 
 ```
-terraform destroy
+terraform destroy -var-file desired_cluster_profile
 ```

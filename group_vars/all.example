@@ -10,7 +10,7 @@ dcos_download: https://downloads.dcos.io/dcos/stable/1.10.2/dcos_generate_config
 system_updates: true
 
 # Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static
+# options: aws_s3, static, azure
 exhibitor: static
 
 # AWS S3 Credentials (only needed for exhibitor: aws_s3)
@@ -18,6 +18,12 @@ aws_access_key_id: "******"
 aws_secret_access_key: "******"
 aws_region: us-west-2
 s3_bucket: bucket-name
+
+# Azure Credentials (only needed for exhibitor: azure)
+exhibitor_azure_account_name: "******"
+exhibitor_azure_account_key: "******"
+exhibitor_azure_prefix: ""
+exhibitor_azure_container: dcos-exhibitor
 
 # Enterprise or OSS?
 enterprise_dcos: false

@@ -33,7 +33,9 @@ Here are guides to follow to install the DC/OS cluster:
 
 * [On-Premises with Ansible](docs/INSTALL_ONPREM.md)
 * [On AWS with Terraform/Ansible](docs/INSTALL_AWS.md)
+* [On Azure with Terraform/Ansible](docs/INSTALL_AZURE.md)
 * [On GCP with Terraform/Ansible](docs/INSTALL_GCP.md)
+
 
 ## Operational tasks
 
@@ -57,8 +59,8 @@ Current maintainers:
 
   - [X] Support for On-Premises
   - [X] Support for AWS
-  - [X] Support for GCP
   - [ ] Support for Azure
+  - [X] Support for GCP
 
 ## License
 [DC/OS][github-dcos], along with this project, are both open source software released under the

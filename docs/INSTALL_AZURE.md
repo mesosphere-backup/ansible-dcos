@@ -1,6 +1,6 @@
-# Steps for DC/OS installation with Terraform and Ansible on AWS
+# Steps for DC/OS installation with Terraform and Ansible on Azure
 
-With the following guide, you are able to install a DC/OS cluster on AWS. You need the tools Terraform and Ansible installed. On MacOS, you can use [brew](https://brew.sh/) for that.
+With the following guide, you are able to install a DC/OS cluster on Azure. You need the tools Terraform and Ansible installed. On MacOS, you can use [brew](https://brew.sh/) for that.
 
 ```
 brew install terraform
@@ -12,14 +12,14 @@ brew install ansible
 ### Pull down the DC/OS Terraform scripts below
 
 ```bash
-terraform init -from-module github.com/jrx/terraform-dcos//aws
+terraform init -from-module github.com/jrx/terraform-dcos//azure
 ```
 
 ### Terraform variables
 
 Some Terraform variables need to be overwritten, copy the `override.tf` file, by running:
 ```bash
-cp terraform/override.aws.tf ./override.tf
+cp terraform/override.azure.tf ./override.tf
 ```
 
 The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
@@ -27,28 +27,40 @@ The setup variables for Terraform are defined in the file `desired_cluster_profi
 cp desired_cluster_profile.example desired_cluster_profile
 ```
 
-### Configure your AWS ssh Keys
+### Configure your Azure ssh Keys
 
-In the `variables.tf` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
-
-When you have your key available, you can use ssh-add.
+Set the private key that you will be you will be using to your ssh-agent and set public key in terraform.
 
 ```bash
-ssh-add ~/.ssh/path_to_you_key.pem
+ssh-add ~/.ssh/your_private_azure_key.pem
 ```
 
-### Configure your IAM AWS Keys
+Add your Azure ssh key to `desired_cluster_profile` file:
+```
+ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
+```
 
-You will need your AWS aws_access_key_id and aws_secret_access_key. If you dont have one yet, you can get them from the AWS documentation [here](
-http://docs.aws.amazon.com/IAM/latest/UserGuide/id_credentials_access-keys.html). When you finally get them, you can install it in your home directory. The default location is `$HOME/.aws/credentials` on Linux and OS X, or `"%USERPROFILE%\.aws\credentials"` for Windows users.
+### Configure your Azure ID Keys
 
-Here is an example of the output when you're done:
+Follow the Terraform instructions [here](https://www.terraform.io/docs/providers/azurerm/#creating-credentials) to setup your Azure credentials to provide to terraform.
+
+When you've successfully retrieved your output of `az account list`, create a source file to easily run your credentials in the future.
+
 
 ```bash
-$ cat ~/.aws/credentials
-[default]
-aws_access_key_id = ACHEHS71DG712w7EXAMPLE
-aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
+$ cat ~/.azure/credentials
+export ARM_TENANT_ID=45ef06c1-a57b-40d5-967f-88cf8example
+export ARM_CLIENT_SECRET=Lqw0kyzWXyEjfha9hfhs8dhasjpJUIGQhNFExAmPLE
+export ARM_CLIENT_ID=80f99c3a-cd7d-4931-9405-8b614example
+export ARM_SUBSCRIPTION_ID=846d9e22-a320-488c-92d5-41112example
+```
+
+### Source Credentials
+
+Set your environment variables by sourcing the files before you run any terraform commands.
+
+```bash
+$ source ~/.
 ```
 
 ### Example Terraform Deployments
@@ -90,23 +102,23 @@ The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the
 cp group_vars/all.example group_vars/all
 ```
 
-The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for AWS, you should change at least the following variables:
+The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for Azure, you should change at least the following variables:
 
-Change the exhibitor backend to `aws_s3`. So the master discovery is done by using an S3 bucket:
+Change the exhibitor backend to `azure`. So the master discovery is done by using an Azure shared storage:
 
 ```
 # Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static
-exhibitor: aws_s3
+# options: aws_s3, static, azure
+exhibitor: azure
 ```
-You also have to create an S3 bucket on your own and specify the AWS credentials, the bucket name, and the bucket region:
+You also have to fill Azure Storage Account Name, secret key, blob prefix and container:
 
 ```
-# AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: "YOUR_AWS_ACCESS_KEY_ID"
-aws_secret_access_key: "YOUR_AWS_SECRET_ACCESS_KEY"
-aws_region: YOUR_BUCKET_REGION
-s3_bucket: YOUR_BUCKET_NAME
+# Azure Credentials (only needed for exhibitor: azure)
+exhibitor_azure_account_name: "******"
+exhibitor_azure_account_key: "******"
+exhibitor_azure_prefix: ""
+exhibitor_azure_container: dcos-exhibitor
 ```
 
 Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
@@ -137,7 +149,7 @@ terraform output "Public Agent ELB Address"
 
 ## Destroy the cluster
 
-To delete the AWS stack run the command:
+To delete the Azure stack run the command:
 
 ```
 terraform destroy -var-file desired_cluster_profile

@@ -87,6 +87,7 @@ class TerraformInventory(object):
 
             elif entry == 'cluster_prefix':
                 self.push_var(self.inventory, 'common', {"s3_prefix": terraform_data['cluster_prefix']['value']})
+                self.push_var(self.inventory, 'common', {"exhibitor_azure_prefix": terraform_data['cluster_prefix']['value']})
 
             elif entry == 'ip_detect':
                 self.push_var(self.inventory, 'common', {"ip_detect": terraform_data['ip_detect']['value']})

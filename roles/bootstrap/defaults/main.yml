@@ -4,6 +4,7 @@ port_webserver: 8080
 upgrade: false
 
 s3_prefix: "ansible-dcos-exhibitor"
+exhibitor_azure_prefix: "ansible-dcos-exhibitor"
 
 cluster_name: demo
 dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh

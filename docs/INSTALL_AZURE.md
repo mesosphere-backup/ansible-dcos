@@ -60,7 +60,7 @@ export ARM_SUBSCRIPTION_ID=846d9e22-a320-488c-92d5-41112example
 Set your environment variables by sourcing the files before you run any terraform commands.
 
 ```bash
-$ source ~/.
+$ source ~/.azure/credentials
 ```
 
 ### Example Terraform Deployments
@@ -108,7 +108,7 @@ Change the exhibitor backend to `azure`. So the master discovery is done by usin
 
 ```
 # Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static, azure
+# options: static, aws_s3, azure
 exhibitor: azure
 ```
 You also have to fill Azure Storage Account Name, secret key, blob prefix and container:
@@ -117,8 +117,6 @@ You also have to fill Azure Storage Account Name, secret key, blob prefix and co
 # Azure Credentials (only needed for exhibitor: azure)
 exhibitor_azure_account_name: "******"
 exhibitor_azure_account_key: "******"
-exhibitor_azure_prefix: ""
-exhibitor_azure_container: dcos-exhibitor
 ```
 
 Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:

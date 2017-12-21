@@ -22,8 +22,6 @@ s3_bucket: bucket-name
 # Azure Credentials (only needed for exhibitor: azure)
 exhibitor_azure_account_name: "******"
 exhibitor_azure_account_key: "******"
-exhibitor_azure_prefix: ""
-exhibitor_azure_container: dcos-exhibitor
 
 # Enterprise or OSS?
 enterprise_dcos: false

@@ -1,0 +1,30 @@
+---
+bootstrap_url: http://{{ bootstrap_ip }}:{{ port_webserver }}
+cluster_name: '{{ cluster_name }}'
+
+exhibitor_storage_backend: azure
+exhibitor_address: {{ exhibitor_address }}
+exhibitor_azure_account_name: {{ exhibitor_azure_account_name }}
+exhibitor_azure_account_key: {{ exhibitor_azure_account_key }}
+exhibitor_azure_prefix: {{ exhibitor_azure_prefix }}
+master_discovery: master_http_loadbalancer
+num_masters: {{ groups['masters'] | length }}
+resolvers:
+{% for resolver in resolvers %}
+- {{ resolver }}{{ '\n' }}
+{%- endfor %}
+
+dns_search: {{ dns_search }}
+
+ip_detect_public_filename: /genconf/ip-detect-public
+
+{% if enterprise_dcos == true %}
+superuser_username: {{ superuser_username }}
+superuser_password_hash: {{ superuser_password_hash }}
+customer_key: {{ customer_key }}
+security: {{ security }}
+{% endif %}
+
+{% if rexray_config_method == 'file' %}
+{% include "rexray.yaml.j2" %}
+{% endif %}

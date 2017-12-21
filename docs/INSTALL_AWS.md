@@ -96,7 +96,7 @@ Change the exhibitor backend to `aws_s3`. So the master discovery is done by usi
 
 ```
 # Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static
+# options: static, aws_s3, azure
 exhibitor: aws_s3
 ```
 You also have to create an S3 bucket on your own and specify the AWS credentials, the bucket name, and the bucket region:

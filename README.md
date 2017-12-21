@@ -59,14 +59,14 @@ Current maintainers:
 
   - [X] Support for On-Premises
   - [X] Support for AWS
-  - [ ] Support for Azure
+  - [X] Support for Azure
   - [X] Support for GCP
 
 ## License
 [DC/OS][github-dcos], along with this project, are both open source software released under the
 [Apache Software License, Version 2.0](LICENSE).
 
-[mesosphere-install]: https://docs.mesosphere.com/latest/installing/custom/advanced/
+[mesosphere-install]: https://docs.mesosphere.com/1.10/installing/ent/custom/advanced/
 [github-dcos]: https://github.com/dcos/dcos
 [github-jrx]: https://github.com/jrx
 [github-rimusz]: https://github.com/rimusz

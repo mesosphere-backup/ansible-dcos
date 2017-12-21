@@ -71,6 +71,10 @@
   template: src=config-aws_s3.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
   when: exhibitor == "aws_s3"
 
+- name: generate DC/OS configuration with exhibitor backend Azure
+  template: src=config-azure.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
+  when: exhibitor == "azure"
+
 - name: generate DC/OS bootstrap files
   shell: "bash dcos_generate_config.sh"
   args:

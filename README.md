@@ -57,7 +57,7 @@ Current maintainers:
 
   - [X] Support for On-Premises
   - [X] Support for AWS
-  - [ ] Support for GCP (WIP)
+  - [X] Support for GCP
   - [ ] Support for Azure
 
 ## License

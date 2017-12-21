@@ -9,11 +9,22 @@ brew install ansible
 
 ## Setup infrastructure
 
-### Pull down the DC/OS terraform scripts below
+### Pull down the DC/OS Terraform scripts below
 
 ```bash
 terraform init -from-module github.com/jrx/terraform-dcos//aws
+```
+
+### Terraform variables
+
+Some Terraform variables need to be overwritten, copy the `override.tf` file, by running:
+```bash
 cp terraform/override.aws.tf ./override.tf
+```
+
+The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
+```bash
+cp desired_cluster_profile.example desired_cluster_profile
 ```
 
 ### Configure your AWS ssh Keys
@@ -44,7 +55,7 @@ aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 
 When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
-For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile` (make a copy from `desired_cluster_profile.example`):
+For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile`:
 
 ```bash
 $ cat desired_cluster_profile
@@ -55,7 +66,13 @@ os = "centos_7.3"
 state = "none"
 ```
 
-You can apply the profile with Terraform while referencing:
+You can plan the profile with Terraform while referencing:
+
+```bash
+terraform plan -var-file desired_cluster_profile
+```
+
+If you are happy with the changes, the you can apply the profile with Terraform while referencing:
 
 ```bash
 terraform apply -var-file desired_cluster_profile
@@ -92,7 +109,7 @@ aws_region: YOUR_BUCKET_REGION
 s3_bucket: YOUR_BUCKET_NAME
 ```
 
-Ansible also needs to know how to find the instances that got created via Terraform.  For that we you a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
+Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
 
 ```
 ansible all -i inventory.py -m ping

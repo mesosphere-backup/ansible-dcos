@@ -63,10 +63,18 @@ class TerraformInventory(object):
             elif entry == 'agent_public_ips':
                 self.push_hosts(self.inventory, 'agents', terraform_data['agent_public_ips']['value'])
                 self.push_child(self.inventory, 'common', 'agents')
+            # GCP
+            if entry == 'Mesos Agent Public IP':
+                self.push_hosts(self.inventory, 'agents', terraform_data['Mesos Agent Public IP']['value'])
+                self.push_child(self.inventory, 'common', 'agents')
 
             # Add group public agents
             elif entry == 'public_agent_public_ips':
                 self.push_hosts(self.inventory, 'agents_public', terraform_data['public_agent_public_ips']['value'])
+                self.push_child(self.inventory, 'common', 'agents_public')
+            # GCP
+            if entry == 'Mesos Public Agent Public IP':
+                self.push_hosts(self.inventory, 'agents_public', terraform_data['Mesos Public Agent Public IP']['value'])
                 self.push_child(self.inventory, 'common', 'agents_public')
 
             # Add variables

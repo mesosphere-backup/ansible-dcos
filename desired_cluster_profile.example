@@ -1,0 +1,7 @@
+num_of_masters = "1"
+num_of_private_agents = "3"
+num_of_public_agents = "1"
+os = "centos_7.3"
+state = "none"
+gce_ssh_pub_key_file = "YOUR_GCP_SSH_PUBLIC_KEY.pub"
+google_project = "YOUR_GCP_PROJECT"

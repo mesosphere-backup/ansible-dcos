@@ -1,4 +1,4 @@
-# Steps for DC/OS installation with Terraform/Ansible on AWS
+# Steps for DC/OS installation with Terraform and Ansible on AWS
 
 With the following guide, you are able to install a DC/OS cluster on AWS. You need the tools Terraform and Ansible installed. On MacOS, you can use [brew](https://brew.sh/) for that.
 
@@ -58,17 +58,6 @@ You can apply the profile with Terraform while referencing:
 
 ```bash
 terraform apply -var-file desired_cluster_profile
-```
-
-When we view the file, you can see how you can save your state of your cluster:
-
-```bash
-$ cat desired_cluster_profile
-num_of_masters = "1"
-num_of_private_agents = "2"
-num_of_public_agents = "1"
-os = "centos_7.3"
-state = "none"
 ```
 
 ## Install DC/OS

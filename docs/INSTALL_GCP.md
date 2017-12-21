@@ -1,4 +1,4 @@
-# Steps for DC/OS installation with Terraform/Ansible on AWS
+# Steps for DC/OS installation with Terraform and Ansible on GCP
 
 With the following guide, you are able to install a DC/OS cluster on GCP. You need the tools Terraform and Ansible installed. On MacOS, you can use [brew](https://brew.sh/) for that.
 
@@ -19,7 +19,7 @@ terraform init -from-module github.com/jrx/terraform-dcos//gcp
 - [Terraform 0.11.x](https://www.terraform.io/downloads.html)
 - GCP Cloud Credentials. _[configure via: `gcloud auth login`](https://cloud.google.com/sdk/downloads)_
 - SSH Key
-- Existing Google Project. Soon automated with Terraform using project creation as documented [here.](https://cloud.google.com/community/tutorials/managing-gcp-projects-with-terraform)
+- Existing Google Project.
 
 ## Install Google SDK
 
@@ -83,19 +83,6 @@ You can apply the profile with Terraform while referencing:
 terraform apply -var-file desired_cluster_profile
 ```
 
-When we view the file, you can see how you can save your state of your cluster:
-
-```bash
-$ cat desired_cluster_profile
-num_of_masters = "1"
-num_of_private_agents = "2"
-num_of_public_agents = "1"
-os = "centos_7.3"
-state = "none"
-gce_ssh_pub_key_file = "~/.ssh/your_private_key.pem"
-google_project = "massive-bliss-781"
-```
-
 ## Install DC/OS
 
 Once the components are created, we can run the Ansible script to install DC/OS on the instances.
@@ -136,7 +123,7 @@ terraform output "Public Agent ELB Address"
 
 ## Destroy the cluster
 
-To delete the AWS stack run the command:
+To delete the GCP stack run the command:
 
 ```
 terraform destroy -var-file desired_cluster_profile

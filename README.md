@@ -1,8 +1,10 @@
-# Deploy Open/EE DC/OS using Terraform/Ansible
+# Deploy DC/OS using Terraform and/or Ansible
 
 ## Overview
 
-This ansible playbook installs DC/OS and is supposed to run on CentOS 7. The installation steps are based on the [Advanced Installation Guide][mesosphere-install] of DC/OS.
+Infrastructure for Cloud Providers is bootstraped with Terraform
+
+Ansible playbook installs Open or Enterprise DC/OS and is supposed to run on CentOS 7. The installation steps are based on the [Advanced Installation Guide][mesosphere-install] of DC/OS.
 
 ## Getting Started
 
@@ -39,7 +41,7 @@ Upgrade the DC/OS cluster:
 * [Upgrade DC/OS](docs/UPGRADE_DCOS.md)
 
 Add DC/OS agents:
-* [Add DC/OS agents]() WIP
+* [Add DC/OS agents]() (WIP)
 
 ## Documentation
 
@@ -55,7 +57,7 @@ Current maintainers:
 
   - [X] Support for On-Premises
   - [X] Support for AWS
-  - [ ] Support for GCP
+  - [ ] Support for GCP (WIP)
   - [ ] Support for Azure
 
 ## License

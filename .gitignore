@@ -20,6 +20,8 @@ terraform.tfvars
 .terraform.tfstate.lock.info
 modules/
 scripts/
+desired_cluster_profile.tfvars.example
+desired_cluster_profile
 
 # terraform gce
 /account.json

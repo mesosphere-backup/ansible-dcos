@@ -39,9 +39,21 @@
   template: src=ip-detect-public-aws.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
   when: ip_detect == "aws"
 
-- name: set IP detection script for GCE
-  template: src=ip-detect-gce.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect == "gce"
+- name: set IP detection script for GCP
+  template: src=ip-detect-gcp.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect == "gcp"
+
+- name: set Public IP detection script for GCP
+  template: src=ip-detect-public-gcp.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
+  when: ip_detect == "gcp"
+
+- name: set IP detection script for Azure
+  template: src=ip-detect-azure.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect == "azure"
+
+- name: set Public IP detection script for Azure
+  template: src=ip-detect-public-azure.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
+  when: ip_detect == "azure"
 
 - name: set IP detection script for eth0
   template: src=ip-detect-eth0.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644

@@ -12,7 +12,7 @@ brew install ansible
 ### Pull down the DC/OS Terraform scripts below
 
 ```bash
-terraform init -from-module github.com/jrx/terraform-dcos//azure
+terraform init -from-module github.com/dcos/terraform-dcos//azure
 ```
 
 ### Terraform variables

@@ -27,7 +27,7 @@ $ gcloud auth application-default login
 ### Pull down the DC/OS Terraform scripts below
 
 ```bash
-terraform init -from-module github.com/jrx/terraform-dcos//gcp
+terraform init -from-module github.com/dcos/terraform-dcos//gcp
 ```
 
 ### Terraform variables

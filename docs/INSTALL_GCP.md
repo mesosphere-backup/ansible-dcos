@@ -52,7 +52,7 @@ $ ssh-add ~/.ssh/google_compute_engine.pub
 
 Add your ssh key to `desired_cluster_profile` file:
 ```
-gce_ssh_pub_key_file = "INSERT_PUBLIC_KEY_PATH_HERE"
+gcp_ssh_pub_key_file = "INSERT_PUBLIC_KEY_PATH_HERE"
 ```
 
 ### Configure a Pre-existing GCP Project
@@ -61,7 +61,7 @@ ansible-dcos assumes a project already exist in GCP to start deploying your reso
 
 Add your GCP project to `desired_cluster_profile` file:
 ```
-google_project = "massive-bliss-781"
+gcp_project = "massive-bliss-781"
 ```
 
 ### Example Terraform Deployments
@@ -77,8 +77,8 @@ num_of_private_agents = "3"
 num_of_public_agents = "1"
 os = "centos_7.3"
 state = "none"
-gce_ssh_pub_key_file = "~/.ssh/google_compute_engine.pub"
-google_project = "massive-bliss-781"
+gcp_ssh_pub_key_file = "~/.ssh/google_compute_engine.pub"
+gcp_project = "massive-bliss-781"
 ```
 
 You can plan the profile with Terraform while referencing:

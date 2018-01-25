@@ -4,7 +4,7 @@
 
 Infrastructure for Cloud Providers is bootstrapped with Terraform.
 
-Ansible playbook installs Open or Enterprise DC/OS to infrastucture On-Premises/Cloud Providers and is supposed to run on CentOS 7. 
+Ansible playbook installs Open or Enterprise DC/OS to infrastucture On-Premises/Cloud Providers and is supposed to run on CentOS 7.
 The installation steps are based on the [Advanced Installation Guide][mesosphere-install] of DC/OS.
 
 ## Getting Started
@@ -43,8 +43,8 @@ Here are guides to follow to install the DC/OS cluster:
 Upgrade the DC/OS cluster:
 * [Upgrade DC/OS](docs/UPGRADE_DCOS.md)
 
-Add DC/OS agents:
-* [Add DC/OS agents]() (WIP)
+Change number of DC/OS agents:
+* [Add/remove DC/OS agents](docs/DCOS_AGENTS.md)
 
 ## Documentation
 

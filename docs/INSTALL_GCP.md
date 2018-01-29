@@ -87,7 +87,7 @@ You can plan the profile with Terraform while referencing:
 terraform plan -var-file desired_cluster_profile
 ```
 
-If you are happy with the changes, the you can apply the profile with Terraform while referencing:
+If you are happy with the changes, then you can apply the profile with Terraform while referencing:
 
 ```bash
 terraform apply -var-file desired_cluster_profile

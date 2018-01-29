@@ -35,8 +35,8 @@ security: permissive
 # options: empty, file
 rexray_config_method: empty
 
-# Customer Key (only for Mesosphere Enterprise DC/OS)
-customer_key: "########-####-####-####-############"
+# License Key (only for Mesosphere Enterprise DC/OS)
+license_key_contents: "########"
 
 # DC/OS credentials (only for Mesosphere Enterprise DC/OS)
 superuser_username: admin

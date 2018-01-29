@@ -14,7 +14,7 @@ rexray_config_method: empty
 
 enterprise_dcos: false
 security: permissive
-customer_key: "########-####-####-####-############"
+license_key_contents: "########"
 superuser_username: admin
 superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
 

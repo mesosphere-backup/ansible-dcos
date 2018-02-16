@@ -25,7 +25,7 @@ To check that all instances are reachable via Ansible, run the following:
 ansible all -m ping
 ```
 
-Finally, apply the Absible playbook:
+Finally, apply the Ansible playbook:
 
 ```bash
 ansible-playbook plays/install.yml
@@ -40,8 +40,8 @@ num_of_private_agents = "3"
 num_of_public_agents = "1"
 ```
 
-Then you can apply the profile with Terraform:
+Then you can apply the profile with:
 
 ```bash
-terraform apply -var-file desired_cluster_profile
+make deploy
 ```

@@ -12,15 +12,10 @@ brew install ansible
 ### Pull down the DC/OS Terraform scripts below
 
 ```bash
-terraform init -from-module github.com/dcos/terraform-dcos//azure
+make azure
 ```
 
 ### Terraform variables
-
-Some Terraform variables need to be overwritten, copy the `override.tf` file, by running:
-```bash
-cp terraform/override.azure.tf ./override.tf
-```
 
 The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
 ```bash
@@ -81,13 +76,13 @@ state = "none"
 You can plan the profile with Terraform while referencing:
 
 ```bash
-terraform plan -var-file desired_cluster_profile
+make plan
 ```
 
 If you are happy with the changes, the you can apply the profile with Terraform while referencing:
 
 ```bash
-terraform apply -var-file desired_cluster_profile
+make launch-infra
 ```
 
 ## Install DC/OS
@@ -136,13 +131,13 @@ ansible-playbook -i inventory.py plays/install.yml
 If the installation was successful. You should be able to reach the Master load balancer. You can find the URL of the Master LB with the following command:
 
 ```
-terraform output "Master ELB Address"
+make ui
 ```
 
 The terraform script also created a load balancer for the public agents:
 
 ```
-terraform output "Public Agent ELB Address"
+make public-lb
 ```
 
 ## Destroy the cluster
@@ -150,5 +145,5 @@ terraform output "Public Agent ELB Address"
 To delete the Azure stack run the command:
 
 ```
-terraform destroy -var-file desired_cluster_profile
+make destroy
 ```

@@ -44,7 +44,7 @@ class TerraformInventory(object):
     def parse_terraform(self):
         ''' Retrieve json output from cmd and parse instances and variables '''
 
-        cmd_read = subprocess.getoutput("terraform output -json")
+        cmd_read = subprocess.getoutput("cd .deploy && terraform output -json")
         terraform_data = json.loads(cmd_read)
 
         for entry in terraform_data:

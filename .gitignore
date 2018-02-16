@@ -11,6 +11,7 @@ group_vars/all
 .vagrant
 
 # terraform
+.deploy
 .terraform
 /*.tf
 /*.tf.disabled

@@ -1,5 +1,11 @@
 # common
 .DS_Store
+.master_ip
+.master_lb_ip
+
+# cli
+dcos
+kubectl
 
 # ansible
 hosts.yaml
@@ -20,7 +26,6 @@ group_vars/all
 terraform.tfvars
 .terraform.tfstate.lock.info
 modules/
-scripts/
 desired_cluster_profile.tfvars.example
 desired_cluster_profile
 

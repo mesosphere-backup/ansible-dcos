@@ -15,13 +15,6 @@ brew install ansible
 make aws
 ```
 
-### Terraform variables
-
-The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
-```bash
-cp desired_cluster_profile.example desired_cluster_profile
-```
-
 ### Configure your AWS ssh Keys
 
 In the `variables.tf` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
@@ -46,19 +39,29 @@ aws_access_key_id = ACHEHS71DG712w7EXAMPLE
 aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 ```
 
-### Example Terraform Deployments
+### Terraform deployment
 
-When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
+The setup variables for Terraform are defined in the file `desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
-For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile`:
+For example, you can see the default configuration of your cluster:
 
 ```bash
 $ cat desired_cluster_profile
+os = "centos_7.3"
+state = "none"
+#
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
-os = "centos_7.3"
-state = "none"
+#
+aws_region = "us-west-1"
+aws_bootstrap_instance_type = "m3.large"
+aws_master_instance_type = "m4.2xlarge"
+aws_agent_instance_type = "m4.2xlarge"
+aws_public_agent_instance_type = "m4.2xlarge"
+ssh_key_name = "default"
+# Inbound Master Access
+admin_cidr = "0.0.0.0/0"
 ```
 
 You can plan the profile with Terraform while referencing:

@@ -15,13 +15,6 @@ brew install ansible
 make azure
 ```
 
-### Terraform variables
-
-The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
-```bash
-cp desired_cluster_profile.example desired_cluster_profile
-```
-
 ### Configure your Azure ssh Keys
 
 Set the private key that you will be you will be using to your ssh-agent and set public key in terraform.
@@ -58,19 +51,28 @@ Set your environment variables by sourcing the files before you run any terrafor
 $ source ~/.azure/credentials
 ```
 
-### Example Terraform Deployments
+### Terraform deployment
 
-When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
+The setup variables for Terraform are defined in the file `desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
-For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile`:
+For example, you can see the default configuration of your cluster:
 
 ```bash
 $ cat desired_cluster_profile
+os = "centos_7.3"
+state = "none"
+#
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
-os = "centos_7.3"
-state = "none"
+#
+azure_region = "East US 2"
+azure_bootstrap_instance_type = "Standard_DS1_v2"
+azure_master_instance_type = "Standard_D4_v2"
+azure_agent_instance_type = "Standard_D4_v2"
+azure_public_agent_instance_type = "Standard_D4_v2"
+# Inbound Master Access
+admin_cidr = "0.0.0.0/0"
 ```
 
 You can plan the profile with Terraform while referencing:

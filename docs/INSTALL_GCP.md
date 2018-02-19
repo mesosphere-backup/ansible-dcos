@@ -30,13 +30,6 @@ $ gcloud auth application-default login
 make gcp
 ```
 
-### Terraform variables
-
-The setup variables for Terraform are defined in the file `desired_cluster_profile`. Copy the example file, by running:
-```bash
-cp desired_cluster_profile.example desired_cluster_profile
-```
-
 ### Configure your GCP ssh keys
 
 Set the public key that you will be you will be using to your ssh-agent and set public key in terraform. This will allow you to log into to the cluster after DC/OS is deployed and also helps Terraform setup your cluster at deployment time.
@@ -59,21 +52,42 @@ Add your GCP project to `desired_cluster_profile` file:
 gcp_project = "massive-bliss-781"
 ```
 
-### Example Terraform Deployments
+### Terraform deployment
 
-When reading the commands below relating to installing and upgrading, it may be easier for you to keep all these flags in a file instead. This way you can make a change to the file and it will persist when you do other commands to your cluster in the future.
+The setup variables for Terraform are defined in the file `desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
-For example, you can see how you can save your state of your cluster in a file called `desired_cluster_profile`:
+For example, you can see the default configuration of your cluster:
 
 ```bash
 $ cat desired_cluster_profile
+os = "centos_7.3"
+state = "none"
+#
 num_of_masters = "1"
 num_of_private_agents = "3"
 num_of_public_agents = "1"
-os = "centos_7.3"
-state = "none"
-gcp_ssh_pub_key_file = "~/.ssh/google_compute_engine.pub"
-gcp_project = "massive-bliss-781"
+#
+gcp_project = "YOUR_GCP_PROJECT"
+gcp_region = "us-central1"
+gcp_ssh_pub_key_file = "/PATH/YOUR_GCP_SSH_PUBLIC_KEY.pub"
+#
+# If you want to use GCP service account key instead of GCP SDK
+# uncomment the line below and update it with the path to the key file
+#gcp_credentials_key_file = "/PATH/YOUR_GCP_SERVICE_ACCOUNT_KEY.json"
+#
+gcp_bootstrap_instance_type = "n1-standard-1"
+gcp_master_instance_type = "n1-standard-8"
+gcp_agent_instance_type = "n1-standard-8"
+gcp_public_agent_instance_type = "n1-standard-8"
+#
+# Change public/private subnetworks e.g. "10.65." if you want to run multiple clusters in the same project
+gcp_compute_subnetwork_public = "10.64.0.0/22"
+gcp_compute_subnetwork_private = "10.64.4.0/22"
+# Inbound Master Access
+admin_cidr = "0.0.0.0/0"
+
+# Uncomment the line below if you want short living cheap cluster for testing
+#gcp_scheduling_preemptible = "true"
 ```
 
 You can plan the profile with Terraform while referencing:

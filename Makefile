@@ -66,7 +66,7 @@ azure: clean check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
 	cp ../resources/override.azure.tf override.tf; \
-	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
+	cp ../resources/desired_cluster_profile.azure ../desired_cluster_profile; \
 	cp ../resources/options.json.azure options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -76,7 +76,7 @@ aws: clean check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/override.aws.tf override.tf; \
-	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
+	cp ../resources/desired_cluster_profile.aws ../desired_cluster_profile; \
 	cp ../resources/options.json.aws options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -86,7 +86,7 @@ gcp: clean check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
 	cp ../resources/override.gcp.tf override.tf; \
-	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
+	cp ../resources/desired_cluster_profile.gcp ../desired_cluster_profile; \
 	cp ../resources/options.json.gcp options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -129,7 +129,7 @@ install-k8s: check-dcos
 	watch dcos beta-kubernetes --name=kubernetes plan show deploy
 
 .PHONY: uninstall-k8s
-uninstall: check-dcos
+uninstall-k8s: check-dcos
 	$(DCOS_CMD) package uninstall --yes beta-kubernetes
 
 .PHONY: plan-infra
@@ -184,10 +184,10 @@ ui:
 .PHONY: public-lb
 public-lb:
 	cd .deploy; \
-	$(OPEN) https://`terraform output "lb_external_agents"`
+	$(OPEN) http://`terraform output "lb_external_agents"`
 
 .PHONY: uninstall
-uninstall: uninstall-k8s ansible-uninstall
+uninstall: ansible-uninstall
 
 .PHONY: destroy
 destroy: destroy-infra

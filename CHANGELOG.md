@@ -1,5 +1,16 @@
 # Changelog
 
+## v0.6.0-dcos-1.11
+
+* Removing Terraform and referencing https://github.com/dcos/terraform-dcos for setting up the infrastructure
+* Adds support for GCP and Azure
+* Enables IPv6
+* Support of Fault Domain Awareness
+* Support of License Keys (in DC/OS Enterprise 1.11)
+* Bumps Docker version to 17.05.0.ce
+* Adopts Makefile approach for easy setup
+* Docs improvements
+
 ## v0.5.0-dcos-1.10
 
 * Installs and disables dnsmasq

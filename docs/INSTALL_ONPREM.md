@@ -35,7 +35,7 @@ all:
         1.0.0.5:
   vars:
     # Choose the IP Detect Script
-    # options: eth0, eth1, aws, gcp, azure
+    # options: aws, gcp, azure or eth0, eth1, ... (or other device name for existing network interface)
     ip_detect: eth0
 
     # (internal/private) IP Address of the Bootstrap Node

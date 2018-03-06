@@ -36,7 +36,7 @@
 
 - name: install docker packages
   yum:
-    name: "docker-engine-{{ docker_version }}, docker-engine-selinux-{{ docker_version }}"
+    name: "docker-ce-{{ docker_version }}"
     update_cache: yes
     state: present
 

@@ -67,13 +67,9 @@
   copy: src=fault-domain-detect dest={{ path_bootstrap }}/genconf/fault-domain-detect mode=0644
   when: ip_detect == "azure"
 
-- name: set IP detection script for eth0
-  template: src=ip-detect-eth0.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect == "eth0"
-
-- name: set IP detection script for eth1
-  template: src=ip-detect-eth1.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect == "eth1"
+- name: set IP detection script for existing network interface
+  template: src=ip-detect-interface.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
+  when: ip_detect != "aws" and ip_detect != "gcp" and ip_detect != "azure"
 
 - name: generate DC/OS configuration with exhibitor backend static
   template: src=config-static.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644

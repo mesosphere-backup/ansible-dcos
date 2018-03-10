@@ -17,7 +17,7 @@ make aws
 
 ### Configure your AWS ssh Keys
 
-In the `variables.tf` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
+In the file `desired_cluster_profile` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
 
 When you have your key available, you can use ssh-add.
 
@@ -47,7 +47,7 @@ For example, you can see the default configuration of your cluster:
 
 ```bash
 $ cat desired_cluster_profile
-os = "centos_7.3"
+os = "centos_7.4"
 state = "none"
 #
 num_of_masters = "1"
@@ -55,7 +55,7 @@ num_of_private_agents = "3"
 num_of_public_agents = "1"
 #
 aws_region = "us-west-1"
-aws_bootstrap_instance_type = "m3.large"
+aws_bootstrap_instance_type = "m4.large"
 aws_master_instance_type = "m4.2xlarge"
 aws_agent_instance_type = "m4.2xlarge"
 aws_public_agent_instance_type = "m4.2xlarge"

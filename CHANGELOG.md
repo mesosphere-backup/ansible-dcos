@@ -10,6 +10,7 @@
 * Bumps Docker version to 17.05.0.ce
 * Adopts Makefile approach for easy setup
 * Docs improvements
+* #8 On-Premises: added possibility to use other device names for existing network interface
 
 ## v0.5.0-dcos-1.10
 

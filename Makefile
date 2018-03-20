@@ -54,7 +54,7 @@ endif
 .PHONY: check-python3
 check-python3:
 ifndef PYTHON3_CMD
-	$(error "$n$nNo ansible command in $(PATH).$n$nPlease install via 'brew install ansible' on MacOS, or download from http://docs.ansible.com/ansible/latest/intro_installation.html.$n$n")
+	$(error "$n$nNo python3 command in $(PATH).$n$nPlease install via 'brew install python3' on MacOS.$n$n")
 endif
 
 .PHONY: check-dcos

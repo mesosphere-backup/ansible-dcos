@@ -141,12 +141,12 @@ plan-infra: check-terraform
 .PHONY: launch-infra
 launch-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile -var state=none -auto-approve
+	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile -var state=none
 
 .PHONY: destroy-infra
 destroy-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) destroy -var-file desired_cluster_profile -force
+	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
 .PHONY: ansible-ping
 ansible-ping: check-ansible
@@ -195,8 +195,6 @@ uninstall: ansible-uninstall
 destroy: destroy-infra
 	$(RM) $(MASTER_IP_FILE)
 	$(RM) $(MASTER_LB_IP_FILE)
-	cd .deploy; \
-	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
 .PHONY: clean
 clean:

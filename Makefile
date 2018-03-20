@@ -107,8 +107,8 @@ onprem:
 
 .PHONY: setup-cli
 setup-cli: check-dcos
-	$(call get_master_lb_ip)
-	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
+	cd .deploy; \
+	$(DCOS_CMD) cluster setup --insecure http://`terraform output "lb_external_masters"`
 
 .PHONY: get-master-ip
 get-master-ip:
@@ -184,11 +184,6 @@ plan: plan-infra
 
 .PHONY: deploy
 deploy: launch-infra ansible-install setup-cli
-
-.PHONY: setup-cli
-setup-cli: check-dcos
-	cd .deploy; \
-	$(DCOS_CMD) cluster setup --insecure http://`terraform output "lb_external_masters"`
 
 .PHONY: ui
 ui:

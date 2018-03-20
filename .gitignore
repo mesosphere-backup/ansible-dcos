@@ -34,3 +34,7 @@ desired_cluster_profile
 
 # ide
 .idea
+
+# keypair
+private-key.pem
+public-key.pem

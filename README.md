@@ -37,6 +37,8 @@ Here are guides to follow to install the DC/OS cluster:
 * [On Azure with Terraform/Ansible](docs/INSTALL_AZURE.md)
 * [On GCP with Terraform/Ansible](docs/INSTALL_GCP.md)
 
+Here are guides to follow to install `framework as-a-service`:
+* [Kubernetes as-a-Service](docs/INSTALL_KUBERNETES.md)
 
 ## Operational tasks
 
@@ -56,18 +58,19 @@ Current maintainers:
 * [Jan Repnak][github-jrx]
 * [Rimas Mocevicius][github-rimusz]
 
-## Roadmaps
+## Roadmap
 
   - [X] Support for On-Premises
   - [X] Support for AWS
   - [X] Support for Azure
   - [X] Support for GCP
+  - [X] Support Kubernetes as-a-service
 
 ## License
 [DC/OS][github-dcos], along with this project, are both open source software released under the
 [Apache Software License, Version 2.0](LICENSE).
 
-[mesosphere-install]: https://docs.mesosphere.com/1.10/installing/ent/custom/advanced/
+[mesosphere-install]: https://docs.mesosphere.com/1.11/installing/ent/custom/advanced/
 [github-dcos]: https://github.com/dcos/dcos
 [github-jrx]: https://github.com/jrx
 [github-rimusz]: https://github.com/rimusz

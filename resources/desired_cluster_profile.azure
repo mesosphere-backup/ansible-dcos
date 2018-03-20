@@ -10,5 +10,6 @@ azure_bootstrap_instance_type = "Standard_DS1_v2"
 azure_master_instance_type = "Standard_D4_v2"
 azure_agent_instance_type = "Standard_D4_v2"
 azure_public_agent_instance_type = "Standard_D4_v2"
+#
 # Inbound Master Access
 admin_cidr = "0.0.0.0/0"

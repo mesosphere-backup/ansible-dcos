@@ -13,6 +13,7 @@ DCOS_CMD := $(shell PATH=$(PATH) command -v dcos 2> /dev/null)
 KUBECTL_CMD := $(shell PATH=$(PATH) command -v kubectl 2> /dev/null)
 TERRAFORM_CMD := $(shell command -v terraform 2> /dev/null)
 ANSIBLE_CMD := $(shell command -v ansible 2> /dev/null)
+PYTHON3_CMD := $(shell command -v python3 2> /dev/null)
 TERRAFORM_APPLY_ARGS ?=
 TERRAFORM_DESTROY_ARGS ?=
 
@@ -47,6 +48,12 @@ endif
 .PHONY: check-ansible
 check-ansible:
 ifndef ANSIBLE_CMD
+	$(error "$n$nNo ansible command in $(PATH).$n$nPlease install via 'brew install ansible' on MacOS, or download from http://docs.ansible.com/ansible/latest/intro_installation.html.$n$n")
+endif
+
+.PHONY: check-python3
+check-python3:
+ifndef PYTHON3_CMD
 	$(error "$n$nNo ansible command in $(PATH).$n$nPlease install via 'brew install ansible' on MacOS, or download from http://docs.ansible.com/ansible/latest/intro_installation.html.$n$n")
 endif
 
@@ -149,11 +156,11 @@ destroy-infra: check-terraform
 	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
 .PHONY: ansible-ping
-ansible-ping: check-ansible
+ansible-ping: check-python3 check-ansible
 	ansible all -i inventory.py -m ping
 
 .PHONY: ansible-install
-ansible-install: check-ansible ansible-ping
+ansible-install: check-python3 check-ansible ansible-ping
 	ansible-playbook -i inventory.py plays/install.yml
 
 kubectl-config: check-kubectl
@@ -169,7 +176,7 @@ kubectl-tunnel:
 		centos@$(MASTER_IP)
 
 .PHONY: ansible-uninstall
-ansible-uninstall: check-ansible ansible-ping
+ansible-uninstall: check-python3 check-ansible ansible-ping
 	ansible-playbook -i inventory.py plays/uninstall.yml
 
 .PHONY: plan

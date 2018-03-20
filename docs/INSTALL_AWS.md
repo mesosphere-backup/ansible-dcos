@@ -125,6 +125,12 @@ If the installation was successful. You should be able to reach the Master load 
 make ui
 ```
 
+Setup `dcos` cli to access your cluster:
+
+```
+make setup-cli
+```
+
 The terraform script also created a load balancer for the public agents:
 
 ```

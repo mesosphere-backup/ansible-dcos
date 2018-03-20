@@ -85,9 +85,6 @@ gcp_compute_subnetwork_public = "10.64.0.0/22"
 gcp_compute_subnetwork_private = "10.64.4.0/22"
 # Inbound Master Access
 admin_cidr = "0.0.0.0/0"
-
-# Uncomment the line below if you want short living cheap cluster for testing
-#gcp_scheduling_preemptible = "true"
 ```
 
 You can plan the profile with Terraform while referencing:
@@ -132,6 +129,12 @@ If the installation was successful. You should be able to reach the Master load 
 
 ```
 make ui
+```
+
+Setup `dcos` cli to access your cluster:
+
+```
+make setup-cli
 ```
 
 The terraform script also created a load balancer for the public agents:

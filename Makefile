@@ -183,7 +183,12 @@ ansible-uninstall: check-python3 check-ansible ansible-ping
 plan: plan-infra
 
 .PHONY: deploy
-deploy: launch-infra ansible-install
+deploy: launch-infra ansible-install setup-cli
+
+.PHONY: setup-cli
+setup-cli: check-dcos
+	cd .deploy; \
+	$(DCOS_CMD) cluster setup --insecure http://`terraform output "lb_external_masters"`
 
 .PHONY: ui
 ui:

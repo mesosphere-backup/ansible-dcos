@@ -43,5 +43,5 @@ num_of_public_agents = "1"
 Then you can apply the profile with:
 
 ```bash
-make deploy
+make launch-infra ansible-install
 ```

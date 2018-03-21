@@ -25,13 +25,19 @@ e.g. a path included in `PATH`.
 
 ### Install
 
-You are now ready to install the Kubernetes package:
+You are now ready to install the Kubernetes package.
+
+For DC/OS Open cluster run:
 
 ```bash
 $ make install-k8s
 ```
 
-(The command will run `dcos package install --yes kubernetes --options=./.deploy/options.json`)
+For DC/OS Enterprise cluster run:
+
+```bash
+$ make install-k8s-ee
+```
 
 The Kubernetes package installation will take place.
 
@@ -92,10 +98,8 @@ In order to access the Kubernetes API from outside the DC/OS cluster, one needs
 to configure `kubectl`, the Kubernetes CLI tool:
 
 ```bash
-$ make kubectl-config
+$ dcos kubernetes kubeconfig
 ```
-
-(The command will run `dcos kubernetes kubeconfig`)
 
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 

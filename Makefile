@@ -136,6 +136,15 @@ endef
 install-k8s: check-dcos
 	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
 
+.PHONY: install-k8s-ee
+install-k8s: check-dcos
+	$(DCOS_CMD) package install dcos-enterprise-cli --yes
+	$(DCOS_CMD) security org service-accounts keypair private-key.pem public-key.pem
+	$(DCOS_CMD) security org service-accounts create -p public-key.pem -d 'kubernetes service account' kubernetes
+	$(DCOS_CMD) security secrets create-sa-secret private-key.pem kubernetes kubernetes/sa
+	$(DCOS_CMD) security org groups add_user superusers kubernetes
+	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
+
 .PHONY: uninstall-k8s
 uninstall-k8s: check-dcos
 	$(DCOS_CMD) package uninstall --yes kubernetes

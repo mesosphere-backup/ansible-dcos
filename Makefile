@@ -3,7 +3,6 @@ MASTER_IP_FILE := .master_ip
 MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION := 1.9.4
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
@@ -33,7 +32,6 @@ endef
 .PHONY: get-cli
 get-cli:
 	$(eval export DCOS_VERSION)
-	$(eval export KUBERNETES_VERSION)
 	scripts/get_cli
 
 .PHONY: check-cli

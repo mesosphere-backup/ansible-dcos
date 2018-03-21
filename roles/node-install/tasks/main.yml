@@ -2,10 +2,10 @@
 # This playbook installs all nodes
 
 - name: create temporary install directory
-  file: path={{ path_tmp }} state=directory mode=0755
+  file: path={{ dcos_path_tmp }} state=directory mode=0755
 
 - name: download installation file from the bootstrap
-  get_url: url="http://{{ bootstrap_ip }}:{{ port_webserver }}/dcos_install.sh" dest={{ path_tmp }}/dcos_install.sh mode=0440 force=yes
+  get_url: url="http://{{ dcos_bootstrap_ip }}:{{ dcos_port_webserver }}/dcos_install.sh" dest={{ dcos_path_tmp }}/dcos_install.sh mode=0440 force=yes
 
 - name: check if already installed
   find:
@@ -17,7 +17,7 @@
 - name: install master
   shell: bash dcos_install.sh master
   args:
-    chdir: "{{ path_tmp }}"
+    chdir: "{{ dcos_path_tmp }}"
   when:
     - currently_installed.matched|int == 0
     - "'masters' in group_names"
@@ -25,7 +25,7 @@
 - name: install agent
   shell: bash dcos_install.sh slave
   args:
-    chdir: "{{ path_tmp }}"
+    chdir: "{{ dcos_path_tmp }}"
   when:
     - currently_installed.matched|int == 0
     - "'agents' in group_names"
@@ -33,7 +33,7 @@
 - name: install public agent
   shell: bash dcos_install.sh slave_public
   args:
-    chdir: "{{ path_tmp }}"
+    chdir: "{{ dcos_path_tmp }}"
   when:
     - currently_installed.matched|int == 0
-    - "'agents_public' in group_names"
+    - "'agent_publics' in group_names"

@@ -1,26 +1,63 @@
 ---
-path_bootstrap: /var/lib/dcos-bootstrap
-port_webserver: 8080
-upgrade: false
+dcos_version: '1.11.0'
 
-s3_prefix: "ansible-dcos-exhibitor"
-exhibitor_azure_prefix: "ansible-dcos-exhibitor"
+# Name of the DC/OS Cluster
+dcos_cluster_name: ''
 
-cluster_name: demo
-dcos_download: https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh
+# If planning to upgrade a previous deployed DC/OS Cluster
+dcos_upgrade: False
+dcos_upgrade_from_version: ''
 
-exhibitor: static
-rexray_config_method: empty
+dcos_path_bootstrap: '/var/lib/dcos-bootstrap'
+dcos_path_tmp: '/tmp/dcos'
+dcos_port_webserver: 8080
 
-enterprise_dcos: false
-security: permissive
-license_key_contents: "########"
-superuser_username: admin
-superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
+# Deploy Mesosphere Enterprise DC/OS or DC/OS OSS?
+dcos_deploy_ee_package: False
 
+dcos_ip_detect_interface: ''
 
-ip_detect: eth0
-resolvers:
+# IP Address of the Bootstrap Node (internal/private)
+dcos_bootstrap_ip: ''
+
+# (internal/private) IP Addresses for the Master Nodes
+dcos_master_list: []
+
+dcos_resolvers:
   - 8.8.4.4
   - 8.8.8.8
-dns_search: None
+
+dcos_dns_search: None
+
+# IaaS target for DC/OS deployment
+# options: aws, gcp, azure or onprem
+dcos_iaas_target: ''
+
+# Configuration for the Exhibitor Storage Backend
+# options: aws_s3, static, azure
+dcos_exhibitor: 'static'
+
+dcos_exhibitor_address: ''
+
+# AWS S3 Credentials (only needed for exhibitor: aws_s3)
+dcos_aws_access_key_id: ''
+dcos_aws_secret_access_key: ''
+dcos_aws_region: ''
+dcos_s3_bucket: ''
+dcos_s3_prefix: ''
+
+# Azure Credentials (only needed for exhibitor: azure)
+dcos_exhibitor_azure_account_name: ''
+dcos_exhibitor_azure_account_key: ''
+dcos_exhibitor_azure_prefix: ''
+
+# Only required when deploying Mesosphere Enterprise DC/OS
+dcos_ee_security: 'disabled'
+dcos_ee_license_key_contents: ''
+dcos_ee_superuser_username: ''
+dcos_ee_superuser_password_hash: ''
+
+# Configure rexray to enable support of external volumes
+# Note: Set rexray_config_method: file and edit ./roles/bootstrap/templates/rexray.yaml.j2 for a custom rexray configuration
+# options: empty, file
+dcos_ee_rexray_config_method: empty

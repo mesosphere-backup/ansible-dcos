@@ -15,29 +15,25 @@ all:
         # Public IP Addresses for the Agent Nodes
         1.0.0.3:
         1.0.0.4:
-    agents_public:
+    agent_publics:
       hosts:
         # Public IP Addresses for the Public Agent Nodes
         1.0.0.5:
   vars:
-    # Choose the IP Detect Script
-    # options: aws, gcp, azure or eth0, eth1, ... (or other device name for existing network interface)
-    ip_detect: eth0
-
     # (internal/private) IP Address of the Bootstrap Node
-    bootstrap_ip: 2.0.0.1
+    dcos_bootstrap_ip: 2.0.0.1
 
     # (internal/private) IP Addresses for the Master Nodes
-    master_list:
+    dcos_master_list:
       - 2.0.0.2
 
     # DNS Resolvers
-    resolvers:
+    dcos_resolvers:
       - 8.8.4.4
       - 8.8.8.8
 
     # DNS Search Domain
-    dns_search: None
+    dcos_dns_search: None
 
     # Internal Loadbalancer DNS for Masters (only needed for exhibitor: aws_s3)
-    exhibitor_address: masterlb.internal
+    dcos_exhibitor_address: masterlb.internal

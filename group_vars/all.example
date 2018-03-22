@@ -26,6 +26,7 @@ exhibitor_azure_account_key: "******"
 # Enterprise or OSS?
 enterprise_dcos: false
 
+# Enterprise options
 # This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
 # options: disabled, permissive, strict
 security: permissive
@@ -36,7 +37,7 @@ security: permissive
 rexray_config_method: empty
 
 # License Key (only for Mesosphere Enterprise DC/OS)
-license_key_contents: "########"
+license_key_contents: "******"
 
 # DC/OS credentials (only for Mesosphere Enterprise DC/OS)
 superuser_username: admin

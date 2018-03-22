@@ -17,7 +17,7 @@ make aws
 
 ### Configure your AWS ssh Keys
 
-In the file `desired_cluster_profile` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
+In the file `.deploy/desired_cluster_profile` there is a `key_name` variable. This key must be added to your host machine running your terraform script as it will be used to log into the machines to run setup scripts. The default is `default`. You can find aws documentation that talks about this [here](https://docs.aws.amazon.com/AWSEC2/latest/UserGuide/ec2-key-pairs.html#how-to-generate-your-own-key-and-import-it-to-aws).
 
 When you have your key available, you can use ssh-add.
 
@@ -41,12 +41,12 @@ aws_secret_access_key = /R8SHF+SHFJaerSKE83awf4ASyrF83sa471DHSEXAMPLE
 
 ### Terraform deployment
 
-The setup variables for Terraform are defined in the file `desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
+The setup variables for Terraform are defined in the file `.deploy/desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
 For example, you can see the default configuration of your cluster:
 
 ```bash
-$ cat desired_cluster_profile
+$ cat .deploy/desired_cluster_profile
 os = "centos_7.4"
 state = "none"
 #
@@ -123,6 +123,12 @@ If the installation was successful. You should be able to reach the Master load 
 
 ```
 make ui
+```
+
+Setup `dcos` cli to access your cluster:
+
+```
+make setup-cli
 ```
 
 The terraform script also created a load balancer for the public agents:

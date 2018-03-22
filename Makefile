@@ -3,7 +3,6 @@ MASTER_IP_FILE := .master_ip
 MASTER_LB_IP_FILE := .master_lb_ip
 TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 DCOS_VERSION := 1.11
-KUBERNETES_VERSION := 1.9.0
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
@@ -13,6 +12,9 @@ DCOS_CMD := $(shell PATH=$(PATH) command -v dcos 2> /dev/null)
 KUBECTL_CMD := $(shell PATH=$(PATH) command -v kubectl 2> /dev/null)
 TERRAFORM_CMD := $(shell command -v terraform 2> /dev/null)
 ANSIBLE_CMD := $(shell command -v ansible 2> /dev/null)
+PYTHON3_CMD := $(shell command -v python3 2> /dev/null)
+TERRAFORM_APPLY_ARGS ?=
+TERRAFORM_DESTROY_ARGS ?=
 
 UNAME := $(shell uname -s)
 ifeq ($(UNAME),Linux)
@@ -30,7 +32,6 @@ endef
 .PHONY: get-cli
 get-cli:
 	$(eval export DCOS_VERSION)
-	$(eval export KUBERNETES_VERSION)
 	scripts/get_cli
 
 .PHONY: check-cli
@@ -46,6 +47,12 @@ endif
 check-ansible:
 ifndef ANSIBLE_CMD
 	$(error "$n$nNo ansible command in $(PATH).$n$nPlease install via 'brew install ansible' on MacOS, or download from http://docs.ansible.com/ansible/latest/intro_installation.html.$n$n")
+endif
+
+.PHONY: check-python3
+check-python3:
+ifndef PYTHON3_CMD
+	$(error "$n$nNo python3 command in $(PATH).$n$nPlease install via 'brew install python3' on MacOS.$n$n")
 endif
 
 .PHONY: check-dcos
@@ -66,7 +73,7 @@ azure: clean check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
 	cp ../resources/override.azure.tf override.tf; \
-	cp ../resources/desired_cluster_profile.azure ../desired_cluster_profile; \
+	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
 	cp ../resources/options.json.azure options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -76,7 +83,7 @@ aws: clean check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/override.aws.tf override.tf; \
-	cp ../resources/desired_cluster_profile.aws ../desired_cluster_profile; \
+	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
 	cp ../resources/options.json.aws options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -86,7 +93,7 @@ gcp: clean check-terraform
 	cd .deploy; \
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
 	cp ../resources/override.gcp.tf override.tf; \
-	cp ../resources/desired_cluster_profile.gcp ../desired_cluster_profile; \
+	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
 	cp ../resources/options.json.gcp options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -94,12 +101,12 @@ gcp: clean check-terraform
 onprem:
 	mkdir .deploy
 	cd .deploy; \
-	cp ../resources/options.json.gcp options.json
+	cp ../resources/options.json.onprem options.json
 
 .PHONY: setup-cli
 setup-cli: check-dcos
-	$(call get_master_lb_ip)
-	$(DCOS_CMD) cluster setup https://$(MASTER_LB_IP)
+	cd .deploy; \
+	$(DCOS_CMD) cluster setup --insecure https://`terraform output "lb_external_masters"`
 
 .PHONY: get-master-ip
 get-master-ip:
@@ -125,56 +132,65 @@ endef
 
 .PHONY: install-k8s
 install-k8s: check-dcos
-	$(DCOS_CMD) package install --yes beta-kubernetes --options=./.deploy/options.json; \
-	watch dcos beta-kubernetes --name=kubernetes plan show deploy
+	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
+
+.PHONY: install-k8s-ee
+install-k8s-ee: check-dcos
+	$(DCOS_CMD) package install dcos-enterprise-cli --yes
+	$(DCOS_CMD) security org service-accounts keypair private-key.pem public-key.pem
+	$(DCOS_CMD) security org service-accounts create -p public-key.pem -d 'kubernetes service account' kubernetes
+	$(DCOS_CMD) security secrets create-sa-secret private-key.pem kubernetes kubernetes/sa
+	$(DCOS_CMD) security org groups add_user superusers kubernetes
+	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
 
 .PHONY: uninstall-k8s
 uninstall-k8s: check-dcos
-	$(DCOS_CMD) package uninstall --yes beta-kubernetes
+	$(DCOS_CMD) package uninstall --yes kubernetes
 
 .PHONY: plan-infra
 plan-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) plan -var-file ../desired_cluster_profile -var state=none
+	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile -var state=none
 
 .PHONY: launch-infra
 launch-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) apply -var-file ../desired_cluster_profile -var state=none -auto-approve
+	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile -var state=none
 
 .PHONY: destroy-infra
 destroy-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) destroy -var-file ../desired_cluster_profile -force
+	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
 
 .PHONY: ansible-ping
-ansible-ping: check-ansible
+ansible-ping: check-python3 check-ansible
 	ansible all -i inventory.py -m ping
 
 .PHONY: ansible-install
-ansible-install: check-ansible ansible-ping
+ansible-install: check-python3 check-ansible ansible-ping
 	ansible-playbook -i inventory.py plays/install.yml
 
 kubectl-config: check-kubectl
+	$(DCOS_CMD) kubernetes kubeconfig
+
+kubectl-tunnel:
 	$(KUBECTL_CMD) config set-cluster dcos-k8s --server=http://localhost:9000
 	$(KUBECTL_CMD) config set-context dcos-k8s --cluster=dcos-k8s --namespace=default
 	$(KUBECTL_CMD) config use-context dcos-k8s
-
-kubectl-tunnel:
 	$(call get_master_ip)
 	ssh -4 -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -o "ServerAliveInterval=120" \
 		-N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 \
 		centos@$(MASTER_IP)
 
 .PHONY: ansible-uninstall
-ansible-uninstall: check-ansible ansible-ping
+ansible-uninstall: check-python3 check-ansible ansible-ping
 	ansible-playbook -i inventory.py plays/uninstall.yml
 
 .PHONY: plan
 plan: plan-infra
 
 .PHONY: deploy
-deploy: launch-infra ansible-install
+deploy: launch-infra ansible-install setup-cli
 
 .PHONY: ui
 ui:
@@ -196,4 +212,4 @@ destroy: destroy-infra
 
 .PHONY: clean
 clean:
-	$(RM) -r .deploy
+	$(RM) -r .deploy dcos kubectl

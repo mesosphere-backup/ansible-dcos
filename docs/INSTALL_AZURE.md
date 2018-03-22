@@ -23,7 +23,7 @@ Set the private key that you will be you will be using to your ssh-agent and set
 ssh-add ~/.ssh/your_private_azure_key.pem
 ```
 
-Add your Azure ssh key to `desired_cluster_profile` file:
+Add your Azure ssh key to `.deploy/desired_cluster_profile` file:
 ```
 ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
 ```
@@ -53,12 +53,12 @@ $ source ~/.azure/credentials
 
 ### Terraform deployment
 
-The setup variables for Terraform are defined in the file `desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
+The setup variables for Terraform are defined in the file `.deploy/desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
 For example, you can see the default configuration of your cluster:
 
 ```bash
-$ cat desired_cluster_profile
+$ cat .deploy/desired_cluster_profile
 os = "centos_7.3"
 state = "none"
 #
@@ -134,6 +134,12 @@ If the installation was successful. You should be able to reach the Master load 
 
 ```
 make ui
+```
+
+Setup `dcos` cli to access your cluster:
+
+```
+make setup-cli
 ```
 
 The terraform script also created a load balancer for the public agents:

@@ -33,7 +33,7 @@ ansible-playbook plays/install.yml
 
 ## Cloud Providers
 
-Edit file `desired_cluster_profile` with required agents count:
+Edit file `.deploy/desired_cluster_profile` with required agents count:
 
 ```
 num_of_private_agents = "3"
@@ -43,5 +43,5 @@ num_of_public_agents = "1"
 Then you can apply the profile with:
 
 ```bash
-make deploy
+make launch-infra ansible-install
 ```

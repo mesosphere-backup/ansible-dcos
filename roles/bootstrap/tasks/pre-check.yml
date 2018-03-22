@@ -2,10 +2,10 @@
 - name: Check all required attributes are present?'
   fail:
     msg: |
-      If we don't have all the informations (dcos_version, dcos_cluster_name, dcos_iaas_target),
+      If we don't have all the informations (dcos_download, dcos_cluster_name, dcos_iaas_target),
       we cannot install DC/OS cluster.
   when: >
-    dcos_version == '' or
+    dcos_download == '' or
     dcos_iaas_target == '' or
     dcos_cluster_name == ''
 

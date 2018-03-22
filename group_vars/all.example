@@ -2,8 +2,8 @@
 # Install latest operating system updates
 os_system_updates: False
 
-# DC/OS Release
-dcos_version: '1.11.0'
+# Download URL for DC/OS
+dcos_download: https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh
 
 # Name of the DC/OS Cluster
 dcos_cluster_name: 'demo'

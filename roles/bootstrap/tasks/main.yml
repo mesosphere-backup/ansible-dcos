@@ -3,13 +3,8 @@
 
 - import_tasks: init.yml
 
-- name: Generate DC/OS Download url
-  set_fact:
-    dcos_download_server: "{% if dcos_deploy_ee_package==False %}downloads.dcos.io/dcos/stable{% else %}downloads.mesosphere.com/dcos-enterprise/stable{% endif %}"
-    dcos_download_file: "{% if dcos_deploy_ee_package==False %}dcos_generate_config.sh{% else %}dcos_generate_config.ee.sh{% endif %}"
-
 - name: Download DC/OS installation file
-  get_url: url="https://{{ dcos_download_server }}/{{ dcos_version }}/{{ dcos_download_file }}" dest={{ dcos_path_bootstrap }}/dcos_generate_config.sh mode=0440 force=yes
+  get_url: url="{{ dcos_download }}" dest={{ dcos_path_bootstrap }}/dcos_generate_config.sh mode=0440 force=yes
 
 - name: Generate IP detection script.
   template: src=ip-detect-{{ dcos_iaas_target }}.j2 dest={{ dcos_path_bootstrap }}/genconf/ip-detect mode=0644

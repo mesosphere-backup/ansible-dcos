@@ -1,98 +1,40 @@
 ---
-# This playbook generates the DC/OS installation/configuration files
+- import_tasks: pre-check.yml
 
-- name: make sure docker-python is not installed via yum
-  yum:
-    name: docker-python
-    state: absent
+- import_tasks: init.yml
 
-- name: make sure epel-release is installed
-  yum:
-    name: epel-release
-    state: present
+- name: Generate DC/OS Download url
+  set_fact:
+    dcos_download_server: "{% if dcos_deploy_ee_package==False %}downloads.dcos.io/dcos/stable{% else %}downloads.mesosphere.com/dcos-enterprise/stable{% endif %}"
+    dcos_download_file: "{% if dcos_deploy_ee_package==False %}dcos_generate_config.sh{% else %}dcos_generate_config.ee.sh{% endif %}"
 
-- name: make sure pip is installed
-  yum:
-    name: python-pip
-    state: present
+- name: Download DC/OS installation file
+  get_url: url="https://{{ dcos_download_server }}/{{ dcos_version }}/{{ dcos_download_file }}" dest={{ dcos_path_bootstrap }}/dcos_generate_config.sh mode=0440 force=yes
 
-- name: make sure docker-py is installed via pip
-  pip: name="docker-py==1.10.6" state=present
+- name: Generate IP detection script.
+  template: src=ip-detect-{{ dcos_iaas_target }}.j2 dest={{ dcos_path_bootstrap }}/genconf/ip-detect mode=0644
 
-- name: clear install directory
-  file: path={{ path_bootstrap }} state=absent
+- name: Set Public IP detection script.
+  template: src=ip-detect-public-{{ dcos_iaas_target }}.j2 dest={{ dcos_path_bootstrap }}/genconf/ip-detect-public mode=0644
+  when: dcos_iaas_target != "onprem"
 
-- name: create install directory
-  file: path={{ path_bootstrap }} state=directory mode=0755
+- name: Generate DC/OS configuration
+  template: src=config.yaml.j2 dest={{ dcos_path_bootstrap }}/genconf/config.yaml mode=0644
 
-- name: create install directory/genconf
-  file: path={{ path_bootstrap }}/genconf/ state=directory mode=0755
+- name: Set Fault Domain detection script
+  copy: src=fault-domain-detect dest={{ dcos_path_bootstrap }}/genconf/fault-domain-detect mode=0644
+  when: dcos_iaas_target != "onprem"
 
-- name: download installation file
-  get_url: url="{{ dcos_download }}" dest={{ path_bootstrap }}/dcos_generate_config.sh mode=0440 force=yes
-
-- name: set IP detection script for AWS
-  template: src=ip-detect-aws.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect == "aws"
-
-- name: set Public IP detection script for AWS
-  template: src=ip-detect-public-aws.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
-  when: ip_detect == "aws"
-
-- name: set Fault Domain detection script for AWS
-  copy: src=fault-domain-detect dest={{ path_bootstrap }}/genconf/fault-domain-detect mode=0644
-  when: ip_detect == "aws"
-
-- name: set IP detection script for GCE
-  template: src=ip-detect-gcp.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect == "gcp"
-
-- name: set Public IP detection script for GCE
-  template: src=ip-detect-public-gcp.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
-  when: ip_detect == "gcp"
-
-- name: set Fault Domain detection script for GCE
-  copy: src=fault-domain-detect dest={{ path_bootstrap }}/genconf/fault-domain-detect mode=0644
-  when: ip_detect == "gcp"
-
-- name: set IP detection script for Azure
-  template: src=ip-detect-azure.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect == "azure"
-
-- name: set Public IP detection script for Azure
-  template: src=ip-detect-public-azure.j2 dest={{ path_bootstrap }}/genconf/ip-detect-public mode=0644
-  when: ip_detect == "azure"
-
-- name: set Fault Domain detection script for Azure
-  copy: src=fault-domain-detect dest={{ path_bootstrap }}/genconf/fault-domain-detect mode=0644
-  when: ip_detect == "azure"
-
-- name: set IP detection script for existing network interface
-  template: src=ip-detect-interface.j2 dest={{ path_bootstrap }}/genconf/ip-detect mode=0644
-  when: ip_detect != "aws" and ip_detect != "gcp" and ip_detect != "azure"
-
-- name: generate DC/OS configuration with exhibitor backend static
-  template: src=config-static.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
-  when: exhibitor == "static"
-
-- name: generate DC/OS configuration with exhibitor backend AWS S3
-  template: src=config-aws_s3.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
-  when: exhibitor == "aws_s3"
-
-- name: generate DC/OS configuration with exhibitor backend Azure
-  template: src=config-azure.yaml.j2 dest={{ path_bootstrap }}/genconf/config.yaml mode=0644
-  when: exhibitor == "azure"
-
-- name: generate DC/OS bootstrap files
+- name: Generate DC/OS bootstrap files
   shell: "bash dcos_generate_config.sh"
   args:
-    chdir: "{{ path_bootstrap }}"
-  when: upgrade == false
+    chdir: "{{ dcos_path_bootstrap }}"
+  when: dcos_upgrade == False
 
 - import_tasks: upgrade.yml
-  when: upgrade == true
+  when: dcos_upgrade == True
 
-- name: start web server to serve the bootstrap files
+- name: Start web server to serve the bootstrap files
   docker_container:
     name: dcos_nginx
     image: nginx
@@ -100,6 +42,6 @@
     recreate: yes
     restart: yes
     ports:
-    - "{{ port_webserver }}:80"
+    - "{{ dcos_port_webserver }}:80"
     volumes:
-    - "{{ path_bootstrap }}/genconf/serve:/usr/share/nginx/html:ro"
+    - "{{ dcos_path_bootstrap }}/genconf/serve:/usr/share/nginx/html:ro"

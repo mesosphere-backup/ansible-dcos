@@ -7,7 +7,7 @@
 - name: upgrade node
   shell: "bash dcos_node_upgrade.sh"
   args:
-    chdir: "{{ path_tmp }}"
+    chdir: "{{ dcos_path_tmp }}"
   ignore_errors: yes
 
 - name: wait for mesos agent
@@ -23,4 +23,4 @@
   retries: 12
   delay: 5
   changed_when: false
-  when: security != "strict"
+  when: dcos_ee_security != "strict"

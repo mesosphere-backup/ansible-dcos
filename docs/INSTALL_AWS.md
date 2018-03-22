@@ -86,23 +86,17 @@ The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the
 cp group_vars/all.example group_vars/all
 ```
 
-The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for AWS, you should change at least the following variables:
+The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file.
 
-Change the exhibitor backend to `aws_s3`. So the master discovery is done by using an S3 bucket:
-
-```
-# Configuration for the Exhibitor Storage Backend
-# options: static, aws_s3, azure
-exhibitor: aws_s3
-```
-You also have to create an S3 bucket on your own and specify the AWS credentials, the bucket name, and the bucket region:
+Optionally you can change the exhibitor backend to `aws_s3`. So the master discovery is done by using a S3 bucket, this is suggested for production deployments on AWS. For that you need to create an S3 bucket on your own and specify the AWS credentials, the bucket name, and the bucket region:
 
 ```
-# AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: "YOUR_AWS_ACCESS_KEY_ID"
-aws_secret_access_key: "YOUR_AWS_SECRET_ACCESS_KEY"
-aws_region: YOUR_BUCKET_REGION
-s3_bucket: YOUR_BUCKET_NAME
+# Optional if dcos_iaas_target := aws
+dcos_exhibitor: 'aws_s3'
+dcos_aws_access_key_id: 'YOUR_AWS_ACCESS_KEY_ID'
+dcos_aws_secret_access_key: 'YOUR_AWS_SECRET_ACCESS_KEY'
+dcos_aws_region: 'YOUR_BUCKET_REGION'
+dcos_s3_bucket: 'YOUR_BUCKET_NAME'
 ```
 
 Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:

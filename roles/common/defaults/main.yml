@@ -1,2 +1,3 @@
 ---
-system_updates: false
+# Install latest operating system updates
+os_system_updates: False

@@ -1,11 +1,9 @@
 ---
 # This playbook performs a DC/OS upgrade
-
 - name: setup the system requirements on all nodes
   hosts: all
   serial: 20
   become: true
-
   roles:
     - common
     - docker
@@ -14,11 +12,8 @@
   hosts: bootstraps
   serial: 1
   become: true
-
   vars:
-    upgrade: true
-    installed_cluster_version: 1.9.4
-
+    dcos_upgrade: true
   roles:
     - bootstrap
 
@@ -26,14 +21,12 @@
   hosts: masters
   serial: 1
   become: true
-
   roles:
     - node-upgrade
 
 - name: upgrade agents
-  hosts: [ agents, agents_public]
+  hosts: [ agents, agent_publics]
   serial: 20
   become: true
-
   roles:
     - node-upgrade

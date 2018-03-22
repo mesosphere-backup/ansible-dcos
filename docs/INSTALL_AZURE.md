@@ -99,21 +99,15 @@ The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the
 cp group_vars/all.example group_vars/all
 ```
 
-The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file. In order to setup DC/OS for Azure, you should change at least the following variables:
+The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file.
 
-Change the exhibitor backend to `azure`. So the master discovery is done by using an Azure shared storage:
-
-```
-# Configuration for the Exhibitor Storage Backend
-# options: static, aws_s3, azure
-exhibitor: azure
-```
-You also have to fill Azure Storage Account Name, secret key, blob prefix and container:
+Optionally you can change the exhibitor backend to `azure`. So the master discovery is done by using Azure shared storage. For that you have to fill in the Azure Storage Account Name and secret key:
 
 ```
-# Azure Credentials (only needed for exhibitor: azure)
-exhibitor_azure_account_name: "******"
-exhibitor_azure_account_key: "******"
+# Optional if dcos_iaas_target := azure
+dcos_exhibitor: 'azure'
+dcos_exhibitor_azure_account_name: 'name'
+dcos_exhibitor_azure_account_key: '******'
 ```
 
 Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:

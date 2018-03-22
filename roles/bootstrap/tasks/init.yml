@@ -1,0 +1,27 @@
+---
+- name: make sure docker-python is not installed via yum
+  yum:
+    name: docker-python
+    state: absent
+
+- name: make sure epel-release is installed
+  yum:
+    name: epel-release
+    state: present
+
+- name: make sure pip is installed
+  yum:
+    name: python-pip
+    state: present
+
+- name: make sure docker-py is installed via pip
+  pip: name="docker-py==1.10.6" state=present
+
+- name: clear install directory
+  file: path={{ dcos_path_bootstrap }} state=absent
+
+- name: create install directory
+  file: path={{ dcos_path_bootstrap }} state=directory mode=0755
+
+- name: create install directory/genconf
+  file: path={{ dcos_path_bootstrap }}/genconf/ state=directory mode=0755

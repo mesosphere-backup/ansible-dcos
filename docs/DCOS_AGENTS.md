@@ -11,8 +11,7 @@ Edit `./hosts.yaml` and fill in the public IP addresses of your cluster agents s
         # Public IP Addresses for the Agent Nodes
         1.0.0.3:
         1.0.0.4:
-        1.0.0.5:
-    agents_public:
+    agent_publics:
       hosts:
         # Public IP Addresses for the Public Agent Nodes
         1.0.0.5:
@@ -43,5 +42,6 @@ num_of_public_agents = "1"
 Then you can apply the profile with:
 
 ```bash
-make launch-infra ansible-install
+make launch-infra
+ansible-playbook -i inventory.py plays/install.yml
 ```

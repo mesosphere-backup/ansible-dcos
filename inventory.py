@@ -66,31 +66,31 @@ class TerraformInventory(object):
 
             # Add group public agents
             elif entry == 'public_agent_public_ips':
-                self.push_hosts(self.inventory, 'agents_public', terraform_data['public_agent_public_ips']['value'])
-                self.push_child(self.inventory, 'common', 'agents_public')
+                self.push_hosts(self.inventory, 'agent_publics', terraform_data['public_agent_public_ips']['value'])
+                self.push_child(self.inventory, 'common', 'agent_publics')
 
             # Add variables
             elif entry == 'bootstrap_private_ips':
-                self.push_var(self.inventory, 'common', {"bootstrap_ip": terraform_data['bootstrap_private_ips']['value']})
+                self.push_var(self.inventory, 'common', {"dcos_bootstrap_ip": terraform_data['bootstrap_private_ips']['value']})
 
             elif entry == 'master_private_ips':
-                self.push_var(self.inventory, 'common', {"master_list": terraform_data['master_private_ips']['value']})
+                self.push_var(self.inventory, 'common', {"dcos_master_list": terraform_data['master_private_ips']['value']})
 
             elif entry == 'dns_resolvers':
-                self.push_var(self.inventory, 'common', {"resolvers": terraform_data['dns_resolvers']['value'] })
+                self.push_var(self.inventory, 'common', {"dcos_resolvers": terraform_data['dns_resolvers']['value'] })
 
             elif entry == 'dns_search':
-                self.push_var(self.inventory, 'common', {"dns_search": terraform_data['dns_search']['value'] })
+                self.push_var(self.inventory, 'common', {"dcos_dns_search": terraform_data['dns_search']['value'] })
 
             elif entry == 'lb_internal_masters':
-                self.push_var(self.inventory, 'common', {"exhibitor_address": terraform_data['lb_internal_masters']['value'] })
+                self.push_var(self.inventory, 'common', {"dcos_exhibitor_address": terraform_data['lb_internal_masters']['value'] })
 
             elif entry == 'cluster_prefix':
-                self.push_var(self.inventory, 'common', {"s3_prefix": terraform_data['cluster_prefix']['value']})
-                self.push_var(self.inventory, 'common', {"exhibitor_azure_prefix": terraform_data['cluster_prefix']['value']})
+                self.push_var(self.inventory, 'common', {"dcos_s3_prefix": terraform_data['cluster_prefix']['value']})
+                self.push_var(self.inventory, 'common', {"dcos_exhibitor_azure_prefix": terraform_data['cluster_prefix']['value']})
 
             elif entry == 'ip_detect':
-                self.push_var(self.inventory, 'common', {"ip_detect": terraform_data['ip_detect']['value']})
+                self.push_var(self.inventory, 'common', {"dcos_iaas_target": terraform_data['ip_detect']['value']})
 
     def json_format_dict(self, data, pretty=False):
         ''' Converts a dict to a JSON object and dumps it as a formatted string '''

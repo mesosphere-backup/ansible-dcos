@@ -1,12 +1,10 @@
 ---
-# This playbook contains common plays that will be run on all nodes.
-
 - name: update all packages
   yum:
     name: "*"
     state: latest
     exclude: docker-engine,docker-engine-selinux
-  when: system_updates
+  when: os_system_updates
 
 - name: install system utilities
   yum:

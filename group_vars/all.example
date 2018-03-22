@@ -1,44 +1,40 @@
 ---
-# Name of the DC/OS Cluster
-cluster_name: demo
-
-# Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh
-
 # Install latest operating system updates
-# options: true, false
-system_updates: true
+os_system_updates: False
 
-# Configuration for the Exhibitor Storage Backend
-# options: aws_s3, static, azure
-exhibitor: static
+# DC/OS Release
+dcos_version: '1.11.0'
 
-# AWS S3 Credentials (only needed for exhibitor: aws_s3)
-aws_access_key_id: "******"
-aws_secret_access_key: "******"
-aws_region: us-west-2
-s3_bucket: bucket-name
+# Name of the DC/OS Cluster
+dcos_cluster_name: 'demo'
 
-# Azure Credentials (only needed for exhibitor: azure)
-exhibitor_azure_account_name: "******"
-exhibitor_azure_account_key: "******"
+# If planning to upgrade a previous deployed DC/OS Cluster,
+# uncomment the following variable
+#dcos_upgrade_from_version: '1.11.0'
 
-# Enterprise or OSS?
-enterprise_dcos: false
+# Deploy Mesosphere Enterprise DC/OS or DC/OS OSS?
+dcos_deploy_ee_package: False
 
-# Enterprise options
-# This parameter specifies your desired security mode. (only for Mesosphere Enterprise DC/OS)
-# options: disabled, permissive, strict
-security: permissive
+# Optional if dcos_iaas_target := aws
+#dcos_exhibitor: 'aws_s3'
+#dcos_aws_access_key_id: '******'
+#dcos_aws_secret_access_key: '******'
+#dcos_aws_region: 'us-west-2'
+#dcos_s3_bucket: 'bucket-name'
+
+# Optional if dcos_iaas_target := azure
+#dcos_exhibitor: 'azure'
+#dcos_exhibitor_azure_account_name: 'name'
+#dcos_exhibitor_azure_account_key: '******'
+
+# Only required when deploying Mesosphere Enterprise DC/OS
+dcos_ee_security: 'permissive'
+dcos_ee_license_key_contents: '******'
+dcos_ee_superuser_username: admin
+# Default password:= admin
+dcos_ee_superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ."
 
 # Configure rexray to enable support of external volumes (only for Mesosphere Enterprise DC/OS)
 # Note: Set rexray_config_method: file and edit ./roles/bootstrap/templates/rexray.yaml.j2 for a custom rexray configuration
 # options: empty, file
-rexray_config_method: empty
-
-# License Key (only for Mesosphere Enterprise DC/OS)
-license_key_contents: "******"
-
-# DC/OS credentials (only for Mesosphere Enterprise DC/OS)
-superuser_username: admin
-superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmPGWt.dhwAv0.XsjYXwVHuS9aHh3DMcfGaz45OpGxC5oQPXUUpFLMkqlXCfhXMloIzE0Xh8VwHJ." # Password: admin
+dcos_ee_rexray_config_method: empty

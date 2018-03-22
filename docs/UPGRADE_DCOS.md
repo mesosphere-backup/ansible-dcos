@@ -2,16 +2,8 @@
 
 In order to upgrade a cluster, you have to set the download URL for the target version of DC/OS inside of the file `group_vars/all`. So for example if you want to upgrade to DC/OS 1.11.1, specify the download URL for this version depending on DC/OS version install.
 
-Open DC/OS Open:
-
 ```
 dcos_download: https://downloads.dcos.io/dcos/stable/1.11.1/dcos_generate_config.sh
-```
-
-DC/OS Enterprise:
-
-```
-dcos_download: https://downloads.mesosphere.com/dcos-enterprise/stable/1.11.1/dcos_generate_config.ee.sh
 ```
 
 ## On-Premises upgrade

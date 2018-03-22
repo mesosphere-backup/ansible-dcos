@@ -106,7 +106,7 @@ onprem:
 .PHONY: setup-cli
 setup-cli: check-dcos
 	cd .deploy; \
-	$(DCOS_CMD) cluster setup --insecure http://`terraform output "lb_external_masters"`
+	$(DCOS_CMD) cluster setup --insecure https://`terraform output "lb_external_masters"`
 
 .PHONY: get-master-ip
 get-master-ip:
@@ -135,7 +135,7 @@ install-k8s: check-dcos
 	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
 
 .PHONY: install-k8s-ee
-install-k8s: check-dcos
+install-k8s-ee: check-dcos
 	$(DCOS_CMD) package install dcos-enterprise-cli --yes
 	$(DCOS_CMD) security org service-accounts keypair private-key.pem public-key.pem
 	$(DCOS_CMD) security org service-accounts create -p public-key.pem -d 'kubernetes service account' kubernetes

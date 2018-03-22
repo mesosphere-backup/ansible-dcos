@@ -38,7 +38,7 @@ Set the public key that you will be you will be using to your ssh-agent and set 
 $ ssh-add ~/.ssh/google_compute_engine.pub
 ```
 
-Add your ssh key to `desired_cluster_profile` file:
+Add your ssh key to `.deploy/desired_cluster_profile` file:
 ```
 gcp_ssh_pub_key_file = "INSERT_PUBLIC_KEY_PATH_HERE"
 ```
@@ -47,19 +47,19 @@ gcp_ssh_pub_key_file = "INSERT_PUBLIC_KEY_PATH_HERE"
 
 ansible-dcos assumes a project already exist in GCP to start deploying your resources against.
 
-Add your GCP project to `desired_cluster_profile` file:
+Add your GCP project to `.deploy/desired_cluster_profile` file:
 ```
 gcp_project = "massive-bliss-781"
 ```
 
 ### Terraform deployment
 
-The setup variables for Terraform are defined in the file `desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
+The setup variables for Terraform are defined in the file `.deploy/desired_cluster_profile`. You can make a change to the file and it will persist when you do other commands to your cluster in the future.
 
 For example, you can see the default configuration of your cluster:
 
 ```bash
-$ cat desired_cluster_profile
+$ cat .deploy/desired_cluster_profile
 os = "centos_7.3"
 state = "none"
 #

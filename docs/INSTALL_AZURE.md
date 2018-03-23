@@ -2,25 +2,25 @@
 
 With the following guide, you are able to install a DC/OS cluster on Azure. You need the tools Terraform and Ansible installed. On MacOS, you can use [brew](https://brew.sh/) for that.
 
-```
-brew install terraform
-brew install ansible
+```shell
+$ brew install terraform
+$ brew install ansible
 ```
 
 ## Setup infrastructure
 
 ### Pull down the DC/OS Terraform scripts below
 
-```bash
-make azure
+```shell
+$ make azure
 ```
 
 ### Configure your Azure ssh Keys
 
 Set the private key that you will be you will be using to your ssh-agent and set public key in terraform.
 
-```bash
-ssh-add ~/.ssh/your_private_azure_key.pem
+```shell
+$ ssh-add ~/.ssh/your_private_azure_key.pem
 ```
 
 Add your Azure ssh key to `.deploy/desired_cluster_profile` file:
@@ -35,7 +35,7 @@ Follow the Terraform instructions [here](https://www.terraform.io/docs/providers
 When you've successfully retrieved your output of `az account list`, create a source file to easily run your credentials in the future.
 
 
-```bash
+```shell
 $ cat ~/.azure/credentials
 export ARM_TENANT_ID=45ef06c1-a57b-40d5-967f-88cf8example
 export ARM_CLIENT_SECRET=Lqw0kyzWXyEjfha9hfhs8dhasjpJUIGQhNFExAmPLE
@@ -47,7 +47,7 @@ export ARM_SUBSCRIPTION_ID=846d9e22-a320-488c-92d5-41112example
 
 Set your environment variables by sourcing the files before you run any terraform commands.
 
-```bash
+```shell
 $ source ~/.azure/credentials
 ```
 
@@ -57,7 +57,7 @@ The setup variables for Terraform are defined in the file `.deploy/desired_clust
 
 For example, you can see the default configuration of your cluster:
 
-```bash
+```shell
 $ cat .deploy/desired_cluster_profile
 os = "centos_7.3"
 state = "none"
@@ -77,14 +77,14 @@ admin_cidr = "0.0.0.0/0"
 
 You can plan the profile with Terraform while referencing:
 
-```bash
-make plan
+```shell
+$ make plan
 ```
 
 If you are happy with the changes, the you can apply the profile with Terraform while referencing:
 
-```bash
-make launch-infra
+```shell
+$ make launch-infra
 ```
 
 ## Install DC/OS
@@ -95,8 +95,8 @@ You have to add the private SSH key (defined in Terraform with variable `ssh_key
 
 The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the example file, by running:
 
-```
-cp group_vars/all.example group_vars/all
+```shell
+$ cp group_vars/all.example group_vars/all
 ```
 
 The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file.
@@ -112,40 +112,40 @@ dcos_exhibitor_azure_account_key: '******'
 
 Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
 
-```
-ansible all -i inventory.py -m ping
+```shell
+$ ansible all -i inventory.py -m ping
 ```
 
 Finally, you can install DC/OS by running:
 
-```
-ansible-playbook -i inventory.py plays/install.yml
+```shell
+$ ansible-playbook -i inventory.py plays/install.yml
 ```
 
 ## Access the cluster
 
 If the installation was successful. You should be able to reach the Master load balancer. You can find the URL of the Master LB with the following command:
 
-```
-make ui
+```shell
+$ make ui
 ```
 
 Setup `dcos` cli to access your cluster:
 
-```
-make setup-cli
+```shell
+$ make setup-cli
 ```
 
 The terraform script also created a load balancer for the public agents:
 
-```
-make public-lb
+```shell
+$ make public-lb
 ```
 
 ## Destroy the cluster
 
 To delete the Azure stack run the command:
 
-```
-make destroy
+```shell
+$ make destroy
 ```

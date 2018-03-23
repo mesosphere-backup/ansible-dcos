@@ -4,18 +4,18 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current Kubernetes package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.0.1-1.9.4/limitations/).
+Before proceeding, please check the [current Kubernetes package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.0.2-1.9.6/limitations/).
 
 ## Pre-Requisites
 
-Make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.1-1.9.4/install/#prerequisites/).
+Make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.2-1.9.6/install/#prerequisites/).
 
 ### Download command-line tools
 
 If you haven't already, please download DC/OS client, `dcos` and Kubernetes
 client, `kubectl`:
 
-```bash
+```shell
 $ make get-cli
 ```
 
@@ -29,13 +29,13 @@ You are now ready to install the Kubernetes package.
 
 For DC/OS Open cluster run:
 
-```bash
+```shell
 $ make install-k8s
 ```
 
 For DC/OS Enterprise cluster run:
 
-```bash
+```shell
 $ make install-k8s-ee
 ```
 
@@ -45,7 +45,7 @@ Wait until all tasks are running before trying to access the Kubernetes API.
 
 You can watch the progress what was deployed so far with:
 
-```bash
+```shell
 $ watch dcos kubernetes plan show deploy
 ```
 
@@ -97,19 +97,19 @@ deploy (serial strategy) (COMPLETE)
 In order to access the Kubernetes API from outside the DC/OS cluster, one needs
 to configure `kubectl`, the Kubernetes CLI tool:
 
-```bash
+```shell
 $ dcos kubernetes kubeconfig
 ```
 
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
-```bash
+```shell
 $ kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.4
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.4
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.4
-kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.4
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.6
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.6
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9.6
+kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.6
 ```
 
 ### Using kubectl proxy
@@ -117,20 +117,24 @@ kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9
 For running more advanced commands such as `kubectl proxy`, an SSH tunnel is still required.
 To create the tunnel, run:
 
-```bash
+```shell
 $ make kubectl-tunnel
 ```
 
 If `kubectl` is properly configured and the tunnel established successfully, in another terminal you should now be able to run `kubectl proxy` as well as any other command.
 
+## Upgrading kubernetes
+
+Check [Kubernetes upgrade doc](UPGRADE_KUBERNETES.md).
+
 ## Uninstall Kubernetes
 
 To uninstall the DC/OS Kubernetes package run:
 
-```bash
+```shell
 $ make uninstall-k8s
 ```
 
 ## Documentation
 
-For more details, please check the official [Kubernetes package docs](https://docs.mesosphere.com/service-docs/kubernetes/1.0.1-1.9.4).
+For more details, please check the official [Kubernetes package docs](https://docs.mesosphere.com/service-docs/kubernetes/1.0.2-1.9.6).

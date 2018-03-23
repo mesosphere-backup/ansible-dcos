@@ -48,6 +48,9 @@ Upgrade the DC/OS cluster:
 Change number of DC/OS agents:
 * [Add/remove DC/OS agents](docs/DCOS_AGENTS.md)
 
+Upgrade the Kubernetes cluster:
+* [Upgrade Kubernetes](docs/UPGRADE_KUBERNETES.md)
+
 ## Documentation
 
 All documentation for this project is located in the [docs](docs/) directory at the root of this repository.

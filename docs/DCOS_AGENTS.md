@@ -20,14 +20,14 @@ Edit `./hosts.yaml` and fill in the public IP addresses of your cluster agents s
 
 To check that all instances are reachable via Ansible, run the following:
 
-```bash
-ansible all -m ping
+```shell
+$ ansible all -m ping
 ```
 
 Finally, apply the Ansible playbook:
 
-```bash
-ansible-playbook plays/install.yml
+```shell
+$ ansible-playbook plays/install.yml
 ```
 
 ## Cloud Providers
@@ -41,7 +41,7 @@ num_of_public_agents = "1"
 
 Then you can apply the profile with:
 
-```bash
-make launch-infra
-ansible-playbook -i inventory.py plays/install.yml
+```shell
+$ make launch-infra
+$ ansible-playbook -i inventory.py plays/install.yml
 ```

@@ -3,8 +3,8 @@
 With the following guide, you are able to install a DC/OS cluster on premises. You need the Ansible tool installed.
 On MacOS, you can use [brew](https://brew.sh/) for that.
 
-```
-brew install ansible
+```shell
+$ brew install ansible
 ```
 
 Execute `ssh-add {keypair}.pem` to be able to access your cluster nodes via SSH
@@ -63,20 +63,20 @@ all:
 
 The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the example file, by running:
 
-```
-cp group_vars/all.example group_vars/all
+```shell
+$ cp group_vars/all.example group_vars/all
 ```
 
 The now created file `group_vars/all` is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the file.
 
 To check that all instances are reachable via Ansible, run the following:
 
-```
-ansible all -m ping
+```shell
+$ ansible all -m ping
 ```
 
 Finally, you can install DC/OS by applying the Absible playbook:
 
-```
-ansible-playbook plays/install.yml
+```shell
+$ ansible-playbook plays/install.yml
 ```

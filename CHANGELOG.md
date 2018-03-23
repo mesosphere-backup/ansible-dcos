@@ -1,5 +1,13 @@
 # Changelog
 
+## v0.6.1-dcos-1.11
+
+* Update Kubernetes framework to GA
+* Bump Kubernetes version to v1.9.6
+* Add Kubernetes upgrade doc
+* Other docs improvements
+* Major refactoring around ansible variables and removal of code duplication
+
 ## v0.6.0-dcos-1.11
 
 * Removing Terraform and referencing https://github.com/dcos/terraform-dcos for setting up the infrastructure

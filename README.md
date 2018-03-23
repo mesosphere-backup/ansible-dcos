@@ -19,13 +19,13 @@ Use `git tag` to list all versions:
 
 ```
 git tag
-v0.6.0-dcos-1.11
+v0.6.1-dcos-1.11
 ```
 
 Check out the latest version with:
 
 ```
-git checkout v0.6.0-dcos-1.11
+git checkout v0.6.1-dcos-1.11
 ```
 
 ## Install

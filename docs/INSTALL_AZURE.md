@@ -102,7 +102,7 @@ cp host_vars/localhost/vars.example host_vars/localhost/vars
 
 The now created file `group_vars/all/vars` is for configuring DC/OS and the file `host_vars/localhost/vars` is for configuring common localhost variables. The variables are explained within the files.
 
-Additionally provide the needed vault variables in `host_vars/localhost/vault` for the ansible control machine running all further Ansible scripts like installing command line interfaces (`dcos` & `kubectl`) and [`Kubernetes as-a-Service` (doc)](docs/INSTALL_KUBERNETES.md). 
+Additionally provide the needed vault variables in `host_vars/localhost/vault` for the ansible control machine running all further Ansible scripts like installing command line interfaces (`dcos` & `kubectl`) and [`Kubernetes as-a-Service` (doc)](INSTALL_KUBERNETES.md). 
 
 For installing `Kubernetes as-a-Service` at the end of the DC/OS installation process you need to change the variable `dcos_k8s_enabled`:
 

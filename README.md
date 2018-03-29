@@ -49,7 +49,7 @@ Change number of DC/OS agents:
 * [Add/remove DC/OS agents](docs/DCOS_AGENTS.md)
 
 Upgrade the Kubernetes cluster:
-* [Upgrade Kubernetes](docs/UPGRADE_KUBERNETES.md)
+* [Upgrade Kubernetes as-a-Service](docs/INSTALL_KUBERNETES.md#upgrade-kubernetes-on-dcos-package)
 
 ## Documentation
 

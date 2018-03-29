@@ -2,8 +2,10 @@
 # Install latest operating system updates
 os_system_updates: False
 
+# DC/OS cluster version
+dcos_version: '1.11.0'
 # Download URL for DC/OS
-dcos_download: https://downloads.dcos.io/dcos/stable/1.11.0/dcos_generate_config.sh
+dcos_download: "https://downloads.dcos.io/dcos/stable/{{ dcos_version }}/dcos_generate_config.sh"
 
 # Name of the DC/OS Cluster
 dcos_cluster_name: 'demo'
@@ -38,3 +40,10 @@ dcos_ee_superuser_password_hash: "$6$rounds=656000$8CXbMqwuglDt3Yai$ZkLEj8zS.GmP
 # Note: Set rexray_config_method: file and edit ./roles/bootstrap/templates/rexray.yaml.j2 for a custom rexray configuration
 # options: empty, file
 dcos_ee_rexray_config_method: empty
+
+# Install k8s cluster on DC/OS as a service at the end of the DC/OS installation process
+dcos_k8s_enabled: false
+# Kubernetes on DC/OS package version
+dcos_k8s_package_version: '1.0.2-1.9.6'
+# Create SSH tunnel to kubernetes on DC/OS for advanced kubectl CLI commands (like kubectl proxy)
+dcos_k8s_cli_tunnel: true

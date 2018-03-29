@@ -1,0 +1,21 @@
+---
+# this playbook authenticates DC/OS CLI to Enterprise DC/OS cluster
+
+- name: send DC/OS CLI authenticate instructions via mail
+  mail:
+    host: "{{ mail_host | default('localhost') }}"
+    port: "{{ mail_port | default('25') }}"
+    username: "{{ mail_username | default('') }}"
+    password: "{{ mail_password | default('') }}"
+    from: "{{ mail_from | default('root') }}"
+    to: "{{ mail_to | default('root') }}"
+    subject: "[{{ ansible_hostname | upper }}][DC/OS CLI] Authenticate from CLI to your DC/OS '{{ dcos_cluster_name }}'"
+    body: "The current Ansible play need your attention for authenticate from CLI to your DC/OS '{{ dcos_cluster_name }}'!"
+
+- name: authenticate from the DC/OS CLI on your ansible control machine to your Enterprise DC/OS cluster
+  command: "dcos auth login"
+  when: dcos_cli_configured
+
+- name: connect from the DC/OS CLI on your ansible control machine to your Enterprise DC/OS cluster
+  command: "dcos cluster setup --insecure http{{ 's' if dcos_cli_tls else '' }}://{{ dcos_master_address }}"
+  when: not dcos_cli_configured

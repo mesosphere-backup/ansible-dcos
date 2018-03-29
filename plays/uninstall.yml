@@ -1,4 +1,24 @@
-- hosts: [ masters, agents, agent_publics]
+---
+# This playbook remove DC/OS
+
+- name: added localhost to in-memory inventory
+  hosts: all
+  gather_facts: no
+  tasks:
+    - add_host:
+        hostname: localhost
+        ansible_connection: local
+        ansible_host: 127.0.0.1
+
+- name: remove CLIs on control machine
+  hosts: localhost
+  serial: 1
+  environment:
+    PATH: '..:{{ ansible_env.PATH }}'
+  roles:
+    - { role: cli, cli_uninstall: true }
+
+- hosts: [ masters, agents, agents_public]
   become: true
   tasks:
 
@@ -42,7 +62,7 @@
 - hosts: bootstraps
   become: true
   tasks:
-
+      
     - name: Stop Nginx
       docker_container:
         name: dcos_nginx

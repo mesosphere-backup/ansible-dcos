@@ -7,9 +7,9 @@ On MacOS, you can use [brew](https://brew.sh/) for that.
 $ brew install ansible
 ```
 
-Execute `ssh-add {keypair}.pem` to be able to access your cluster nodes via SSH
+## Setup infrastructure
 
-Copy `./hosts.example.yaml` to `./hosts.yaml` and fill in the public IP addresses of your cluster so that Ansible can reach them and additionally set for the variables `bootstrap_ip` and `master_list` the private/internal IP addresses for cluster-internal communication. For example:
+Copy `./hosts.example.yaml` to `./hosts.yaml` and fill in the public IP addresses of your cluster so that Ansible can reach them and additionally set for the variables `dcos_bootstrap_ip` and `dcos_master_list` the private/internal IP addresses for cluster-internal communication. For example:
 
 ```
 ---
@@ -59,15 +59,34 @@ all:
 
     # Internal Loadbalancer DNS for Masters (only needed for exhibitor: aws_s3)
     dcos_exhibitor_address: 'masterlb.internal'
+
+    # External Loadbalancer DNS for Masters or 
+    # (external/public) Master Node IP Address (only needed for cli setup) 
+    dcos_master_address: 'masterlb.external'
 ```
 
-The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the example file, by running:
+The setup variables for DC/OS are defined in the file `group_vars/all/vars` and `host_vars/localhost/vars`. Copy the example files, by running:
 
 ```shell
-$ cp group_vars/all.example group_vars/all
+$ cp group_vars/all/vars.example group_vars/all/vars
+cp host_vars/localhost/vars.example host_vars/localhost/vars
 ```
 
-The now created file `group_vars/all` is for configuring DC/OS. You have to fill in the variables that match your preferred configuration. The variables are explained within the file.
+The now created file `group_vars/all` is for configuring DC/OS and the file `host_vars/localhost/vars` is for configuring common localhost variables. The variables are explained within the files.
+
+Additionally provide the needed vault variables in `host_vars/localhost/vault` for the ansible control machine running all further Ansible scripts like installing command line interfaces (`dcos` & `kubectl`) and [`Kubernetes as-a-Service` (doc)](docs/INSTALL_KUBERNETES.md). 
+
+For installing `Kubernetes as-a-Service` at the end of the DC/OS installation process you need to change the variable `dcos_k8s_enabled`:
+
+```
+dcos_k8s_enabled: true
+```
+
+### Configure your ssh Keys
+
+Applying the Ansible playbook `ansible-playbook plays/access-onprem.yml` ([see doc](docs/ACCESS_ONPREM.md)) to be able to access your cluster nodes via SSH.
+
+## Install DC/OS
 
 To check that all instances are reachable via Ansible, run the following:
 

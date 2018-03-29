@@ -45,3 +45,7 @@ all:
 
     # Internal Loadbalancer DNS for Masters (only needed for exhibitor: aws_s3)
     dcos_exhibitor_address: 'masterlb.internal'
+
+    # External Loadbalancer DNS for Masters or 
+    # (external/public) Master Node IP Address (only needed for cli setup) 
+    dcos_master_address: 'masterlb.external'

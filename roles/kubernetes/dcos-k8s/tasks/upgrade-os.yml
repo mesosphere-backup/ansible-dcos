@@ -1,0 +1,10 @@
+---
+# This playbook upgrade kubernetes on Open Source DC/OS as a service
+
+- name: upgrade kubernetes cluster on Open Source DC/OS as a service
+  shell: "{{ item }}"
+  with_items:
+    - "dcos package install kubernetes --yes --cli --package-version={{ dcos_k8s_package_version }}"
+    - "dcos kubernetes describe > {{ dcos_k8s_options_file }}"
+    - "dcos marathon app remove /{{ dcos_k8s_app_id }}"
+    - "dcos package install kubernetes --yes --package-version={{ dcos_k8s_package_version }} --options={{ dcos_k8s_options_file }}"

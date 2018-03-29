@@ -1,7 +1,17 @@
 ---
 # This playbook performs a DC/OS upgrade
-- name: setup the system requirements on all nodes
+
+- name: added localhost to in-memory inventory
   hosts: all
+  gather_facts: no
+  tasks:
+    - add_host:
+        hostname: localhost
+        ansible_connection: local
+        ansible_host: 127.0.0.1
+
+- name: setup the system requirements on all nodes
+  hosts: all:!localhost
   serial: 20
   become: true
   roles:
@@ -30,3 +40,11 @@
   become: true
   roles:
     - node-upgrade
+
+- name: upgrade CLIs on control machine
+  hosts: localhost
+  serial: 1
+  environment:
+    PATH: '..:{{ ansible_env.PATH }}'
+  roles:
+    - { role: cli, cli_upgrade: true }

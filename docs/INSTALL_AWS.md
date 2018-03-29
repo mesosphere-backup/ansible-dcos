@@ -80,13 +80,22 @@ $ make launch-infra
 
 Once the components are created, we can run the Ansible script to install DC/OS on the instances.
 
-The setup variables for DC/OS are defined in the file `group_vars/all`. Copy the example file, by running:
+The setup variables for DC/OS are defined in the file `group_vars/all/vars` and `host_vars/localhost/vars`. Copy the example files, by running:
 
 ```shell
-$ cp group_vars/all.example group_vars/all
+$ cp group_vars/all/vars.example group_vars/all/vars
+cp host_vars/localhost/vars.example host_vars/localhost/vars
 ```
 
-The now created file `group_vars/all` is for configuring DC/OS. The variables are explained within the file.
+The now created file `group_vars/all` is for configuring DC/OS and the file `host_vars/localhost/vars` is for configuring common localhost variables. The variables are explained within the files.
+
+Additionally provide the needed vault variables in `host_vars/localhost/vault` for the ansible control machine running all further Ansible scripts like installing command line interfaces (`dcos` & `kubectl`) and [`Kubernetes as-a-Service` (doc)](docs/INSTALL_KUBERNETES.md). 
+
+For installing `Kubernetes as-a-Service` at the end of the DC/OS installation process you need to change the variable `dcos_k8s_enabled`:
+
+```
+dcos_k8s_enabled: true
+```
 
 Optionally you can change the exhibitor backend to `aws_s3`. So the master discovery is done by using a S3 bucket, this is suggested for production deployments on AWS. For that you need to create an S3 bucket on your own and specify the AWS credentials, the bucket name, and the bucket region:
 
@@ -99,7 +108,7 @@ dcos_aws_region: 'YOUR_BUCKET_REGION'
 dcos_s3_bucket: 'YOUR_BUCKET_NAME'
 ```
 
-Ansible also needs to know how to find the instances that got created via Terraform.  For that we you run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
+Ansible also needs to know how to find the instances that got created via Terraform. For that we run a dynamic inventory script called `./inventory.py`. To use it specify the script with the parameter `-i`. In example, check that all instances are reachable via Ansible:
 
 ```shell
 $ ansible all -i inventory.py -m ping
@@ -117,12 +126,6 @@ If the installation was successful. You should be able to reach the Master load 
 
 ```shell
 $ make ui
-```
-
-Setup `dcos` cli to access your cluster:
-
-```shell
-$ make setup-cli
 ```
 
 The terraform script also created a load balancer for the public agents:

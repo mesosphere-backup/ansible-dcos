@@ -1,0 +1,10 @@
+---
+ansible_become_pass: "{{ vault_ansible_pass }}"
+
+# Ansible mail and mail_error callback config:
+mail_host: 'localhost'
+mail_port: '25'
+mail_username: ''
+mail_password: ""
+mail_from: 'root'
+mail_to: 'root'

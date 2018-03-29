@@ -1,0 +1,80 @@
+---
+# this playbook authenticates DC/OS CLI to Open Source DC/OS cluster
+
+- name: "load current 'OpenID Connect ID Token' from DC/OS CLI config dir"
+  include_vars: 
+    file: "{{ dcos_cli_config_dir }}/openid-token.key"
+  when: dcos_cli_configured
+
+- name: authenticate from the CLI on your ansible control machine to your DC/OS cluster
+  become: false
+  expect:
+    command: "dcos auth login"
+    responses:
+      (?i)token: "{{ dcos_cli_openid_token | default('') }}"
+  register: dcos_cli_authenticate
+  ignore_errors: yes
+
+- name: send DC/OS CLI authenticate instructions via mail
+  mail:
+    host: "{{ mail_host | default('localhost') }}"
+    port: "{{ mail_port | default('25') }}"
+    username: "{{ mail_username | default('') }}"
+    password: "{{ mail_password | default('') }}"
+    from: "{{ mail_from | default('root') }}"
+    to: "{{ mail_to | default('root') }}"
+    subject: "[{{ ansible_hostname | upper }}][DC/OS CLI] Auth0 from CLI to your DC/OS '{{ dcos_cluster_name }}'"
+    body: "Please open the following link on your ansible control machine '{{ ansible_hostname | upper }}' executed by user '{{ ansible_user }}':\n\n    http{{ 's' if dcos_cli_tls else '' }}://{{ dcos_master_address }}/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob\n\nThen log in via Auth0, copy the generated 'OpenID Connect ID Token' and paste it in the command line of your waiting Ansible play!"
+  when: dcos_cli_authenticate.failed
+
+- name: "create new 'OpenID Connect ID Token' via OAuth authentication to your DC/OS cluster"
+  prompt:
+    msg:
+      - say: "Please open the following link on your ansible control machine, log in and copy the 'OpenID Connect ID Token'!"
+      - say: ""
+      - say: "    http{{ 's' if dcos_cli_tls else '' }}://{{ dcos_master_address }}/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob"
+      - say: ""
+      - say: "What is your new 'OpenID Connect ID Token'"
+        ask: dcos_cli_openid_token
+  when: dcos_cli_authenticate.failed
+
+- name: authenticate from the CLI on your ansible control machine to your DC/OS cluster
+  become: false
+  expect:
+    command: "dcos auth login"
+    responses:
+      (?i)token: "{{ dcos_cli_openid_token }}"
+  when: dcos_cli_authenticate.failed and dcos_cli_configured
+
+- name: connect DC/OS CLI to DC/OS cluster and check if DC/OS CLI is configured yet
+  block:
+    - name: connect from the CLI on your ansible control machine to your DC/OS cluster
+      become: false
+      expect:
+        command: "dcos cluster setup --insecure http{{ 's' if dcos_cli_tls else '' }}://{{ dcos_master_address }}"
+        responses:
+          (?i)token: "{{ dcos_cli_openid_token }}"
+
+    - name: find DC/OS CLI config files
+      become: false
+      find:
+        paths: '~/.dcos/clusters'
+        patterns: 'dcos.toml'
+        recurse: yes
+      register: dcos_cli_configs
+
+    - name: search for current DC/OS config
+      include_tasks: dcos-config-check.yml
+      with_items:
+        - "{{ dcos_cli_configs.files }}"
+      loop_control:
+        loop_var: dcos_cli_config_loop
+  when: dcos_cli_authenticate.failed and not dcos_cli_configured
+
+- name: "save new 'OpenID Connect ID Token' to  DC/OS CLI config dir"
+  become: false
+  template:
+    src: openid-token.j2
+    dest: "{{ dcos_cli_config_dir }}/openid-token.key"
+    mode: 0600
+  when: dcos_cli_authenticate.failed

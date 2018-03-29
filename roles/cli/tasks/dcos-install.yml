@@ -1,0 +1,72 @@
+---
+# this playbook installs DC/OS CLI
+
+- name: ensure pip python package manager is installed on Debian
+  become: true
+  apt:
+    name: python-pip
+    update_cache: yes
+  when: ansible_os_family == "Debian"
+
+- name: ensure pip python package manager is installed on RedHat
+  become: true
+  yum:
+    name: python-pip
+    update_cache: yes
+  when: ansible_os_family == "RedHat"
+
+- name: ensure pip python package manager is installed on Darwin
+  become: true
+  command: easy_install pip
+  when: ansible_os_family == "Darwin"
+
+- name: ensure pexpect python module is installed
+  become: true
+  pip:
+    name: pexpect
+
+- name: ensure current relative directory is added to PATH for login shells
+  become: true
+  copy:
+    src: current-dir-path.sh
+    dest: /etc/profile.d/current-dir-path.sh
+    owner: root
+    group: root
+    mode: 0644
+
+- name: check if global bashrc file exists
+  find:
+    paths: '/etc'
+    file_type: file
+    patterns: '(.*)bashrc(.*)'
+  register: cli_bashrc
+
+- name: ensure current relative directory is added to PATH for non-login shells
+  become: true 
+  lineinfile:
+    path: "{{ cli_bashrc.files[0].path }}"
+    line: "{{ item }}"
+    insertbefore: 'not(.*)interactive'
+    state: present
+  with_items:
+    - "# Expand $PATH to include the executable binaries in current working directory."
+    - ". /etc/profile.d/current-dir-path.sh"
+  when: cli_bashrc.matched|int == 1
+
+- name: download the DC/OS CLI Linux binary (dcos) to your local bin directory and make it executable
+  become: false
+  get_url: url="{{ dcos_cli_download_linux }}" dest="../dcos" mode=0755 force=yes
+  when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
+
+- name: download the DC/OS CLI Darwin binary (dcos) to your local bin directory and make it executable
+  become: false
+  get_url: url="{{ dcos_cli_download_macos }}" dest="../dcos" mode=0755 force=yes
+  when: ansible_os_family == "Darwin"
+
+- name: connect DC/OS CLI to DC/OS cluster
+  include_tasks: dcos-connect.yml
+
+- name: install the DC/OS Enterprise CLI
+  become: false
+  command: dcos package install --yes dcos-enterprise-cli
+  when: dcos_deploy_ee_package

@@ -34,7 +34,8 @@
       - say: ""
       - say: "    http{{ 's' if dcos_cli_tls else '' }}://{{ dcos_master_address }}/login?redirect_uri=urn:ietf:wg:oauth:2.0:oob"
       - say: ""
-      - say: "What is your new 'OpenID Connect ID Token'"
+      - say: "Enter your new 'OpenID Connect ID Token'"
+        postfix: ":"
         ask: dcos_cli_openid_token
   when: dcos_cli_authenticate.failed
 

@@ -9,8 +9,8 @@
     password: "{{ mail_password | default('') }}"
     from: "{{ mail_from | default('root') }}"
     to: "{{ mail_to | default('root') }}"
-    subject: "[{{ ansible_hostname | upper }}][DC/OS CLI] Authenticate from CLI to your DC/OS '{{ dcos_cluster_name }}'"
-    body: "The current Ansible play need your attention for authenticate from CLI to your DC/OS '{{ dcos_cluster_name }}'!"
+    subject: "[{{ ansible_hostname | upper }}][DC/OS CLI] Authenticate from CLI to your DC/OS"
+    body: "The current Ansible play need your attention for authentication from CLI to your DC/OS '{{ dcos_cluster_name }}'!"
 
 - name: authenticate from the DC/OS CLI on your ansible control machine to your Enterprise DC/OS cluster
   command: "dcos auth login"

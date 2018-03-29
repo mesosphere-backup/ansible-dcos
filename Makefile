@@ -74,7 +74,7 @@ azure: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
 	cp ../resources/override.azure.tf override.tf; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
-    mkdir kubernetes; \
+	mkdir kubernetes; \
 	cp ../resources/options.json.azure kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -85,7 +85,7 @@ aws: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/override.aws.tf override.tf; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
-	mkdir kubernetes; \
+    mkdir kubernetes; \
 	cp ../resources/options.json.aws kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -96,7 +96,7 @@ gcp: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
 	cp ../resources/override.gcp.tf override.tf; \
 	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
-    mkdir kubernetes; \
+	mkdir kubernetes; \
 	cp ../resources/options.json.gcp kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
@@ -104,7 +104,7 @@ gcp: clean check-terraform
 onprem:
 	mkdir .deploy
 	cd .deploy; \
-    mkdir kubernetes; \
+	mkdir kubernetes; \
 	cp ../resources/options.json.onprem kubernetes/options.json
 
 .PHONY: setup-cli

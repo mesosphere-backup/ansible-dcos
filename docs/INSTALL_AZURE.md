@@ -100,7 +100,7 @@ $ cp group_vars/all/vars.example group_vars/all/vars
 cp host_vars/localhost/vars.example host_vars/localhost/vars
 ```
 
-The now created file `group_vars/all` is for configuring DC/OS and the file `host_vars/localhost/vars` is for configuring common localhost variables. The variables are explained within the files.
+The now created file `group_vars/all/vars` is for configuring DC/OS and the file `host_vars/localhost/vars` is for configuring common localhost variables. The variables are explained within the files.
 
 Additionally provide the needed vault variables in `host_vars/localhost/vault` for the ansible control machine running all further Ansible scripts like installing command line interfaces (`dcos` & `kubectl`) and [`Kubernetes as-a-Service` (doc)](docs/INSTALL_KUBERNETES.md). 
 

@@ -85,7 +85,7 @@ aws: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/override.aws.tf override.tf; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
-    mkdir kubernetes; \
+	mkdir kubernetes; \
 	cp ../resources/options.json.aws kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 

@@ -40,9 +40,9 @@ def _ensure_dcos():
     if v < (0, 5, 0):
         raise AnsibleActionFail(
             "DC/OS CLI 0.5.x is required, found {}".format(v))
-    if v > (0, 6, 0):
+    if v >= (0, 7, 0):
         raise AnsibleActionFail(
-            "DC/OS CLI version > 0.6.x detected, may not work")
+            "DC/OS CLI version > 0.7.x detected, may not work")
     display.vvv("dcos: all prerequisites seem to be in order")
 
 

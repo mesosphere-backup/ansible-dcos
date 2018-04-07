@@ -1,0 +1,7 @@
+---
+- name: manage DC/OS packages
+  hosts: localhost
+  serial: 1
+  become: false
+  roles:
+    - cli

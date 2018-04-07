@@ -38,3 +38,6 @@ desired_cluster_profile
 # keypair
 private-key.pem
 public-key.pem
+
+# python
+*.pyc

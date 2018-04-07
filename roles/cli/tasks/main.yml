@@ -1,0 +1,29 @@
+---
+
+# - name: connect to cluster
+#   dcos_connection_cli:
+#     url: "https://{{ groups['masters'][0] }}"
+#     insecure: true
+
+- name: ensure spark is installed
+  dcos_package_cli:
+    name: spark
+    app_id: spark
+    state: absent
+    version: 2.3.0-2.2.1-2
+
+- name: ensure kubernetes is installed
+  dcos_package_cli:
+    name: kubernetes
+    app_id: kubernetes
+    version: 1.0.2-1.9.6
+    state: absent
+    options: { 'service': { 'name': 'kubernetes' }, 'kubernetes': { 'high_availability': false, 'node_count': 1, 'public_node_count': 0 } }
+
+- name: ensure cassandra is installed
+  dcos_package_cli:
+    name: cassandra
+    app_id: cassandra
+    version: 2.1.0-3.0.16
+    state: absent
+    options: { 'service': { 'name': 'cassandra', 'user': 'nobody' } }

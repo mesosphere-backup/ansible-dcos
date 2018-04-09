@@ -8,8 +8,11 @@ dcos
 kubectl
 
 # ansible
+.vault
+**/vault
 hosts.yaml
-group_vars/all
+group_vars/**/vars
+host_vars/**/vars
 *.retry
 /tmp
 

@@ -1,0 +1,25 @@
+---
+# This playbook connects from the DC/OS CLI on your ansible control machine to your DC/OS cluster
+
+- name: find DC/OS CLI config files
+  become: false
+  find:
+    paths: '~/.dcos/clusters'
+    patterns: 'dcos.toml'
+    recurse: yes
+  register: dcos_cli_configs
+
+- name: search for current DC/OS config
+  include_tasks: dcos-config-check.yml
+  with_items:
+    - "{{ dcos_cli_configs.files }}"
+  loop_control:
+    loop_var: dcos_cli_config_loop
+
+- name: connect/authenticate from the DC/OS CLI on your ansible control machine to your Enterprise DC/OS cluster
+  include_tasks: dcos-auth-ees.yml
+  when: dcos_deploy_ee_package
+
+- name: connect/authenticate from the DC/OS CLI on your ansible control machine to your Open Source DC/OS cluster
+  include_tasks: dcos-auth-oss.yml
+  when: not dcos_deploy_ee_package

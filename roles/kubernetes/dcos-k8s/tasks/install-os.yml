@@ -1,0 +1,20 @@
+---
+# This playbook installs kubernetes on Open Source DC/OS as a service
+
+- name: ensure kubernetes config directory exists
+  file:
+    path: "{{ dcos_k8s_config_dir }}"
+    state: directory
+
+- name: ensure kubernetes options file exists
+  template:
+    src: options.j2
+    dest: "{{ dcos_k8s_options_file }}"
+    force: no
+
+- name: install kubernetes cluster on Open Source DC/OS as a service
+  shell: "{{ item }}"
+  with_items:
+    - "dcos package install kubernetes --yes --cli --package-version={{ dcos_k8s_package_version }}"
+    - "dcos package install kubernetes --yes --package-version={{ dcos_k8s_package_version }} --options={{ dcos_k8s_options_file }}"
+    - "dcos kubernetes describe > {{ dcos_k8s_options_file }}"

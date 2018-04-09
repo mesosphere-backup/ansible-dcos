@@ -1,4 +1,4 @@
-# Kubernetes on DC/OS
+# Kubernetes on DC/OS as-a-Service On-Premises and on Cloud Providers
 
 Kubernetes is now available as a DC/OS package to quickly, and reliably run Kubernetes clusters on Mesosphere DC/OS.
 
@@ -10,43 +10,32 @@ Before proceeding, please check the [current Kubernetes package limitations](htt
 
 Make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.0.2-1.9.6/install/#prerequisites/).
 
-### Download command-line tools
+## Install Kubernetes on DC/OS package
 
-If you haven't already, please download DC/OS client, `dcos` and Kubernetes
-client, `kubectl`:
+### On-Premises installation
 
-```shell
-$ make get-cli
-```
-
-The `dcos` and `kubectl` binaries will be downloaded to the current workdir.
-It's up to you to decided whether or not to copy or move them to another path,
-e.g. a path included in `PATH`.
-
-### Install
-
-You are now ready to install the Kubernetes package.
-
-For DC/OS Open cluster run:
+To start the package installation trigger the play `plays/k8s-install.yml`. The command for that is:
 
 ```shell
-$ make install-k8s
+$ ansible-playbook plays/k8s-install.yml
 ```
 
-For DC/OS Enterprise cluster run:
+### Cloud Providers installation
+
+To start the package installation trigger the play `plays/k8s-install.yml`. The command for that is:
 
 ```shell
-$ make install-k8s-ee
+$ ansible-playbook -i inventory.py plays/k8s-install.yml
 ```
+
+### Verify installation process
 
 The Kubernetes package installation will take place.
 
-Wait until all tasks are running before trying to access the Kubernetes API.
-
-You can watch the progress what was deployed so far with:
+You can watch the progress what was deployed manuelly with:
 
 ```shell
-$ watch dcos kubernetes plan show deploy
+$ watch dcos kubernetes plan status deploy
 ```
 
 Below is an example of how it looks like when the install ran successfully:
@@ -92,14 +81,10 @@ deploy (serial strategy) (COMPLETE)
    └─ mandatory-addons-0:[ark] (COMPLETE)
 ```
 
+After that, all kubernetes tasks are running and the `kubectl` is configured to access the Kubernetes API from outside the DC/OS cluster, 
+including an established ssh tunnel for running more advanced commands such as `kubectl proxy`.
+
 ### Accessing the Kubernetes API
-
-In order to access the Kubernetes API from outside the DC/OS cluster, one needs
-to configure `kubectl`, the Kubernetes CLI tool:
-
-```shell
-$ dcos kubernetes kubeconfig
-```
 
 Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 
@@ -112,27 +97,70 @@ kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    8m        v1.9
 kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    7m        v1.9.6
 ```
 
-### Using kubectl proxy
+## Upgrade Kubernetes on DC/OS package
 
-For running more advanced commands such as `kubectl proxy`, an SSH tunnel is still required.
-To create the tunnel, run:
+In order to upgrade Kubernetes on DC/OS package, you have to set the target package version of Kubernetes on DC/OS inside of the file `group_vars/all/vars`. So for example if you want to upgrade to Kubernetes on DC/OS 1.0.2-1.9.6, specify the version within the variable `dcos_k8s_package_version`.
 
 ```shell
-$ make kubectl-tunnel
+$ dcos_k8s_package_version: '1.0.2-1.9.6'
 ```
 
-If `kubectl` is properly configured and the tunnel established successfully, in another terminal you should now be able to run `kubectl proxy` as well as any other command.
+### On-Premises upgrade
 
-## Upgrading kubernetes
-
-Check [Kubernetes upgrade doc](UPGRADE_KUBERNETES.md).
-
-## Uninstall Kubernetes
-
-To uninstall the DC/OS Kubernetes package run:
+To start the package upgrade trigger the play `plays/k8s-update.yml`. The command for that is:
 
 ```shell
-$ make uninstall-k8s
+$ ansible-playbook plays/k8-update.yml
+```
+
+### Cloud Providers upgrade
+
+To start the package upgrade trigger the play `plays/k8s-update.yml`. The command for that is:
+
+```shell
+$ ansible-playbook -i inventory.py plays/k8-update.yml
+```
+
+For more details, please check the official [Kubernetes package upgrade doc](https://docs.mesosphere.com/services/kubernetes/1.0.2-1.9.6/upgrade/#updating-the-package-version/).
+
+## Update Kubernetes on DC/OS package options
+
+In order to update Kubernetes on DC/OS package options, you have to edit your current Kubernetes on DC/OS options file `.deploy/kubernetes/options.json`.
+
+### On-Premises update
+
+To start the package options update trigger the play `plays/k8s-update.yml`. The command for that is:
+
+```shell
+$ ansible-playbook plays/k8-update.yml
+```
+
+### Cloud Providers update
+
+To start the package options update trigger the play `plays/k8s-update.yml`. The command for that is:
+
+```shell
+$ ansible-playbook -i inventory.py plays/k8-update.yml
+```
+
+For more details, please check the official [Kubernetes package options update doc](https://docs.mesosphere.com/services/kubernetes/1.0.2-1.9.6/upgrade/#updating-the-package-options/).
+
+## Uninstall Kubernetes on DC/OS package
+
+### On-Premises uninstallation
+
+To start the package uninstallation trigger the play `plays/k8s-uninstall.yml`. The command for that is:
+
+```shell
+$ ansible-playbook plays/k8s-uninstall.yml
+```
+
+### Cloud Providers uninstallation
+
+To start the package uninstallation trigger the play `plays/k8s-uninstall.yml`. The command for that is:
+
+```shell
+$ ansible-playbook -i inventory.py plays/k8s-uninstall.yml
 ```
 
 ## Documentation

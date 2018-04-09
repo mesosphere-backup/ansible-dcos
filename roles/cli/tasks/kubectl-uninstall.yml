@@ -1,0 +1,15 @@
+---
+# this playbook uninstalls k8s CLI
+
+- name: delete the hidden .kube directory
+  become: false
+  file:
+    path: '~/.kube'
+    state: absent
+  when: cli_uninstall_hidden_config
+
+- name: delete the kubectl executable
+  become: false
+  file:
+    path: '../kubectl'
+    state: absent

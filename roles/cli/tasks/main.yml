@@ -1,16 +1,9 @@
 ---
 
-# - name: connect to cluster
-#   dcos_connection_cli:
-#     url: "https://{{ groups['masters'][0] }}"
-#     insecure: true
-
-# - name: ensure spark is installed
-#   dcos_package_cli:
-#     name: spark
-#     app_id: spark
-#     state: absent
-#     version: 2.3.0-2.2.1-2
+- name: connect to cluster
+  dcos_connection:
+    url: "https://{{ groups['masters'][0] }}"
+    insecure: true
 
 - name: create service account for kubernetes
   dcos_serviceaccount:
@@ -21,17 +14,9 @@
     state: present
 
 - name: ensure kubernetes is installed
-  dcos_package_cli:
+  dcos_package:
     name: kubernetes
     app_id: kubernetes
     version: 1.0.2-1.9.6
-    state: absent
+    state: present
     options: { 'service': { 'name': 'kubernetes', "service_account": "kubernetes", "service_account_secret": "kubernetes/secret" }, 'kubernetes': { 'high_availability': true, 'node_count': 3, 'public_node_count': 1 } }
-
-# - name: ensure cassandra is installed
-#   dcos_package_cli:
-#     name: cassandra
-#     app_id: cassandra
-#     version: 2.1.0-3.0.16
-#     state: absent
-#     options: { 'service': { 'name': 'cassandra', 'user': 'nobody' } }

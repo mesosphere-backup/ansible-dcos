@@ -160,23 +160,23 @@ def create_serviceaccount(name, description, secret):
 def add_to_group(name, group):
     display.vvv("DC/OS: add service account {} to group {}".format(name, group))
 
-    cmd = [
-        'dcos',
-        'security',
-        'org',
-        'groups',
-        'add_user',
-        group,
-        name
-    ]
-    display.vvv("command: " + ' '.join(cmd))
-
     changed = False
-    try:
-        display.vvv(subprocess.check_output(cmd))
-        changed = True
-    except:
-        changed = False
+    if group is not None:
+        cmd = [
+            'dcos',
+            'security',
+            'org',
+            'groups',
+            'add_user',
+            group,
+            name
+        ]
+        display.vvv("command: " + ' '.join(cmd))
+        try:
+            display.vvv(subprocess.check_output(cmd))
+            changed = True
+        except:
+            changed = False
 
     return changed
 

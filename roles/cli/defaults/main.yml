@@ -1,0 +1,9 @@
+---
+cli_enabled: true
+cli_upgrade: false
+cli_uninstall: false
+cli_uninstall_hidden_config: false
+
+dcos_cli_configured: false
+# Use TLS to secure connection from DC/OS CLI to DC/OS cluster
+dcos_cli_tls: true

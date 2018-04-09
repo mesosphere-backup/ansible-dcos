@@ -1,0 +1,54 @@
+---
+# This playbook manages kubernetes on DC/OS as a service
+
+- name: check if kubernetes on DC/OS is installed and return package version
+  shell: "dcos package list | grep '/{{ dcos_k8s_app_id }}' | awk '{print $2}'"
+  register: dcos_k8s_installed_package_version
+
+- name: setup kubernetes on DC/OS
+  block:
+    - name: install kubernetes cluster on Open Source DC/OS as a service
+      include_tasks: install-os.yml
+      when: dcos_k8s_installed_package_version.stdout == "" and not dcos_deploy_ee_package
+
+    - name: install kubernetes cluster on Enterprise DC/OS as a service
+      include_tasks: install-ee.yml
+      when: dcos_k8s_installed_package_version.stdout == "" and dcos_deploy_ee_package
+    
+    - name: update kubernetes cluster on DC/OS as a service
+      command: "dcos kubernetes update --yes --options={{ dcos_k8s_options_file }}"
+      when: dcos_k8s_installed_package_version.stdout == dcos_k8s_package_version and dcos_k8s_update
+
+    - name: upgrade kubernetes cluster on Open Source DC/OS as a service
+      include_tasks: upgrade-os.yml
+      when: 
+        - dcos_k8s_installed_package_version.stdout != dcos_k8s_package_version
+        - dcos_k8s_installed_package_version.stdout != ""
+        - dcos_k8s_update
+        - not dcos_deploy_ee_package
+    
+    - name: upgrade kubernetes cluster on Enterprise DC/OS as a service
+      include_tasks: upgrade-ee.yml
+      when: 
+        - dcos_k8s_installed_package_version.stdout != dcos_k8s_package_version
+        - dcos_k8s_installed_package_version.stdout != ""
+        - dcos_k8s_update
+        - dcos_deploy_ee_package
+
+    - name: ensure deployment of kubernetes cluster on DC/OS as a service is completed
+      shell: dcos kubernetes plan status deploy
+      register: dcos_k8s_deploy_state
+      until: dcos_k8s_deploy_state.stdout_lines[0].find('COMPLETE') != -1
+      retries: 120
+      delay: 30
+      when: dcos_k8s_installed_package_version.stdout == "" or dcos_k8s_update
+
+    - name: connect kubectl CLI to kubernetes cluster on DC/OS
+      include_tasks: kubectl-connect.yml
+  when: dcos_k8s_enabled and not dcos_k8s_uninstall
+
+- name: remove kubernetes on DC/OS
+  block:
+    - name: uninstall kubernetes cluster on DC/OS as a service
+      include_tasks: uninstall.yml
+  when: dcos_k8s_installed_package_version.stdout == dcos_k8s_package_version and dcos_k8s_uninstall

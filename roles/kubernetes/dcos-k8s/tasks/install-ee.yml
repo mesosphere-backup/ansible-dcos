@@ -1,0 +1,26 @@
+---
+# This playbook installs kubernetes on Enterprise DC/OS as a service
+
+- name: ensure kubernetes config directory exists
+  file:
+    path: "{{ dcos_k8s_config_dir }}"
+    state: directory
+
+- name: ensure kubernetes options file exists
+  template:
+    src: options.j2
+    dest: "{{ dcos_k8s_options_file }}"
+    force: no
+
+- name: install kubernetes cluster on Enterprise DC/OS as a service
+  command: "{{ item }}"
+  with_items:
+    - "dcos security org service-accounts keypair {{ dcos_k8s_config_dir }}/private-key.pem {{ dcos_k8s_config_dir }}/public-key.pem"
+    - "dcos security org service-accounts delete kubernetes"
+    - "dcos security org service-accounts create -p {{ dcos_k8s_config_dir }}/public-key.pem -d 'Kubernetes service account' kubernetes"
+    - "dcos security secrets delete kubernetes/sa"
+    - "dcos security secrets create-sa-secret {{ dcos_k8s_config_dir }}/private-key.pem kubernetes kubernetes/sa"
+    - "dcos security org groups add_user superusers kubernetes"
+    - "dcos package install kubernetes --yes --cli --package-version={{ dcos_k8s_package_version }}"
+    - "dcos package install kubernetes --yes --package-version={{ dcos_k8s_package_version }} --options={{ dcos_k8s_options_file }}"
+    - "dcos kubernetes describe > {{ dcos_k8s_options_file }}"

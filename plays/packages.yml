@@ -1,7 +1,20 @@
 ---
-- name: manage DC/OS packages
+- name: install packages
   hosts: localhost
   serial: 1
   become: false
+  environment:
+    PATH: '{{ ansible_env.PATH }}:{{ ansible_env.PWD }}/..'
+
+  vars:
+    cli_enabled: false
+
   roles:
-    - cli
+    - package
+
+  tasks:
+    - name: ensure spark is installed
+      dcos_package:
+        name: spark
+        state: present
+        version: 2.0.1-2.2.0-1

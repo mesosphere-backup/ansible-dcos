@@ -1,0 +1,8 @@
+---
+# this playbook uninstalls DC/OS CLI
+
+- name: delete the dcos executable
+  become: false
+  file:
+    path: '../dcos'
+    state: absent

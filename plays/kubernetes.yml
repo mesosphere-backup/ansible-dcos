@@ -1,0 +1,18 @@
+---
+- name: install kubernetes as a service
+  hosts: localhost
+  serial: 1
+  become: false
+  environment:
+    PATH: '{{ ansible_env.PATH }}:{{ ansible_env.PWD }}/..'
+
+  vars:
+    cli_enabled: true
+
+  roles:
+    - role: package/kubernetes
+      vars:
+        dcos_k8s_enabled: true
+        dcos_k8s_app_id: 'kubernetes'
+        dcos_k8s_package_version: '1.0.2-1.9.6'
+        dcos_k8s_cli_tunnel: true

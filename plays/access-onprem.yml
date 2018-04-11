@@ -7,7 +7,7 @@
   remote_user: "{{ initial_remote_user | default('root') }}"
   become: true
   tasks:
-    
+
     - name: attempt to update apt's cache
       raw: test -e /usr/bin/apt-get && apt-get update
       ignore_errors: yes
@@ -58,7 +58,7 @@
       command: cp -f /etc/sudoers /etc/sudoers.bak
 
     - name: Ensure admin group can sudo
-      lineinfile: 
+      lineinfile:
         dest: /etc/sudoers.tmp
         state: present
         regexp: '^%admin'

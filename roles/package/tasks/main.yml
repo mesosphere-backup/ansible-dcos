@@ -1,0 +1,40 @@
+---
+# this playbook manages DC/OS CLI
+
+- name: setup CLIs
+  block:
+    - name: check if DC/OS CLI is already installed
+      become: false
+      find:
+        paths: '..'
+        file_type: file
+        patterns: 'dcos'
+      register: dcos_cli_installed
+
+    - name: install DC/OS CLI
+      include_tasks: dcos-install.yml
+      when: dcos_cli_installed.matched|int == 0 or cli_upgrade
+
+    - name: check if k8s CLI is already installed
+      become: false
+      find:
+        paths: '..'
+        file_type: file
+        patterns: 'kubectl'
+      register: cli_k8s_installed
+      when:  dcos_k8s_enabled
+
+    - name: install k8s CLI
+      include_tasks: kubectl-install.yml
+      when: (cli_k8s_installed.matched|int == 0 or cli_upgrade) and dcos_k8s_enabled
+
+  when: cli_enabled and not cli_uninstall
+
+- name: remove CLIs
+  block:
+    - name: uninstall DC/OS CLI
+      include_tasks: dcos-uninstall.yml
+
+    - name: uninstall k8s CLI
+      include_tasks: kubectl-uninstall.yml
+  when: cli_uninstall

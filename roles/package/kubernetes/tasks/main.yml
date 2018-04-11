@@ -1,0 +1,33 @@
+---
+# This playbook manages kubernetes on DC/OS as a service
+
+- name: connect to cluster
+  dcos_connection:
+    url: "https://{{ groups['masters'][0] }}"
+    insecure: true
+
+- name: create service account for kubernetes
+  dcos_serviceaccount:
+    name: kubernetes
+    description: 'kubernetes service account'
+    secret: kubernetes/secret
+    group: superusers
+    state: present
+  when: dcos_k8s_enabled and dcos_deploy_ee_package
+
+- name: ensure kubernetes is installed
+  dcos_package:
+    name: kubernetes
+    app_id: "{{ dcos_k8s_app_id }}"
+    version: "{{ dcos_k8s_package_version }}"
+    state: present
+    options: { 'service': { 'name': 'kubernetes', "service_account": "kubernetes", "service_account_secret": "kubernetes/secret" }, 'kubernetes': { 'high_availability': true, 'node_count': 3, 'public_node_count': 1 } }
+  when: dcos_k8s_enabled and dcos_deploy_ee_package
+
+- name: connect kubectl
+  include_tasks: kubectl.yml
+  when: dcos_k8s_enabled
+
+- name: uninstall
+  include_tasks: uninstall.yml
+  when: not dcos_k8s_enabled

@@ -1,0 +1,17 @@
+---
+# This playbook uninstalls kubernetes on DC/OS as a service
+
+- name: uninstall kubernetes
+  dcos_package:
+    name: kubernetes
+    app_id: "{{ dcos_k8s_app_id }}"
+    version: "{{ dcos_k8s_package_version }}"
+    state: absent
+
+# - name: uninstall kubernetes-proxy on DC/OS
+#   command: "./dcos marathon app remove /{{ dcos_k8s_proxy_app_id }}"
+#   ignore_errors: true
+
+- name: kill active SSH tunnel to kubernetes on DC/OS for advanced kubectl CLI commands
+  shell: "kill $(ps aux | grep -v grep | grep '9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 {{ lookup('ini', 'remote_user section=defaults file=../ansible.cfg') }}@{{ dcos_master_list[0] }}' | awk '{print $2}')"
+  ignore_errors: yes

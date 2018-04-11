@@ -6,13 +6,13 @@
 # cli
 dcos
 kubectl
+kubectl-version
 
 # ansible
 .vault
 **/vault
 hosts.yaml
-group_vars/**/vars
-host_vars/**/vars
+group_vars/all
 *.retry
 /tmp
 

@@ -1,8 +1,0 @@
-{
-  "kubernetes": {
-    "cloud_provider": "aws",
-    "high_availability": true,
-    "node_count": 3,
-    "public_node_count": 1
-  }
-}

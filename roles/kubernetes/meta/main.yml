@@ -1,4 +1,0 @@
----
-dependencies:
-  - role: cli
-  - role: kubernetes/dcos-k8s

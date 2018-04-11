@@ -14,10 +14,8 @@
     state: present
 
 - name: enable docker yum repo
-  template:
-    src: docker.repo.j2
-    dest: /etc/yum.repos.d/docker.repo
-    mode: 0644
+  shell: yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+  changed_when: false
 
 - name: create docker systemd directory
   file:
@@ -36,7 +34,7 @@
 
 - name: install docker packages
   yum:
-    name: "docker-engine-{{ docker_version }}, docker-engine-selinux-{{ docker_version }}"
+    name: "docker-ce-{{ docker_version }}"
     update_cache: yes
     state: present
 

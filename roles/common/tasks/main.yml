@@ -3,7 +3,7 @@
   yum:
     name: "*"
     state: latest
-    exclude: docker-engine,docker-engine-selinux
+    exclude: docker-ce,docker-engine,docker-engine-selinux
   when: os_system_updates
 
 - name: install system utilities

@@ -4,9 +4,14 @@
     name: docker-python
     state: absent
 
-- name: make sure epel-release is installed
+- name: install epel
   yum:
-    name: epel-release
+    name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
+    state: present
+
+- name: import epel gpg key
+  rpm_key:
+    key: /etc/pki/rpm-gpg/RPM-GPG-KEY-EPEL-7
     state: present
 
 - name: make sure pip is installed

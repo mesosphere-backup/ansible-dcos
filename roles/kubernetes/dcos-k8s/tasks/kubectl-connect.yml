@@ -1,0 +1,21 @@
+---
+# This playbook connects from the kubectl CLI on your ansible control machine to your kubernetes cluster
+
+- name: configure kubernetes on DC/OS for common kubectl CLI commands
+  command: dcos kubernetes kubeconfig
+
+- name: kill active SSH tunnel to kubernetes on DC/OS for advanced kubectl CLI commands
+  shell: "kill $(ps aux | grep -v grep | grep '9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 {{ lookup('ini', 'remote_user section=defaults file=../ansible.cfg') }}@{{ dcos_master_list[0] }}' | awk '{print $2}')"
+  ignore_errors: yes
+
+- name: create SSH tunnel to kubernetes on DC/OS for advanced kubectl CLI commands
+  shell: "ssh -4 -f -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' -o 'ServerAliveInterval=120' -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 {{ lookup('ini', 'remote_user section=defaults file=../ansible.cfg') }}@{{ dcos_master_list[0] }}"
+  when: dcos_k8s_cli_tunnel
+
+- name: re-configure kubectl CLI
+  command: "{{ item }}"
+  with_items:
+    - "kubectl config set-cluster {{ dcos_cluster_name }}.tunnel --server=http://localhost:9000"
+    - "kubectl config set-context {{ dcos_cluster_name }}.tunnel  --cluster={{ dcos_cluster_name }}.tunnel"
+    - "kubectl config use-context {{ dcos_cluster_name }}.tunnel"
+  when: dcos_k8s_cli_tunnel

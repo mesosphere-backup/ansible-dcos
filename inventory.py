@@ -84,6 +84,9 @@ class TerraformInventory(object):
 
             elif entry == 'lb_internal_masters':
                 self.push_var(self.inventory, 'common', {"dcos_exhibitor_address": terraform_data['lb_internal_masters']['value'] })
+            
+            elif entry == 'lb_external_masters':
+                self.push_var(self.inventory, 'common', {"dcos_master_address": terraform_data['lb_external_masters']['value'] })
 
             elif entry == 'cluster_prefix':
                 self.push_var(self.inventory, 'common', {"dcos_s3_prefix": terraform_data['cluster_prefix']['value']})

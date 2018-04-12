@@ -74,7 +74,8 @@ azure: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
 	cp ../resources/override.azure.tf override.tf; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
-	cp ../resources/options.json.azure options.json; \
+	mkdir kubernetes; \
+	cp ../resources/options.json.azure kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
 .PHONY: aws
@@ -84,7 +85,8 @@ aws: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/override.aws.tf override.tf; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
-	cp ../resources/options.json.aws options.json; \
+	mkdir kubernetes; \
+	cp ../resources/options.json.aws kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
 .PHONY: gcp
@@ -94,14 +96,16 @@ gcp: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
 	cp ../resources/override.gcp.tf override.tf; \
 	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
-	cp ../resources/options.json.gcp options.json; \
+	mkdir kubernetes; \
+	cp ../resources/options.json.gcp kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
 .PHONY: onprem
 onprem:
 	mkdir .deploy
 	cd .deploy; \
-	cp ../resources/options.json.onprem options.json
+	mkdir kubernetes; \
+	cp ../resources/options.json.onprem kubernetes/options.json
 
 .PHONY: setup-cli
 setup-cli: check-dcos
@@ -127,12 +131,12 @@ get-master-lb-ip: check-terraform
 define get_master_lb_ip
 $(shell test -f $(MASTER_LB_IP_FILE) || \
 	$(TERRAFORM_CMD) output -state=.deploy/terraform.tfstate "lb_external_masters" > $(MASTER_LB_IP_FILE))
-$(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE)))
+$(eval MASTER_LB_IP := $(shell cat $(MASTER_LB_IP_FILE))) 
 endef
 
 .PHONY: install-k8s
 install-k8s: check-dcos
-	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
+	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/kubernetes/options.json
 
 .PHONY: install-k8s-ee
 install-k8s-ee: check-dcos
@@ -141,7 +145,7 @@ install-k8s-ee: check-dcos
 	$(DCOS_CMD) security org service-accounts create -p public-key.pem -d 'kubernetes service account' kubernetes
 	$(DCOS_CMD) security secrets create-sa-secret private-key.pem kubernetes kubernetes/sa
 	$(DCOS_CMD) security org groups add_user superusers kubernetes
-	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/options.json
+	$(DCOS_CMD) package install --yes kubernetes --options=./.deploy/kubernetes/options.json
 
 .PHONY: uninstall-k8s
 uninstall-k8s: check-dcos

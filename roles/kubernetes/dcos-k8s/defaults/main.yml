@@ -1,0 +1,10 @@
+---
+dcos_k8s_enabled: true
+dcos_k8s_update: false
+dcos_k8s_uninstall: false
+dcos_k8s_cli_tunnel: false
+
+dcos_k8s_config_dir: "../.deploy/kubernetes"
+dcos_k8s_options_file: "{{ dcos_k8s_config_dir }}/options.json"
+dcos_k8s_app_id: "kubernetes"
+dcos_k8s_proxy_app_id: "kubernetes-proxy"

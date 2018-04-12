@@ -1,6 +1,42 @@
 ---
 # This playbook connects from the kubectl CLI on your ansible control machine to your kubernetes cluster
 
+- name: check if k8s CLI is already installed
+  become: false
+  find:
+    paths: '..'
+    file_type: file
+    patterns: 'kubectl'
+  register: cli_k8s_installed
+  when:  dcos_k8s_enabled
+
+- name: install kubectl
+  when: (cli_k8s_installed.matched|int == 0 or dcos_cli_upgrade) and dcos_k8s_enabled
+  block:
+  - name: create temporay file
+    become: false
+    get_url: url="https://storage.googleapis.com/kubernetes-release/release/stable.txt" dest="../kubectl-version" mode=0744 force=yes
+
+  - name: detect kubernetes version
+    shell: cat "../kubectl-version"
+    register: kubernetes_version
+
+  - name: download the k8s CLI Linux binary (kubectl) to your current directory and make it executable
+    become: false
+    get_url: url="https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version.stdout }}/bin/linux/amd64/kubectl" dest="../kubectl" mode=0755 force=yes
+    when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
+
+  - name: download the k8s CLI Darwin binary (kubectl) to your current directory and make it executable
+    become: false
+    get_url: url="https://storage.googleapis.com/kubernetes-release/release/{{ kubernetes_version.stdout }}/bin/darwin/amd64/kubectl" dest="../kubectl" mode=0755 force=yes
+    when: ansible_os_family == "Darwin"
+
+  - name: clean-up temporay file
+    become: false
+    file:
+      path: '../kubectl-version'
+      state: absent
+
 - name: configure kubernetes on DC/OS for common kubectl CLI commands
   command: dcos package install kubernetes --yes --cli
 
@@ -13,7 +49,6 @@
 
 - name: create SSH tunnel to kubernetes on DC/OS for advanced kubectl CLI commands
   shell: "ssh -4 -f -o 'UserKnownHostsFile=/dev/null' -o 'StrictHostKeyChecking=no' -o 'ServerAliveInterval=120' -N -L 9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 {{ lookup('ini', 'remote_user section=defaults file=../ansible.cfg') }}@{{ groups['masters'][0] }}"
-  when: dcos_k8s_cli_tunnel
 
 - name: re-configure kubectl CLI
   command: "{{ item }}"
@@ -21,4 +56,3 @@
     - "kubectl config set-cluster {{ dcos_cluster_name }}.tunnel --server=http://localhost:9000"
     - "kubectl config set-context {{ dcos_cluster_name }}.tunnel  --cluster={{ dcos_cluster_name }}.tunnel"
     - "kubectl config use-context {{ dcos_cluster_name }}.tunnel"
-  when: dcos_k8s_cli_tunnel

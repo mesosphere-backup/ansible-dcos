@@ -6,9 +6,6 @@
   environment:
     PATH: '{{ ansible_env.PATH }}:{{ ansible_env.PWD }}/..'
 
-  vars:
-    cli_enabled: false
-
   roles:
     - package
 

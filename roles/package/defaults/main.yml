@@ -1,5 +1,3 @@
 ---
-cli_enabled: true
-cli_upgrade: false
-cli_uninstall: false
-dcos_k8s_enabled: false
+dcos_cli_enabled: true
+dcos_cli_upgrade: false

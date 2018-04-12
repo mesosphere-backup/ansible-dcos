@@ -68,10 +68,6 @@ gcp: clean check-terraform
 	cp ../resources/options.json.gcp kubernetes/options.json; \
 	rm -f desired_cluster_profile.tfvars.example
 
-.PHONY: onprem
-onprem: clean
-	mkdir .deploy
-
 .PHONY: install-k8s
 install-k8s: check-ansible
 	ansible-playbook -i inventory.py plays/kubernetes.yml

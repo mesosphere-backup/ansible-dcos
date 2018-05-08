@@ -12,10 +12,6 @@
   command: "dcos marathon app remove /{{ dcos_k8s_proxy_app_id }}"
   ignore_errors: true
 
-- name: kill active SSH tunnel to kubernetes on DC/OS for advanced kubectl CLI commands
-  shell: "kill $(ps aux | grep -v grep | grep '9000:apiserver-insecure.kubernetes.l4lb.thisdcos.directory:9000 {{ lookup('ini', 'remote_user section=defaults file=../ansible.cfg') }}@{{ groups['masters'][0] }}' | awk '{print $2}')"
-  ignore_errors: yes
-
 - name: delete the kubectl executable
   become: false
   file:

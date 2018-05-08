@@ -30,7 +30,7 @@
 
 - name: connect kubectl
   include_tasks: kubectl.yml
-  when: dcos_k8s_enabled and dcos_k8s_cli_tunnel
+  when: dcos_k8s_enabled
 
 - name: uninstall
   include_tasks: uninstall.yml

@@ -38,7 +38,7 @@
       state: absent
 
 - name: configure kubernetes on DC/OS for common kubectl CLI commands
-  command: dcos package install kubernetes --yes --cli
+  command: "dcos package install kubernetes --package-version {{ dcos_k8s_package_version }} --yes --cli"
 
 - name: configure kubernetes on DC/OS for common kubectl CLI commands
   command: dcos kubernetes kubeconfig

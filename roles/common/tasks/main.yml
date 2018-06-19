@@ -20,6 +20,7 @@
     - firewalld
     - dnsmasq
     - yum-utils
+    - net-tools
 
 - name: disable selinux
   selinux: policy=targeted state=permissive

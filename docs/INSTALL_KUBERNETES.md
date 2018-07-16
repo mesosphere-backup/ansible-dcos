@@ -106,7 +106,7 @@ roles:
     vars:
       dcos_k8s_enabled: true
       dcos_k8s_app_id: 'kubernetes'
-      dcos_k8s_package_version: '1.0.3-1.9.7'
+      dcos_k8s_package_version: '1.2.0-1.10.5
 ```
 
 ### On-Premises upgrade
@@ -137,7 +137,7 @@ roles:
     vars:
       dcos_k8s_enabled: false
       dcos_k8s_app_id: 'kubernetes'
-      dcos_k8s_package_version: '1.0.3-1.9.7'
+      dcos_k8s_package_version: '1.2.0-1.10.5
 ```
 
 ### On-Premises uninstallation

@@ -1,0 +1,93 @@
+# This playbook installs the Kubernetes package
+
+- name: Create a group for Kubernetes
+  dcos_iam_group:
+    gid: "{{ dcos_k8s_app_id }}-group"
+    description: Permissions for Kubernetes
+    state: present
+    permissions:
+      - rid: "dcos:mesos:master:framework:role:*"
+        action: read
+      - rid: "dcos:mesos:master:framework:role:{{ dcos_k8s_app_id }}-role"
+        action: create
+      - rid: "dcos:mesos:master:task:user:root"
+        action: create
+      - rid: "dcos:mesos:agent:task:user:root"
+        action: create
+      - rid: "dcos:mesos:master:reservation:role:{{ dcos_k8s_app_id }}-role"
+        action: create
+      - rid: "dcos:mesos:master:reservation:principal:{{ dcos_k8s_app_id }}"
+        action: delete
+      - rid: "dcos:mesos:master:volume:role:{{ dcos_k8s_app_id }}-role"
+        action: create
+      - rid: "dcos:mesos:master:volume:principal:{{ dcos_k8s_app_id }}"
+        action: delete
+      - rid: "dcos:service:marathon:marathon:services:/"
+        action: create
+      - rid: "dcos:service:marathon:marathon:services:/"
+        action: delete
+      - rid: "dcos:secrets:default:/{{ dcos_k8s_app_id }}/*"
+        action: full
+      - rid: "dcos:secrets:list:default:/{{ dcos_k8s_app_id }}"
+        action: read
+      - rid: "dcos:adminrouter:ops:ca:rw"
+        action: full
+      - rid: "dcos:adminrouter:ops:ca:ro"
+        action: full
+      - rid: "dcos:mesos:master:framework:role:slave_public/{{ dcos_k8s_app_id }}-role"
+        action: create
+      - rid: "dcos:mesos:master:framework:role:slave_public/{{ dcos_k8s_app_id }}-role"
+        action: read
+      - rid: "dcos:mesos:master:reservation:role:slave_public/{{ dcos_k8s_app_id }}-role"
+        action: create
+      - rid: "dcos:mesos:master:volume:role:slave_public/{{ dcos_k8s_app_id }}-role"
+        action: create
+      - rid: "dcos:mesos:master:framework:role:slave_public"
+        action: read
+      - rid: "dcos:mesos:agent:framework:role:slave_public"
+        action: read
+  when: dcos_deploy_ee_package
+
+- name: Create service account for Kubernetes
+  dcos_iam_serviceaccount:
+    sid: "{{ dcos_k8s_app_id }}"
+    description: "{{ dcos_k8s_app_id }} Service Account"
+    secret_path: "{{ dcos_k8s_app_id }}/secret"
+    groups: 
+      - "{{ dcos_k8s_app_id }}-group"
+    state: present
+  when: dcos_deploy_ee_package
+
+
+- name: ensure kubernetes is installed
+  dcos_package:
+    name: kubernetes
+    app_id: "{{ dcos_k8s_app_id }}"
+    version: "{{ dcos_k8s_package_version }}"
+    state: present
+    options:
+        service:
+          name: "{{ dcos_k8s_app_id }}"
+          service_account: "{{ dcos_k8s_app_id }}"
+          service_account_secret: "{{ dcos_k8s_app_id }}/secret"
+        kubernetes: 
+          high_availability: true
+          node_count: 3
+          authorization_mode: "RBAC"
+          public_node_count: 1
+  when: dcos_deploy_ee_package
+
+- name: ensure kubernetes is installed
+  dcos_package:
+    name: kubernetes
+    app_id: "{{ dcos_k8s_app_id }}"
+    version: "{{ dcos_k8s_package_version }}"
+    state: present
+    options:
+        service:
+          name: "{{ dcos_k8s_app_id }}"
+        kubernetes: 
+          high_availability: true
+          node_count: 3
+          public_node_count: 1
+  when: not dcos_deploy_ee_package

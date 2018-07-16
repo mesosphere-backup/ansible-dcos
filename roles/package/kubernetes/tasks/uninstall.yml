@@ -8,8 +8,10 @@
     version: "{{ dcos_k8s_package_version }}"
     state: absent
 
-- name: uninstall kubernetes-proxy on DC/OS
-  command: "dcos marathon app remove /{{ dcos_k8s_proxy_app_id }}"
+- name: uninstall kubernetes-proxy
+  dcos_marathon:
+    app_id: "{{ dcos_k8s_proxy_app_id }}"
+    state: absent
   ignore_errors: true
 
 - name: delete the kubectl executable

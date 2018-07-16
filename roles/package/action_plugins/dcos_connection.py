@@ -21,6 +21,11 @@ except ImportError:
 from ansible.plugins.action import ActionBase
 from ansible.errors import AnsibleActionFail
 
+# to prevent duplicating code, make sure we can import common stuff
+sys.path.append(os.getcwd())
+sys.path.append(os.getcwd() + '/roles/package/')
+from action_plugins.common import ensure_dcos, run_command, _dcos_path
+
 try:
     from __main__ import display
 except ImportError:
@@ -38,37 +43,6 @@ DCOS_AUTH_OPTS = [
 ]
 DCOS_CONNECT_OPTS = DCOS_AUTH_OPTS + ['ca_certs']
 
-def runcmd(args):
-    p = subprocess.Popen(args, stdin=subprocess.PIPE, stdout=subprocess.PIPE, env=dcos_path)
-    p.wait()
-    return p
-
-
-def _version(v):
-    return tuple(map(int, v.split('.')))
-
-
-def _ensure_dcos():
-    """Check whether the dcos[cli] package is installed."""
-
-    raw_version = ''
-    r = subprocess.check_output(['dcos', '--version'], env=dcos_path).decode()
-    for line in r.strip().split('\n'):
-        display.vvv(line)
-        k, v = line.split('=')
-        if k == 'dcoscli.version':
-            raw_version = v
-
-    v = _version(raw_version)
-    if v < (0, 5, 0):
-        raise AnsibleActionFail('DC/OS CLI 0.5.x is required, found {}'
-                                .format(v))
-    if v >= (0, 7, 0):
-        raise AnsibleActionFail(
-            'DC/OS CLI version > 0.7.x detected, may not work')
-    display.vvv('dcos: all prerequisites seem to be in order')
-
-
 def check_cluster(name=None, url=None):
     """Check whether cluster is already setup.
 
@@ -84,7 +58,7 @@ def check_cluster(name=None, url=None):
     attached_cluster = None
     wanted_cluster = None
 
-    clusters = subprocess.check_output(['dcos', 'cluster', 'list', '--json'], env=dcos_path)
+    clusters = subprocess.check_output(['dcos', 'cluster', 'list', '--json'], env=_dcos_path())
     for c in json.loads(clusters):
         if fqdn == urlparse(c['url']).netloc:
             wanted_cluster = c
@@ -102,7 +76,7 @@ def check_cluster(name=None, url=None):
         return True
     else:
         subprocess.check_call(
-            ['dcos', 'cluster', 'attach', wanted_cluster['cluster_id']], env=dcos_path)
+            ['dcos', 'cluster', 'attach', wanted_cluster['cluster_id']], env=_dcos_path())
         return True
 
 
@@ -120,7 +94,7 @@ def parse_connect_options(cluster_options=True, **kwargs):
 
 def ensure_auth(**connect_args):
     valid = False
-    r = runcmd(['dcos', 'config', 'show', 'core.dcos_acs_token'])
+    r = run_command(['dcos', 'config', 'show', 'core.dcos_acs_token'])
 
     if r.returncode == 0:
         parts = r.stdout.read().decode().split('.')
@@ -137,7 +111,8 @@ def ensure_auth(**connect_args):
 def refresh_auth(**kwargs):
     """Run the authentication command using the DC/OS CLI."""
     cli_args = parse_connect_options(False, **kwargs)
-    return runcmd(['dcos', 'auth', 'login'] + cli_args)
+    return run_command(['dcos', 'auth', 'login'] + cli_args,
+                       'refresh auth token', True)
 
 
 def connect_cluster(**kwargs):
@@ -156,7 +131,7 @@ def connect_cluster(**kwargs):
         cli_args = parse_connect_options(**kwargs)
         display.vvv('args: {}'.format(cli_args))
 
-        subprocess.check_call(['dcos', 'cluster', 'setup', url] + cli_args, env=dcos_path)
+        subprocess.check_call(['dcos', 'cluster', 'setup', url] + cli_args, env=_dcos_path())
         changed = True
 
     # ensure_auth(**kwargs)
@@ -175,14 +150,9 @@ class ActionModule(ActionBase):
             result['msg'] = 'The dcos task does not support check mode'
             return result
 
-        global dcos_path
-        dcos_path = os.environ.copy()
-        dcos_path["PATH"] = os.getcwd() + ':' + dcos_path["PATH"]
-        display.vvv('dcos cli: path environment variable: {}'.format(dcos_path["PATH"]) )
-
         args = self._task.args
 
-        _ensure_dcos()
+        ensure_dcos()
 
         result['changed'] = connect_cluster(**args)
         return result

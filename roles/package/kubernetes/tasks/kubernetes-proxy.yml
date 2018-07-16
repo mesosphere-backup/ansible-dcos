@@ -1,0 +1,75 @@
+# This playbook installs the Kubernetes Proxy to etasblish a connection for kubectl
+
+- name: Create a group for Marathon-LB
+  dcos_iam_group:
+    gid: marathon-lb-group
+    description: Permissions for Marathon-LB
+    state: present
+    permissions:
+      - rid: dcos:service:marathon:marathon:services:/
+        action: read
+      - rid: dcos:service:marathon:marathon:admin:events
+        action: read
+  when: dcos_deploy_ee_package
+
+- name: Create service account for Marathon-LB
+  dcos_iam_serviceaccount:
+    sid: marathon-lb
+    description: 'Marathon-lb Service Account'
+    secret_path: marathon-lb/secret
+    groups: 
+      - marathon-lb-group
+    state: present
+  when: dcos_deploy_ee_package
+
+- name: Ensure Marathon-LB is installed
+  dcos_package:
+    name: marathon-lb
+    app_id: marathon-lb
+    version: 1.12.2
+    state: present
+    options:
+      marathon-lb:
+        secret_name: 'marathon-lb/secret'
+        marathon-uri: 'https://marathon.mesos:8443'
+        instances: 1
+  when: dcos_deploy_ee_package
+
+- name: Ensure Marathon-LB is installed
+  dcos_package:
+    name: marathon-lb
+    app_id: marathon-lb
+    version: 1.12.2
+    state: present
+    options:
+      marathon-lb:
+        instances: 1
+  when: not dcos_deploy_ee_package
+
+- name: Deploy Kubectl Proxy via Marathon
+  dcos_marathon:
+    app_id: "{{ dcos_k8s_proxy_app_id }}"
+    state: present
+    options:
+      {
+        "instances": 1,
+        "cpus": 0.001,
+        "mem": 16,
+        "cmd": "tail -F /dev/null",
+        "container": {
+          "type": "MESOS"
+        },
+        "portDefinitions": [
+          {
+            "protocol": "tcp",
+            "port": 0
+          }
+        ],
+        "labels": {
+          "HAPROXY_GROUP": "external",
+          "HAPROXY_0_MODE": "http",
+          "HAPROXY_0_PORT": "6443",
+          "HAPROXY_0_SSL_CERT": "/etc/ssl/cert.pem",
+          "HAPROXY_0_BACKEND_SERVER_OPTIONS": "  timeout connect 10s\n  timeout client 86400s\n  timeout server 86400s\n  timeout tunnel 86400s\n  server kube-apiserver apiserver.{{ dcos_k8s_app_id }}.l4lb.thisdcos.directory:6443 ssl verify none\n"
+        }
+      }

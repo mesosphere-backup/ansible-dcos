@@ -40,5 +40,16 @@
 - name: configure kubernetes on DC/OS for common kubectl CLI commands
   command: "dcos package install kubernetes --package-version {{ dcos_k8s_package_version }} --yes --cli"
 
+- name: wait for kubernetes to come up
+  uri:
+    url: "https://{{ groups['agent_publics'][0] }}:6443"
+    validate_certs: no
+  retries: 60
+  delay: 10
+  register: result
+  until: ('status' in result) and (result.status == 401)
+  changed_when: false
+  failed_when: false
+
 - name: configure kubernetes on DC/OS for common kubectl CLI commands
-  command: dcos kubernetes kubeconfig
+  command: "dcos kubernetes kubeconfig --apiserver-url https://{{ groups['agent_publics'][0] }}:6443 --insecure-skip-tls-verify"

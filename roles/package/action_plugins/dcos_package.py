@@ -16,41 +16,19 @@ import sys
 from ansible.plugins.action import ActionBase
 from ansible.errors import AnsibleActionFail
 
+# to prevent duplicating code, make sure we can import common stuff
+sys.path.append(os.getcwd())
+from action_plugins.common import ensure_dcos, run_command, _dcos_path
+
 try:
     from __main__ import display
 except ImportError:
     from ansible.utils.display import Display
     display = Display()
 
-
-def _version(v):
-    return tuple(map(int, v.split('.')))
-
-
-def _ensure_dcos():
-    """Check whether the dcos[cli] package is installed."""
-
-    raw_version = ''
-    r = subprocess.check_output(['dcos', '--version'], env=dcos_path).decode()
-    for line in r.strip().split('\n'):
-        display.vvv(line)
-        k, v = line.split('=')
-        if k == 'dcoscli.version':
-            raw_version = v
-
-    v = _version(raw_version)
-    if v < (0, 5, 0):
-        raise AnsibleActionFail(
-            "DC/OS CLI 0.5.x is required, found {}".format(v))
-    if v >= (0, 7, 0):
-        raise AnsibleActionFail(
-            "DC/OS CLI version > 0.7.x detected, may not work")
-    display.vvv("dcos: all prerequisites seem to be in order")
-
-
 def get_current_version(package, app_id):
     """Get the current version of an installed package."""
-    r = subprocess.check_output(['dcos', 'package', 'list', '--json', '--app-id='+app_id ], env=dcos_path)
+    r = subprocess.check_output(['dcos', 'package', 'list', '--json', '--app-id='+app_id ], env=_dcos_path())
     packages = json.loads(r)
 
     display.vvv('looking for package {} app_id {}'.format(package, app_id))
@@ -71,24 +49,34 @@ def get_wanted_version(version, state):
         return None
     return version
 
-
 def install_package(package, version, options):
     """Install a Universe package on DC/OS."""
     display.vvv("DC/OS: installing package {} version {}".format(
         package, version))
 
-    display.vvv("options: {}".format(options))
+    # create a temporary file for the options json file
     with tempfile.NamedTemporaryFile('w+') as f:
         json.dump(options, f)
+
+        # force write the file to disk to make sure subcommand can read it
         f.flush()
+        os.fsync(f)
+
+        display.vvv(subprocess.check_output(
+        ['cat', f.name]).decode())
+
         cmd = [
-            'dcos', 'package', 'install', package, '--app', '--yes',
-            '--package-version', version, '--options', f.name
+            'dcos',
+            'package',
+            'install',
+            package,
+            '--yes',
+            '--package-version',
+            version,
+            '--options',
+            f.name
         ]
-        display.vvv("command: " + ' '.join(cmd))
-        display.vvv('contents:')
-        display.vvv(subprocess.check_output(['cat', f.name]).decode())
-        display.vvv(subprocess.check_output(cmd, env=dcos_path).decode())
+        run_command(cmd, 'install package', stop_on_error=True)
 
 def update_package(package, app_id, version, options):
     """Update a Universe package on DC/OS."""
@@ -115,8 +103,7 @@ def uninstall_package(package, app_id):
         '--app-id',
         '/' + app_id,
     ]
-    display.vvv("command: " + ' '.join(cmd))
-    display.vvv(subprocess.check_output(cmd, env=dcos_path).decode())
+    run_command(cmd, 'uninstall package', stop_on_error=True)
 
 def app_remove(app_id):
     display.vvv("DC/OS: remove app {}".format(app_id))
@@ -128,8 +115,7 @@ def app_remove(app_id):
         'remove',
         '/' + app_id,
     ]
-    display.vvv("command: " + ' '.join(cmd))
-    display.vvv(subprocess.check_output(cmd, env=dcos_path).decode())
+    run_command(cmd, 'remove app', stop_on_error=True)
 
 class ActionModule(ActionBase):
     def run(self, tmp=None, task_vars=None):
@@ -142,12 +128,6 @@ class ActionModule(ActionBase):
             result['skipped'] = True
             result['msg'] = 'The dcos task does not support check mode'
             return result
-
-        global dcos_path
-        dcos_path = os.environ.copy()
-        dcos_path["PATH"] = os.getcwd() + ':' + dcos_path["PATH"]
-        display.vvv('dcos cli: path environment variable: {}'.format(dcos_path["PATH"]) )
-
 
         args = self._task.args
         package_name = args.get('name', None)
@@ -163,7 +143,7 @@ class ActionModule(ActionBase):
         except KeyError:
             options['service'] = {'name': app_id }
 
-        _ensure_dcos()
+        ensure_dcos()
 
         current_version = get_current_version(package_name, app_id)
         wanted_version = get_wanted_version(package_version, state)
@@ -171,22 +151,20 @@ class ActionModule(ActionBase):
         if current_version == wanted_version:
             display.vvv(
                 "Package {} already in desired state".format(package_name))
+            
+            if state == "present":
+                update_package(package_name, app_id, wanted_version, options)
+
             result['changed'] = False
         else:
             display.vvv("Package {} not in desired state".format(package_name))
             if wanted_version is not None:
                 if current_version is not None:
                     update_package(package_name, app_id, wanted_version, options)
-                    # if wanted_version != get_current_version(package_name, app_id):
-                    #     raise AnsibleActionFail('failed to update')
                 else:
                     install_package(package_name, wanted_version, options)
-                    # if wanted_version != get_current_version(package_name, app_id):
-                    #     raise AnsibleActionFail('failed to install')
             else:
                 uninstall_package(package_name, app_id)
-                # if wanted_version != get_current_version(package_name, app_id):
-                #     raise AnsibleActionFail('failed to uninstall')
 
             result['changed'] = True
 

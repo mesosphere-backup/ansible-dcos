@@ -21,6 +21,7 @@
     - dnsmasq
     - yum-utils
     - net-tools
+    - bind-utils
 
 - name: disable selinux
   selinux: policy=targeted state=permissive

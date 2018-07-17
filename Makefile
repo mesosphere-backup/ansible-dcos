@@ -48,7 +48,7 @@ azure: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
 	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
 	cp ../resources/override.azure.tf override.tf; \
-	cp ../resources/options.json.azure kubernetes/options.json; \
+	../scripts/kubeapi-proxy-azure.sh; \
 	rm -f desired_cluster_profile.tfvars.example
 
 .PHONY: aws
@@ -58,7 +58,7 @@ aws: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
 	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
 	cp ../resources/override.aws.tf override.tf; \
-	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
+	../scripts/kubeapi-proxy-aws.sh; \
 	rm -f desired_cluster_profile.tfvars.example
 
 .PHONY: gcp
@@ -68,7 +68,7 @@ gcp: clean check-terraform
 	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
 	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
 	cp ../resources/override.gcp.tf override.tf; \
-	cp ../resources/options.json.gcp kubernetes/options.json; \
+	../scripts/kubeapi-proxy-gcp.sh; \
 	rm -f desired_cluster_profile.tfvars.example
 
 .PHONY: install-k8s

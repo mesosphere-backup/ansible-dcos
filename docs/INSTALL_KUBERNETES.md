@@ -42,37 +42,37 @@ Below is an example of how it looks like when the install ran successfully:
 
 ```
 deploy (serial strategy) (COMPLETE)
-   etcd (serial strategy) (COMPLETE)
-      etcd-0:[peer] (COMPLETE)
-      etcd-1:[peer] (COMPLETE)
-      etcd-2:[peer] (COMPLETE)
-   apiserver (dependency strategy) (COMPLETE)
-      kube-apiserver-0:[instance] (COMPLETE)
-      kube-apiserver-1:[instance] (COMPLETE)
-      kube-apiserver-2:[instance] (COMPLETE)
-   mandatory-addons (serial strategy) (COMPLETE)
-      mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
-      mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
-      mandatory-addons-0:[kube-dns] (COMPLETE)
-      mandatory-addons-0:[metrics-server] (COMPLETE)
-      mandatory-addons-0:[dashboard] (COMPLETE)
-      mandatory-addons-0:[ark] (COMPLETE)
-   kubernetes-api-proxy (dependency strategy) (COMPLETE)
-      kubernetes-api-proxy-0:[install] (COMPLETE)
-   controller-manager (dependency strategy) (COMPLETE)
-      kube-controller-manager-0:[instance] (COMPLETE)
-      kube-controller-manager-1:[instance] (COMPLETE)
-      kube-controller-manager-2:[instance] (COMPLETE)
-   scheduler (dependency strategy) (COMPLETE)
-      kube-scheduler-0:[instance] (COMPLETE)
-      kube-scheduler-1:[instance] (COMPLETE)
-      kube-scheduler-2:[instance] (COMPLETE)
-   node (dependency strategy) (COMPLETE)
-      kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
-      kube-node-1:[kube-proxy, coredns, kubelet] (COMPLETE)
-      kube-node-2:[kube-proxy, coredns, kubelet] (COMPLETE)
-   public-node (dependency strategy) (COMPLETE)
-      kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+├─ etcd (serial strategy) (COMPLETE)
+│  ├─ etcd-0:[peer] (COMPLETE)
+│  ├─ etcd-1:[peer] (COMPLETE)
+│  └─ etcd-2:[peer] (COMPLETE)
+├─ apiserver (dependency strategy) (COMPLETE)
+│  ├─ kube-apiserver-0:[instance] (COMPLETE)
+│  ├─ kube-apiserver-1:[instance] (COMPLETE)
+│  └─ kube-apiserver-2:[instance] (COMPLETE)
+├─ mandatory-addons (serial strategy) (COMPLETE)
+│  ├─ mandatory-addons-0:[additional-cluster-role-bindings] (COMPLETE)
+│  ├─ mandatory-addons-0:[kubelet-tls-bootstrapping] (COMPLETE)
+│  ├─ mandatory-addons-0:[kube-dns] (COMPLETE)
+│  ├─ mandatory-addons-0:[metrics-server] (COMPLETE)
+│  ├─ mandatory-addons-0:[dashboard] (COMPLETE)
+│  └─ mandatory-addons-0:[ark] (COMPLETE)
+├─ kubernetes-api-proxy (dependency strategy) (COMPLETE)
+│  └─ kubernetes-api-proxy-0:[install] (COMPLETE)
+├─ controller-manager (dependency strategy) (COMPLETE)
+│  ├─ kube-controller-manager-0:[instance] (COMPLETE)
+│  ├─ kube-controller-manager-1:[instance] (COMPLETE)
+│  └─ kube-controller-manager-2:[instance] (COMPLETE)
+├─ scheduler (dependency strategy) (COMPLETE)
+│  ├─ kube-scheduler-0:[instance] (COMPLETE)
+│  ├─ kube-scheduler-1:[instance] (COMPLETE)
+│  └─ kube-scheduler-2:[instance] (COMPLETE)
+├─ node (dependency strategy) (COMPLETE)
+│  ├─ kube-node-0:[kube-proxy, coredns, kubelet] (COMPLETE)
+│  ├─ kube-node-1:[kube-proxy, coredns, kubelet] (COMPLETE)
+│  └─ kube-node-2:[kube-proxy, coredns, kubelet] (COMPLETE)
+└─ public-node (dependency strategy) (COMPLETE)
+   └─ kube-node-public-0:[kube-proxy, coredns, kubelet] (COMPLETE)
 ```
 
 After that, all kubernetes tasks are running and the `kubectl` is configured to access the Kubernetes API from outside the DC/OS cluster.
@@ -84,9 +84,9 @@ Let's test accessing the Kubernetes API and list the Kubernetes cluster nodes:
 ```shell
 $ ./kubectl get nodes
 NAME                                          STATUS    ROLES     AGE       VERSION
-kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.5
-kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.5
-kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    2m        v1.10.5
+kube-node-0-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.5
+kube-node-1-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.5
+kube-node-2-kubelet.kubernetes.mesos          Ready     <none>    3m        v1.10.5
 kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    1m        v1.10.5
 ```
 

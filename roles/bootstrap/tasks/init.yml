@@ -19,8 +19,11 @@
     name: python-pip
     state: present
 
-- name: make sure docker-py is installed via pip
-  pip: name="docker-py==1.10.6" state=present
+- name: make sure docker-py is NOT installed
+  pip: name="docker-py" state=absent
+
+- name: make sure docker is installed via pip
+  pip: name="docker>=3.4" state=present
 
 - name: clear install directory
   file: path={{ dcos_path_bootstrap }} state=absent

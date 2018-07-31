@@ -108,7 +108,7 @@ roles:
 To start the package upgrade trigger the play `plays/kubernetes.yml`. The command for that is:
 
 ```shell
-$ ansible-playbook -i inventory.py plays/kubernetes.yml
+$ ansible-playbook plays/kubernetes.yml
 ```
 
 ### Cloud Providers upgrade

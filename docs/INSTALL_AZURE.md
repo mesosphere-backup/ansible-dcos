@@ -73,6 +73,8 @@ azure_agent_instance_type = "Standard_D4_v2"
 azure_public_agent_instance_type = "Standard_D4_v2"
 # Inbound Master Access
 admin_cidr = "0.0.0.0/0"
+
+ssh_pub_key = "INSERT_AZURE_PUBLIC_KEY_HERE"
 ```
 
 You can plan the profile with Terraform while referencing:

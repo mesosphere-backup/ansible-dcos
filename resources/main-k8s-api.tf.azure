@@ -4,7 +4,7 @@
 # Public Subnet NSG Rule
 resource "azurerm_network_security_rule" "public-subnet-kubeapiRule" {
     name                        = "HTTPSKUBEAPI"
-    priority                    = 120
+    priority                    = 125
     direction                   = "Inbound"
     access                      = "Allow"
     protocol                    = "Tcp"

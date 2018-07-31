@@ -1,5 +1,20 @@
 # Changelog
 
+## v0.7.0-dcos-1.11
+
+* Install DC/OS Packages with Ansible and use Kubernetes as the first example
+* Added Ansible module for package installation (https://github.com/dcos-labs/ansible-dcos-module)
+* Removed instructions for the SSH tunnel (it's not really needed anymore for the current versions of the Kubernetes package)
+* Separate installation of dcos cli and kubectl
+* Dedicated Kubernetes role roles/package/kubernetes/ that is using the package install module
+* Installs ifconfig to address issues with MESOS-6822
+* Update Kubernetes to  framework version 1.2.0-1.10.5
+* Add support for 6443 port in Terraform
+* Replace unsupported docker-py with current docker module.
+* Added yum-utils to common tasks
+* Bumps docker version to 17.06.2.ce
+* Removes Docker live restore because of issues with MESOS-6480
+
 ## v0.6.1-dcos-1.11
 
 * Update Kubernetes framework to GA

@@ -20,6 +20,7 @@ dcos_deploy_ee_package: False
 
 # Optional if dcos_iaas_target := aws
 #dcos_exhibitor: 'aws_s3'
+#dcos_exhibitor_explicit_keys: true
 #dcos_aws_access_key_id: '******'
 #dcos_aws_secret_access_key: '******'
 #dcos_aws_region: 'us-west-2'

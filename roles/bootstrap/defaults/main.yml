@@ -40,6 +40,7 @@ dcos_exhibitor: 'static'
 dcos_exhibitor_address: ''
 
 # AWS S3 Credentials (only needed for exhibitor: aws_s3)
+dcos_exhibitor_explicit_keys: false
 dcos_aws_access_key_id: ''
 dcos_aws_secret_access_key: ''
 dcos_aws_region: ''

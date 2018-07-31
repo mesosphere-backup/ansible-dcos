@@ -17,8 +17,7 @@
       so we can install DC/OS cluster.
   when: >
     dcos_exhibitor == 'aws_s3' and
-    ( dcos_aws_access_key_id == '' or dcos_aws_secret_access_key == '' or
-      dcos_aws_region == '' or dcos_s3_bucket == '' or
+    ( dcos_aws_region == '' or dcos_s3_bucket == '' or
       dcos_exhibitor_address == '' or dcos_s3_prefix == '' )
 
 - name: Check conditional requirements are present for IaaS (Azure)?'

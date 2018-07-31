@@ -1,11 +1,11 @@
 ---
-- name: setup the system requirements on all nodes
-  hosts: all
-  serial: 20
-  become: true
-  roles:
-    - common
-    - docker
+# - name: setup the system requirements on all nodes
+#   hosts: all
+#   serial: 20
+#   become: true
+#   roles:
+#     - common
+#     - docker
 
 - name: generate the DC/OS configuration
   hosts: bootstraps

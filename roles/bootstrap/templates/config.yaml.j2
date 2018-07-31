@@ -13,10 +13,16 @@ master_list:
 
 {% if dcos_exhibitor == "aws_s3" %}
 exhibitor_storage_backend: aws_s3
-exhibitor_explicit_keys: 'true'
 exhibitor_address: {{ dcos_exhibitor_address }}
+
+
+{% if dcos_exhibitor_explicit_keys == True %}
+exhibitor_explicit_keys: 'true'
 aws_access_key_id: {{ dcos_aws_access_key_id }}
 aws_secret_access_key: {{ dcos_aws_secret_access_key }}
+{% else %}
+exhibitor_explicit_keys: 'false'
+{% endif %}
 aws_region: {{ dcos_aws_region }}
 s3_bucket: {{ dcos_s3_bucket }}
 s3_prefix: {{ dcos_s3_prefix }}

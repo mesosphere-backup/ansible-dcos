@@ -93,6 +93,7 @@ Optionally you can change the exhibitor backend to `aws_s3`. So the master disco
 ```
 # Optional if dcos_iaas_target := aws
 dcos_exhibitor: 'aws_s3'
+dcos_exhibitor_explicit_keys: true
 dcos_aws_access_key_id: 'YOUR_AWS_ACCESS_KEY_ID'
 dcos_aws_secret_access_key: 'YOUR_AWS_SECRET_ACCESS_KEY'
 dcos_aws_region: 'YOUR_BUCKET_REGION'

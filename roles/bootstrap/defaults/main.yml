@@ -23,6 +23,10 @@ dcos_bootstrap_ip: ''
 # (internal/private) IP Addresses for the Master Nodes
 dcos_master_list: []
 
+# External Loadbalancer DNS for Masters or 
+# (external/public) Master Node IP Address (only needed for cli setup) 
+dcos_master_address: 'masterlb.external'
+
 dcos_resolvers:
   - 8.8.4.4
   - 8.8.8.8

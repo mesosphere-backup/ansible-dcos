@@ -11,6 +11,8 @@ master_list:
 {%- endfor %}
 {% endif %}
 
+master_external_loadbalancer: {{ dcos_master_address }}
+
 {% if dcos_exhibitor == "aws_s3" %}
 exhibitor_storage_backend: aws_s3
 exhibitor_address: {{ dcos_exhibitor_address }}

@@ -16,7 +16,7 @@
     - unzip
     - curl
     - ipset
-    - ntp
+    - chrony
     - firewalld
     - dnsmasq
     - yum-utils
@@ -24,21 +24,28 @@
     - bind-utils
 
 - name: disable selinux
-  selinux: policy=targeted state=permissive
+  selinux: 
+    policy: targeted
+    state: permissive
 
 - name: create group 'nogroup'
-  group: name=nogroup state=present
+  group: 
+    name: nogroup
+    state: present
 
 - name: ensure ipv6 is not disabled
-  sysctl: name={{ item }} value=0 state=present
+  sysctl: 
+    name: "{{ item }}"
+    value: "0"
+    state: present
   with_items:
     - net.ipv6.conf.all.disable_ipv6
     - net.ipv6.conf.default.disable_ipv6
     - net.ipv6.conf.lo.disable_ipv6
 
-- name: enable ntpd
+- name: enable chronyd
   service:
-    name: ntpd
+    name: chronyd
     enabled: yes
     state: started
 
@@ -53,3 +60,11 @@
     name: dnsmasq
     enabled: no
     state: stopped
+
+- name: check if time is synchronized
+  shell: "timedatectl status | grep 'NTP synchronized: yes'"
+  register: timedatectl_result
+  until: timedatectl_result.rc == 0
+  changed_when: timedatectl_result.rc != 0
+  retries: 5
+  delay: 10

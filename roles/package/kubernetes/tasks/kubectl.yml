@@ -47,7 +47,7 @@
   retries: 60
   delay: 10
   register: result
-  until: ('status' in result) and (result.status == 401)
+  until: ('status' in result) and ((result.status == 403) or (result.status == 401))
   changed_when: false
   failed_when: false
 

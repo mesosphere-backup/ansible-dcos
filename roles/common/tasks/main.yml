@@ -22,6 +22,14 @@
     - yum-utils
     - net-tools
     - bind-utils
+    - bash
+    - coreutils
+    - gawk
+    - gettext
+    - grep
+    - iproute
+    - util-linux
+    - sed
 
 - name: disable selinux
   selinux: 

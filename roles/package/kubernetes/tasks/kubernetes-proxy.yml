@@ -30,8 +30,9 @@
     state: present
     options:
       marathon-lb:
-        secret_name: 'marathon-lb/secret'
-        marathon-uri: 'https://marathon.mesos:8443'
+        secret_name: "marathon-lb/secret"
+        marathon-uri: "https://marathon.mesos:8443"
+        bind-http-https: false
         instances: 1
   when: dcos_deploy_ee_package
 

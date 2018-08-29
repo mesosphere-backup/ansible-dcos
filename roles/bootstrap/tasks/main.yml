@@ -32,7 +32,7 @@
 - name: Start web server to serve the bootstrap files
   docker_container:
     name: dcos_nginx
-    image: nginx
+    image: nginx:stable-alpine
     state: started
     recreate: yes
     restart: yes

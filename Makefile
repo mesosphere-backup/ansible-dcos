@@ -55,12 +55,12 @@ azure: clean check-terraform
 aws: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/aws; \
-	cp ../resources/desired_cluster_profile.aws desired_cluster_profile; \
-	cp ../resources/override.aws.tf override.tf; \
-	../scripts/kubeapi-proxy-aws.sh; \
-	rm -f desired_cluster_profile.tfvars.example
-
+	cp ../resources/cluster_profile.aws.tfvars cluster_profile.tfvars; \
+	cp ../resources/main.aws.tf main.tf; \
+	cp ../resources/outputs.aws.tf outputs.tf; \
+	cp ../resources/variables.aws.tf variables.tf; \
+	$(TERRAFORM_CMD) init
+	
 .PHONY: gcp
 gcp: clean check-terraform
 	mkdir .deploy
@@ -78,17 +78,17 @@ install-k8s: check-ansible
 .PHONY: plan-infra
 plan-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) plan -var-file desired_cluster_profile -var state=none
+	$(TERRAFORM_CMD) plan -var-file cluster_profile.tfvars
 
 .PHONY: launch-infra
 launch-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) apply -var-file desired_cluster_profile -var state=none
+	$(TERRAFORM_CMD) apply -var-file cluster_profile.tfvars
 
 .PHONY: destroy-infra
 destroy-infra: check-terraform
 	cd .deploy; \
-	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file desired_cluster_profile
+	$(TERRAFORM_CMD) destroy $(TERRAFORM_DESTROY_ARGS) -var-file cluster_profile.tfvars
 
 .PHONY: ansible-ping
 ansible-ping: check-python3 check-ansible

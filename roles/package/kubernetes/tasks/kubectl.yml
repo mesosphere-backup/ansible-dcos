@@ -42,7 +42,7 @@
 
 - name: wait for kubernetes to come up
   uri:
-    url: "https://{{ groups['agent_publics'][0] }}:6443"
+    url: "https://{{ groups['agent_publics'][0] }}:8181"
     validate_certs: no
   retries: 60
   delay: 10
@@ -52,4 +52,4 @@
   failed_when: false
 
 - name: configure kubernetes on DC/OS for common kubectl CLI commands
-  command: "dcos kubernetes kubeconfig --apiserver-url https://{{ groups['agent_publics'][0] }}:6443 --insecure-skip-tls-verify"
+  command: "dcos kubernetes kubeconfig --apiserver-url https://{{ groups['agent_publics'][0] }}:8181 --insecure-skip-tls-verify"

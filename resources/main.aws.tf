@@ -40,6 +40,7 @@ module "dcos-infrastructure" {
   public_agents_root_volume_size             = "${var.public_agents_root_volume_size}"
   public_agents_root_volume_type             = "${var.public_agents_root_volume_type}"
   ssh_public_key                             = "${var.ssh_public_key}"
+  ssh_public_key_file                        = "${var.ssh_public_key_file}"
   tags                                       = "${var.tags}"
 
   providers = {

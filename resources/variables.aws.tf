@@ -10,7 +10,14 @@ variable "aws_key_name" {
 
 variable "ssh_public_key" {
   description = <<EOF
-Specify a SSH public key in authorized keys format (e.g. "ssh-rsa ..") to be used with the instances. Make sure you added this key to your ssh-agent
+SSH public key in authorized keys format (e.g. "ssh-rsa ..") to be used with the instances. Make sure you added this key to your ssh-agent
+EOF
+  default     = ""
+}
+
+variable "ssh_public_key_file" {
+  description = <<EOF
+path to SSH public key. This is mandatory but can be set to `""` if you want to use `ssh_public_key` with the key as string
 EOF
 }
 

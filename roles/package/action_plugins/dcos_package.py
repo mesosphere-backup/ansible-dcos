@@ -132,6 +132,10 @@ class ActionModule(ActionBase):
         args = self._task.args
         package_name = args.get('name', None)
         package_version = args.get('version', None)
+
+        if package_version is None:
+            raise AnsibleActionFail('version cannot be empty for dcos_package')
+
         state = args.get('state', 'present')
 
         # ensure app_id has no leading or trailing /

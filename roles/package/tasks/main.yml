@@ -15,12 +15,12 @@
   block:
     - name: Download the DC/OS CLI Linux binary (dcos) to your current directory and make it executable
       become: false
-      get_url: url="https://downloads.dcos.io/binaries/cli/linux/x86-64/dcos-{{ dcos_version | regex_replace('^([0-9]{1,2}\\.[0-9]{1,2})(.*)$', '\\1') }}/dcos" dest="../dcos" mode=0755 force=yes
+      get_url: url="https://downloads.dcos.io/binaries/cli/linux/x86-64/latest/dcos" dest="../dcos" mode=0755 force=yes
       when: ansible_os_family == "Debian" or ansible_os_family == "RedHat"
 
     - name: Download the DC/OS CLI Darwin binary (dcos) to your current directory and make it executable
       become: false
-      get_url: url="https://downloads.dcos.io/binaries/cli/darwin/x86-64/dcos-{{ dcos_version | regex_replace('^([0-9]{1,2}\\.[0-9]{1,2})(.*)$', '\\1') }}/dcos" dest="../dcos" mode=0755 force=yes
+      get_url: url="https://downloads.dcos.io/binaries/cli/darwin/x86-64/latest/dcos" dest="../dcos" mode=0755 force=yes
       when: ansible_os_family == "Darwin"
 
 - name: Uninstall DC/OS CLI

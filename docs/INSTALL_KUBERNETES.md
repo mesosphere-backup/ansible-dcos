@@ -4,11 +4,11 @@ Kubernetes is now available as a DC/OS package to quickly, and reliably run Kube
 
 ## Known limitations
 
-Before proceeding, please check the [current Kubernetes package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.2.1-1.10.6/limitations/).
+Before proceeding, please check the [current Kubernetes package limitations](https://docs.mesosphere.com/service-docs/kubernetes/1.3.0-1.10.8/limitations/).
 
 ## Pre-Requisites
 
-Make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.2.1-1.10.6/install/#prerequisites/).
+Make sure your cluster fulfils the [Kubernetes package default requirements](https://docs.mesosphere.com/service-docs/kubernetes/1.3.0-1.10.8/install/#prerequisites/).
 
 ## Install Kubernetes on DC/OS package
 
@@ -92,7 +92,7 @@ kube-node-public-0-kubelet.kubernetes.mesos   Ready     <none>    1m        v1.1
 
 ## Upgrade Kubernetes on DC/OS package
 
-In order to upgrade Kubernetes on DC/OS package, you have to set the target package version of Kubernetes on DC/OS inside of the file `plays/kubernetes.yml`. So for example if you want to upgrade to Kubernetes on DC/OS `1.2.1-1.10.6`, specify the version within the variable `dcos_k8s_package_version`.
+In order to upgrade Kubernetes on DC/OS package, you have to set the target package version of Kubernetes on DC/OS inside of the file `plays/kubernetes.yml`. So for example if you want to upgrade to Kubernetes on DC/OS `1.3.0-1.10.8`, specify the version within the variable `dcos_k8s_package_version`.
 
 ```yaml
 roles:
@@ -100,7 +100,7 @@ roles:
     vars:
       dcos_k8s_enabled: true
       dcos_k8s_app_id: 'kubernetes'
-      dcos_k8s_package_version: '1.2.1-1.10.6'
+      dcos_k8s_package_version: '1.3.0-1.10.8'
 ```
 
 ### On-Premises upgrade
@@ -119,7 +119,7 @@ To start the package upgrade trigger the play `plays/kubernetes.yml`. The comman
 $ ansible-playbook -i inventory.py plays/kubernetes.yml
 ```
 
-For more details, please check the official [Kubernetes package upgrade doc](https://docs.mesosphere.com/services/kubernetes/1.2.1-1.10.6/upgrade/#updating-the-package-version).
+For more details, please check the official [Kubernetes package upgrade doc](https://docs.mesosphere.com/services/kubernetes/1.3.0-1.10.8/upgrade/#updating-the-package-version).
 
 ## Uninstall Kubernetes on DC/OS package
 
@@ -131,7 +131,7 @@ roles:
     vars:
       dcos_k8s_enabled: false
       dcos_k8s_app_id: 'kubernetes'
-      dcos_k8s_package_version: '1.2.1-1.10.6'
+      dcos_k8s_package_version: '1.3.0-1.10.8'
 ```
 
 ### On-Premises uninstallation
@@ -152,4 +152,4 @@ $ ansible-playbook -i inventory.py plays/kubernetes.yml
 
 ## Documentation
 
-For more details, please check the official [Kubernetes package docs](https://docs.mesosphere.com/service-docs/kubernetes/1.2.1-1.10.6).
+For more details, please check the official [Kubernetes package docs](https://docs.mesosphere.com/service-docs/kubernetes/1.3.0-1.10.8).

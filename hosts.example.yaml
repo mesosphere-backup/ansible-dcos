@@ -6,19 +6,27 @@ all:
       hosts:
         # Public IP Address of the Bootstrap Node
         1.0.0.1:
+      vars:
+        ansible_user: centos
     masters:
       hosts:
         # Public IP Addresses for the Master Nodes
         1.0.0.2:
+      vars:
+        ansible_user: centos
     agents:
       hosts:
         # Public IP Addresses for the Agent Nodes
         1.0.0.3:
         1.0.0.4:
+      vars:
+        ansible_user: centos
     agent_publics:
       hosts:
         # Public IP Addresses for the Public Agent Nodes
         1.0.0.5:
+      vars:
+        ansible_user: centos
   vars:
     # IaaS target for DC/OS deployment
     # options: aws, gcp, azure or onprem

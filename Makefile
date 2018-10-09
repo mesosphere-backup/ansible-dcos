@@ -45,11 +45,11 @@ endif
 azure: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/azure; \
-	cp ../resources/desired_cluster_profile.azure desired_cluster_profile; \
-	cp ../resources/override.azure.tf override.tf; \
-	../scripts/kubeapi-proxy-azure.sh; \
-	rm -f desired_cluster_profile.tfvars.example
+	cp ../resources/cluster_profile.azurerm.tfvars cluster_profile.tfvars; \
+	cp ../resources/main.azurerm.tf main.tf; \
+	cp ../resources/outputs.azurerm.tf outputs.tf; \
+	cp ../resources/variables.azurerm.tf variables.tf; \
+	$(TERRAFORM_CMD) init
 
 .PHONY: aws
 aws: clean check-terraform

@@ -1,5 +1,5 @@
 output "dns_resolvers" {
-  value = ["172.12.0.2"]
+  value = ["168.63.129.16"]
 }
 
 output "cluster_prefix" {
@@ -7,19 +7,19 @@ output "cluster_prefix" {
 }
 
 output "bootstrap_public_ips" {
-  value = "${module.dcos-infrastructure.bootstrap.public_ip}"
+  value = "${module.dcos-infrastructure.bootstrap.public_ip[0]}"
 }
 
 output "bootstrap_private_ips" {
-  value = "${module.dcos-infrastructure.bootstrap.private_ip}"
+  value = "${module.dcos-infrastructure.bootstrap.private_ip[0]}"
 }
 
 output "lb_external_masters" {
-  value = "${module.dcos-infrastructure.elb.masters_dns_name}"
+  value = "${module.dcos-infrastructure.lb.masters}"
 }
 
 output "lb_internal_masters" {
-  value = "${module.dcos-infrastructure.elb.masters_internal_dns_name}"
+  value = "${module.dcos-infrastructure.lb.masters-internal}"
 }
 
 output "master_public_ips" {
@@ -35,33 +35,34 @@ output "agent_public_ips" {
 }
 
 output "lb_external_agents" {
-  value = "${module.dcos-infrastructure.elb.public_agents_dns_name}"
+  value = "${module.dcos-infrastructure.lb.public-agents}"
 }
 
 output "public_agent_public_ips" {
   value = ["${module.dcos-infrastructure.public_agents.public_ips}"]
 }
 
-output "dns_search" {
-  value = "${var.aws_region}.compute.internal"
-}
-
 output "bootstrap_admin_username" {
-  value = "${module.dcos-infrastructure.bootstrap.os_user}"
+  value = "${module.dcos-infrastructure.bootstrap.admin_username}"
 }
 
 output "masters_admin_username" {
-  value = "${module.dcos-infrastructure.masters.os_user}"
+  value = "${module.dcos-infrastructure.masters.admin_username}"
 }
 
 output "public_agents_admin_username" {
-  value = "${module.dcos-infrastructure.public_agents.os_user}"
+  value = "${module.dcos-infrastructure.public_agents.admin_username}"
 }
 
 output "private_agents_admin_username" {
-  value = "${module.dcos-infrastructure.private_agents.os_user}"
+  value = "${module.dcos-infrastructure.private_agents.admin_username}"
+}
+
+output "dns_search" {
+  value = "None"
 }
 
 output "ip_detect" {
-  value = "aws"
+  value = "azure"
 }
+

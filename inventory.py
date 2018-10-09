@@ -95,6 +95,18 @@ class TerraformInventory(object):
             elif entry == 'ip_detect':
                 self.push_var(self.inventory, 'common', {"dcos_iaas_target": terraform_data['ip_detect']['value']})
 
+            elif entry == 'bootstrap_admin_username':
+                self.push_var(self.inventory, 'bootstraps', {"ansible_user": terraform_data['bootstrap_admin_username']['value']})
+
+            elif entry == 'masters_admin_username':
+                self.push_var(self.inventory, 'masters', {"ansible_user": terraform_data['masters_admin_username']['value']})
+
+            elif entry == 'public_agents_admin_username':
+                self.push_var(self.inventory, 'agent_publics', {"ansible_user": terraform_data['public_agents_admin_username']['value']})
+
+            elif entry == 'private_agents_admin_username':
+                self.push_var(self.inventory, 'agents', {"ansible_user": terraform_data['private_agents_admin_username']['value']})
+
     def json_format_dict(self, data, pretty=False):
         ''' Converts a dict to a JSON object and dumps it as a formatted string '''
 

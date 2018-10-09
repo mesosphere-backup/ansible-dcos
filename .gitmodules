@@ -1,0 +1,3 @@
+[submodule "resources/ansible-dcos-module"]
+	path = resources/ansible-dcos-module
+	url = https://github.com/dcos-labs/ansible-dcos-module.git

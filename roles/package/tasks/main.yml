@@ -34,3 +34,4 @@
   dcos_connection:
     url: "https://{{ groups['masters'][0] }}"
     insecure: true
+    no_check: true

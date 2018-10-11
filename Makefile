@@ -1,5 +1,4 @@
 RM := rm -f
-TERRAFORM_INSTALLER_URL := github.com/dcos/terraform-dcos
 
 # Set PATH to include local dir for locally downloaded binaries.
 export PATH := .:$(PATH)
@@ -65,11 +64,11 @@ aws: clean check-terraform
 gcp: clean check-terraform
 	mkdir .deploy
 	cd .deploy; \
-	$(TERRAFORM_CMD) init -from-module $(TERRAFORM_INSTALLER_URL)/gcp; \
-	cp ../resources/desired_cluster_profile.gcp desired_cluster_profile; \
-	cp ../resources/override.gcp.tf override.tf; \
-	../scripts/kubeapi-proxy-gcp.sh; \
-	rm -f desired_cluster_profile.tfvars.example
+	cp ../resources/cluster_profile.gcp.tfvars cluster_profile.tfvars; \
+	cp ../resources/main.gcp.tf main.tf; \
+	cp ../resources/outputs.gcp.tf outputs.tf; \
+	cp ../resources/variables.gcp.tf variables.tf; \
+	$(TERRAFORM_CMD) init
 
 .PHONY: install-k8s
 install-k8s: check-ansible

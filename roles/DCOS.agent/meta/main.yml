@@ -4,7 +4,7 @@ dependencies: []
 galaxy_info:
   role_name: DCOS.agent
   author: MrMarvin
-  description: A set of Ansible Roles that install DC/OS on RedHat/CentOS Linux.
+  description: Installs a Mesosphere DC/OS agent node. Part of a set of Ansible Roles that install DC/OS on RedHat/CentOS Linux.
   company: "Mesosphere"
   license: "Apache 2.0"
   min_ansible_version: 2.5

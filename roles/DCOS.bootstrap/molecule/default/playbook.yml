@@ -2,5 +2,6 @@
 - name: Converge
   hosts: all
   roles:
-    - role: bootstrap
+    - role: DCOS.requirements
+    - role: DCOS.bootstrap
   become: yes

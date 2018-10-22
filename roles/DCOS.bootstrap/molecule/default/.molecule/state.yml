@@ -1,7 +1,0 @@
-# Molecule managed
-
----
-converged: true
-created: true
-driver: vagrant
-prepared: true

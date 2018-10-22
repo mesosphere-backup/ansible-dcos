@@ -14,4 +14,3 @@
   shell: "set -o pipefail; bash {{ path_base_tmp }}/{{ dcos_version_specifier }}/dcos_install.sh master | systemd-cat -t dcos-install"
   args:
     executable: "/usr/bin/bash"
-

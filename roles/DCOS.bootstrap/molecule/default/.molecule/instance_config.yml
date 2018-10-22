@@ -1,0 +1,8 @@
+# Molecule managed
+
+---
+- address: 127.0.0.1
+  identity_file: /Users/marv/work/mesosphere/soak-cluster-deployers/generic-cluster/roles/bootstrap/molecule/default/.molecule/.vagrant/machines/bootstrap1/virtualbox/private_key
+  instance: bootstrap1
+  port: '2222'
+  user: vagrant

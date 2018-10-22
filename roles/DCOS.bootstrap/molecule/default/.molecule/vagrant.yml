@@ -1,0 +1,17 @@
+# Molecule managed
+
+---
+instance:
+  interfaces: []
+  name: bootstrap1
+  raw_config_args: null
+platform:
+  box: centos/7
+  box_url: null
+  box_version: null
+provider:
+  name: virtualbox
+  options:
+    cpus: 2
+    memory: 2048
+  raw_config_args: null

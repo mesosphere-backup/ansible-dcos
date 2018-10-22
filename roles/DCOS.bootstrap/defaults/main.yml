@@ -1,0 +1,13 @@
+---
+download_base_dir: /opt/dcos-install
+bootstrap_port: 8080
+
+s3_prefix: "ansible-dcos-exhibitor"
+
+customer_key: "00000000-0000-0000-0000-000000000000"
+
+ip_detect: eth0
+resolvers: |
+  - 8.8.4.4
+  - 8.8.8.8
+dns_search: None

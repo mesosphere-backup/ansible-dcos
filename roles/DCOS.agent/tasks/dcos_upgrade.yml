@@ -1,0 +1,17 @@
+- name: "Upgrade: Create download directory"
+  file:
+    path: "{{ path_base_tmp }}/{{ dcos_version_specifier }}/upgrade_from_{{ ansible_local.dcos_installation['version'] }}/"
+    state: directory
+    mode: 0755
+
+- name: "Upgrade: Download dcos_node_upgrade.sh"
+  get_url:
+    url: "{{ dcos['config']['bootstrap_url'] }}/{{ dcos_version_specifier }}/genconf/serve/upgrade_from_{{ ansible_local.dcos_installation['version'] }}/latest/dcos_node_upgrade.sh"
+    dest: "{{ path_base_tmp }}/{{ dcos_version_specifier }}/upgrade_from_{{ ansible_local.dcos_installation['version'] }}/dcos_node_upgrade.sh"
+    mode: 0740
+
+- name: "Upgrade: Run DC/OS agent upgrade"
+  shell: "set -o pipefail; ./dcos_node_upgrade.sh {{ dcos['version'] is version_compare('1.11', '>=')|ternary('--verbose', '') }} | systemd-cat -t dcos-upgrade"
+  args:
+    chdir: "{{ path_base_tmp }}/{{ dcos_version_specifier }}/upgrade_from_{{ ansible_local.dcos_installation['version'] }}/"
+    executable: "/usr/bin/bash"

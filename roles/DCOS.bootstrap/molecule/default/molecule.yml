@@ -1,0 +1,58 @@
+---
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+  enabled: False
+platforms:
+  - name: bootstrap1
+    box: centos/7
+    memory: 2048
+    cpus: 2
+    groups:
+      - bootstrap
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      bootstrap:
+        cluster_name: "moleculevagranttestcluster"
+        dcos:
+          download: https://downloads.mesosphere.com/dcos-enterprise/testing/1.10.4/commit/2e05da6b45f9f0e486de4d65404a0081099861c8/dcos_generate_config.ee.sh
+          version: "1.10.4"
+          version_to_upgrade_from: "1.10.4"
+          image_commit: "2e05da6b45f9f0e486de4d65404a0081099861c8"
+        cluster_docker_credentials:
+          auths:
+            'registry-auth-ucr.marathon.autoip.dcos.thisdcos.directory':
+               auth: 'foo@example.com:sicherespasswort'
+        system_updates: true
+        exhibitor: static
+        enterprise_dcos: true
+        security: permissive
+        feature_dcos_storage_enabled: true
+        bouncer_expiration_auth_token_days: '0.0416'
+        customer_key: "00000000-0000-0000-0000-000000000000"
+        superuser_username: dcos-dev
+        superuser_password_hash: "$$6$$rounds=656000$JB03haCceX/l0M4r$PBqhQAGKOiSqsbkinrPvITOVvMaQqkzBGsH2NzNgpjMAmkhP34Pm1GnGg4ErI8iCdj3OU00382ShZXYTgoFEs/"
+        ip_detect: eth0
+        dcos['bootstrap_host']: 172.42.23.42
+        master_list: |
+          - 172.31.4.153
+          - 172.31.8.53
+          - 172.31.11.220
+        resolvers: |
+          - 8.8.8.8
+          - 8.8.4.4
+  lint:
+    name: ansible-lint
+    enabled: False
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+    enabled: False

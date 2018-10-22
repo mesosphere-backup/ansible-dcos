@@ -1,7 +1,0 @@
----
-dcos_deploy_ee_package: false
-dcos_k8s_enabled: true
-
-dcos_k8s_app_id: "kubernetes"
-dcos_k8s_proxy_app_id: "{{ dcos_k8s_app_id }}-proxy"
-dcos_k8s_package_version: '1.2.1-1.10.6'

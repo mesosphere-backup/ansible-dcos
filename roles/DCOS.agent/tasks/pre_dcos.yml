@@ -1,0 +1,7 @@
+- import_tasks: cuda.yml
+  when: ansible_ec2_instance_type is search('p2') or
+        ansible_ec2_instance_type is search('p3') or
+        ansible_ec2_instance_type is search('g2') or
+        ansible_ec2_instance_type is search('g3')
+
+- import_tasks: set_mesos_agent_attributes.yml

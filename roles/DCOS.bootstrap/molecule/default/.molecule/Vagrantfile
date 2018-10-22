@@ -1,0 +1,198 @@
+# Molecule managed
+
+require 'yaml'
+
+Vagrant.configure('2') do |config|
+  vagrant_config = YAML::load_file('/Users/marv/work/mesosphere/soak-cluster-deployers/generic-cluster/roles/bootstrap/molecule/default/.molecule/vagrant.yml')
+
+  if Vagrant.has_plugin?('vagrant-cachier')
+    config.cache.scope = 'machine'
+  end
+
+  ##
+  # Platforms
+  ##
+  if vagrant_config['platform']
+    platform = vagrant_config['platform']
+    config.vm.box = platform['box']
+
+    if platform['box_version']
+      config.vm.box_version = platform['box_version']
+    end
+
+    if platform['box_url']
+      config.vm.box_url = platform['box_url']
+    end
+  end
+
+  ##
+  # Provider
+  ##
+  if vagrant_config['provider']
+    provider = vagrant_config['provider']
+
+    # Boot time optimization
+    if provider['options']
+      if provider['options']['synced_folder']
+        config.vm.synced_folder ".", "/vagrant"
+      else
+        config.vm.synced_folder ".", "/vagrant", disabled: true
+      end
+
+      if provider['options'].has_key?('ssh_insert_key')
+        config.ssh.insert_key = provider['options']['ssh_insert_key']
+      else
+        config.ssh.insert_key = true
+      end
+    end
+
+    ##
+    # Virtualbox
+    ##
+    if provider['name'] == 'virtualbox'
+      config.vm.provider provider['name'] do |virtualbox|
+        virtualbox.memory = provider['options']['memory']
+        virtualbox.cpus = provider['options']['cpus']
+
+        if provider['options'] && provider['options']['linked_clone']
+          if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.8.0')
+            virtualbox.linked_clone = provider['options']['linked_clone']
+          end
+        else
+          if Gem::Version.new(Vagrant::VERSION) >= Gem::Version.new('1.8.0')
+            virtualbox.linked_clone = true
+          end
+        end
+
+        # Custom
+        if provider['options']
+          provider['options'].each { |key, value|
+            if key != 'memory' && key != 'cpus' && key != 'linked_clone' && key != 'ssh_insert_key' && key != 'synced_folder'
+              eval("virtualbox.#{key} = #{value}")
+            end
+          }
+        end
+
+        # Raw Configuration
+        if provider['raw_config_args']
+          provider['raw_config_args'].each { |raw_config_arg|
+            eval("virtualbox.#{raw_config_arg}")
+          }
+        end
+      end
+
+      # The vagrant-vbguest plugin attempts to update packages
+      # before a RHEL based VM is registered.
+      # TODO: Port from the old .j2, should be done in raw config
+      if (vagrant_config['platform'] =~ /rhel/i) != nil
+        if Vagrant.has_plugin?('vagrant-vbguest')
+          config.vbguest.auto_update = false
+        end
+      end
+    end
+
+    ##
+    # VMware (vmware_fusion, vmware_workstation and vmware_desktop)
+    ##
+    if provider['name'].start_with?('vmware_')
+      config.vm.provider provider['name'] do |vmware|
+        vmware.vmx['memsize'] = provider['options']['memory']
+        vmware.vmx['numvcpus'] = provider['options']['cpus']
+
+        # Custom
+        if provider['options']
+          provider['options'].each { |key, value|
+            if key != 'memory' && key != 'cpus' && key != 'ssh_insert_key' && key != 'synced_folder'
+              eval("vmware.#{key} = #{value}")
+            end
+          }
+        end
+
+        # Raw Configuration
+        if provider['raw_config_args']
+          provider['raw_config_args'].each { |raw_config_arg|
+            eval("vmware.#{raw_config_arg}")
+          }
+        end
+      end
+    end
+
+    ##
+    # Parallels
+    ##
+    if provider['name'] == 'parallels'
+      config.vm.provider provider['name'] do |parallels|
+        parallels.memory = provider['options']['memory']
+        parallels.cpus = provider['options']['cpus']
+
+        # Custom
+        if provider['options']
+          provider['options'].each { |key, value|
+            if key != 'memory' && key != 'cpus' && key != 'ssh_insert_key' && key != 'synced_folder'
+              eval("parallels.#{key} = #{value}")
+            end
+          }
+        end
+
+        # Raw Configuration
+        if provider['raw_config_args']
+          provider['raw_config_args'].each { |raw_config_arg|
+            eval("parallels.#{raw_config_arg}")
+          }
+        end
+      end
+    end
+
+    ##
+    # Libvirt
+    ##
+    if provider['name'] == 'libvirt'
+      config.vm.provider provider['name'] do |libvirt|
+        libvirt.memory = provider['options']['memory']
+        libvirt.cpus = provider['options']['cpus']
+
+        # Custom
+        if provider['options']
+          provider['options'].each { |key, value|
+            if key != 'memory' && key != 'cpus' && key != 'ssh_insert_key' && key != 'synced_folder'
+              eval("libvirt.#{key} = #{value}")
+            end
+          }
+        end
+
+        # Raw Configuration
+        if provider['raw_config_args']
+          provider['raw_config_args'].each { |raw_config_arg|
+            eval("libvirt.#{raw_config_arg}")
+          }
+        end
+      end
+    end
+  end
+
+  ##
+  # Instances
+  ##
+  if vagrant_config['instance']
+    instance = vagrant_config['instance']
+    config.vm.define instance['name'] do |c|
+      c.vm.hostname = instance['name']
+
+      if instance['interfaces']
+        instance['interfaces'].each { |interface|
+          if interface['type'] == 'static'
+            c.vm.network "#{interface['network_name']}", type: "#{interface['type']}", auto_config: "#{interface['auto_config']}", ip: "#{interface['ip']}"
+          else
+            c.vm.network "#{interface['network_name']}", type: "#{interface['type']}", auto_config: "#{interface['auto_config']}"
+          end
+        }
+      end
+
+      if instance['raw_config_args']
+        instance['raw_config_args'].each { |raw_config_arg|
+          eval("c.#{raw_config_arg}")
+        }
+      end
+    end
+  end
+end

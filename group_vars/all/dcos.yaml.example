@@ -1,0 +1,21 @@
+---
+dcos:
+  download: "https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh"
+  version: "1.12.0-beta1"
+  # version_to_upgrade_from: "1.12.0-dev"
+  # image_commit: "acc9fe548aea5b1b5b5858a4b9d2c96e07eeb9de"
+  enterprise_dcos: true
+
+  selinux_mode: enforcing
+
+  config:
+    # This is a direct yaml representation of the DC/OS config.yaml
+    # Please see https://docs.mesosphere.com/1.12/installing/production/advanced-configuration/configuration-reference/
+    # for parameter reference.
+    cluster_name: "examplecluster"
+    security: strict
+    bootstrap_url: http://int-bootstrap1-examplecluster.example.com:8080
+    exhibitor_storage_backend: static
+    master_discovery: static
+    master_list:
+      - 172.31.2.95

@@ -1,0 +1,4 @@
+{
+  "tests/test_default.py::test_serving_files_via_http": true, 
+  "tests/test_default.py::test_serving_files_via_http[ansible://bootstrap1]": true
+}

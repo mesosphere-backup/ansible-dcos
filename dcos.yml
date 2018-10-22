@@ -1,0 +1,28 @@
+- name: DC/OS Requirements
+  hosts: all
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.requirements
+
+- name: "SOAK: Setup and configure BOOTSTRAP nodes"
+  hosts: bootstraps
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.bootstrap
+
+- name: "SOAK: Setup and configure MASTER nodes"
+  hosts: masters
+  serial: 1
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.master
+
+- name: "SOAK: Setup and configure AGENT nodes"
+  hosts: agents
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.agent

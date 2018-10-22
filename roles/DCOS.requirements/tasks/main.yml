@@ -1,0 +1,64 @@
+# DC/OS System Requirements as of https://docs.mesosphere.com/1.11/installing/production/system-requirements/
+- name: "Disabled firewalld (RHEL only)"
+  systemd:
+    name: firewalld
+    state: stopped
+    enabled: false
+  when: ansible_distribution == 'RedHat'
+
+- name: "Disabled DNSmasq (RHEL only)"
+  systemd:
+    name: dnsmasq
+    state: stopped
+    enabled: false
+  when: ansible_distribution == 'RedHat'
+
+- name: "Docker CE (stable) repository"
+  yum_repository:
+    name: docker-ce-stable
+    description: Docker CE Repository
+    baseurl: "https://download.docker.com/linux/centos/7/$basearch/stable"
+    enabled: yes
+    gpgcheck: yes
+    gpgkey: https://download.docker.com/linux/centos/gpg
+
+- name: "Docker installed"
+  yum:
+    name: docker-ce >= 17.05
+    state: present
+
+- name: "Docker running"
+  systemd:
+    name: docker
+    state: started
+    enabled: true
+
+- name: "Install EPEL repositories for requires packages"
+  yum:
+    name: "epel-release"
+    state: present
+
+- name: "Install required system packages"
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - tar
+    - xz
+    - unzip
+    - curl
+    - ipset
+    - jq # not technically required by DC/OS but by this Ansible role for checks
+
+- name: "SELinux '{{ dcos['selinux_mode'] | default('permissive') }}'"
+  selinux:
+    policy: targeted
+    state: "{{ dcos['selinux_mode'] | default('permissive') }}"
+
+- name: "Ensure groups 'nogroup' and 'docker' exist"
+  group:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - nogroup
+    - docker

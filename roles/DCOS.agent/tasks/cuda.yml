@@ -1,0 +1,16 @@
+---
+- name: Have epel present
+  yum:
+    name: epel-release
+    state: installed
+
+- name: Add NVIDIA repository for CUDA drivers and tools
+  yum:
+    name: http://developer.download.nvidia.com/compute/cuda/repos/rhel7/x86_64/cuda-repo-rhel7-9.1.85-1.x86_64.rpm
+    state: present
+
+# reference https://jira.mesosphere.com/browse/OPS-724
+- name: Install CUDA drivers and tools
+  yum:
+    name: cuda
+    state: installed

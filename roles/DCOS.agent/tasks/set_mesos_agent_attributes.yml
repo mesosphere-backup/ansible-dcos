@@ -1,0 +1,15 @@
+- name: setting MESOS_ATTRIBUTES for mesos agent
+  ini_file:
+    path: /etc/systemd/system/dcos-mesos-slave.service.d/ATTRIBUTES.conf
+    section: Service
+    option: Environment
+    value: MESOS_ATTRIBUTES=elk_datanode:true
+  when: (elkdatanode is defined) and (elkdatanode == "true")
+
+# - name: setting DEFAULT_ROLE for mesos agent
+#   ini_file:
+#     path: /etc/systemd/system/dcos-mesos-slave.service.d/DEFAULT_ROLE.conf
+#     section: Service
+#     option: Environment
+#     value: MESOS_DEFAULT_ROLE=logs__elasticsearch-role
+#   when: (elkdatanode is defined) and (elkdatanode == "true")

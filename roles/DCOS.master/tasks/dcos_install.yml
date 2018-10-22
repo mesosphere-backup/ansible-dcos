@@ -1,0 +1,16 @@
+- name: "Installation: Create installer download directory"
+  file:
+    path: "{{ path_base_tmp }}/{{ dcos_version_specifier }}"
+    state: directory
+    mode: 0755
+
+- name: "Installation: Download dcos_install.sh"
+  get_url:
+    url: "{{ dcos['config']['bootstrap_url'] }}/{{ dcos_version_specifier }}/genconf/serve/dcos_install.sh"
+    dest: "{{ path_base_tmp }}/{{ dcos_version_specifier }}/"
+    mode: 0740
+
+- name: "Installation: Run DC/OS master installation"
+  shell: "set -o pipefail; bash {{ path_base_tmp }}/{{ dcos_version_specifier }}/dcos_install.sh master | systemd-cat -t dcos-install"
+  args:
+    executable: "/usr/bin/bash"

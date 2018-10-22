@@ -1,0 +1,16 @@
+rexray_config:
+  libstorage:
+    integration:
+      volume:
+        operations:
+          unmount:
+            ignoreusedcount: true
+          create:
+            default:
+              type: gp2
+    server:
+      tasks:
+        logTimeout: 5m
+  rexray:
+    loglevel: info
+    service: ebs

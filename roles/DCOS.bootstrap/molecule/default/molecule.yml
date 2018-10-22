@@ -1,0 +1,44 @@
+---
+driver:
+  name: vagrant
+  provider:
+    name: virtualbox
+lint:
+  name: yamllint
+  enabled: False
+platforms:
+  - name: bootstrap1
+    box: centos/7
+    memory: 2048
+    cpus: 2
+    groups:
+      - bootstrap
+provisioner:
+  name: ansible
+  inventory:
+    group_vars:
+      bootstrap:
+        cluster_name: "moleculevagranttestcluster"
+        dcos:
+          download: "https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh"
+          version: "1.12.0-beta1"
+          enterprise_dcos: false
+          selinux_mode: enforcing
+          config:
+            cluster_name: "examplecluster"
+            security: strict
+            bootstrap_url: http://int-bootstrap1-examplecluster.example.com:8080
+            exhibitor_storage_backend: static
+            master_discovery: static
+            master_list:
+              - 172.31.42.1
+  lint:
+    name: ansible-lint
+    enabled: False
+scenario:
+  name: default
+verifier:
+  name: testinfra
+  lint:
+    name: flake8
+    enabled: False

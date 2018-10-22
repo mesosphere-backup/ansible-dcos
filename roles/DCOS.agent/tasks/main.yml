@@ -1,0 +1,56 @@
+---
+- name: Defining DC/OS by using 'version' or, more specifically, 'image_commit'
+  set_fact:
+     dcos_version_specifier: "{{ dcos['image_commit'] | default(dcos['version']) }}"
+
+- ec2_metadata_facts:
+
+- name: "Create custom fact directory"
+  file:
+    path: "/etc/ansible/facts.d"
+    state: "directory"
+
+- name: "Custom DC/OS facts"
+  file:
+    src: "/opt/mesosphere/etc/dcos-version.json"
+    dest: "/etc/ansible/facts.d/dcos_installation.fact"
+    state: link
+    force: yes
+  notify: reload facts
+- meta: flush_handlers
+
+- import_tasks: pre_dcos.yml
+
+# Installation for fresh nodes
+- import_tasks: dcos_install.yml
+  when: (ansible_local is not defined) or (ansible_local.dcos_installation is not defined) or (ansible_local.dcos_installation['dcos-image-commit'] is not defined)
+
+# Upgrades for existing nodes, given the installed version doesnt match `dcos['version']`
+- import_tasks: dcos_upgrade.yml
+  when:
+    - ansible_local is defined and ansible_local.dcos_installation is defined
+    - ansible_local.dcos_installation['version'] != dcos['version']
+    - dcos['dcos-image-commit'] is not defined or ansible_local.dcos_installation['dcos-image-commit'] != dcos['dcos-image-commit']
+
+
+# Same version config updates for nodes that are on the same version, but differ in `dcos-config--setup` package version
+- name: "Same version config update? Register latest DC/OS-config--setup version from bootstrap"
+  shell: |
+    curl {{ dcos['config']['bootstrap_url'] }}/{{ dcos_version_specifier }}/genconf/serve/package_lists/$(curl {{ dcos['config']['bootstrap_url'] }}/{{ dcos_version_specifier }}/genconf/serve/cluster-package-list.latest).package_list.json | \
+    jq -r '.[] | select(.|test("dcos-config--setup"))' | sed s/dcos-config--//
+  args:
+    warn: false
+  register: latest_dcos_config_setup
+  changed_when: false
+
+- name: "Same version config update? Is latest DC/OS-config--setup package installed?"
+  shell: |
+    /opt/mesosphere/bin/dcos-path/dcos-shell pkgpanda list | grep {{ latest_dcos_config_setup.stdout }}
+  args:
+    executable: bash
+  failed_when: false
+  register: latest_dcos_config_setup_is_installed
+  changed_when: latest_dcos_config_setup_is_installed.rc != 0
+
+- import_tasks: dcos_upgrade.yml
+  when: latest_dcos_config_setup_is_installed.rc != 0

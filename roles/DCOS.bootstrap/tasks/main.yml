@@ -1,0 +1,120 @@
+---
+# This playbook generates the DC/OS installation/configuration files
+- name: Defining DC/OS by using 'version' or, more specifically, 'image_commit'
+  set_fact:
+     dcos_version_specifier: "{{ dcos['image_commit'] | default(dcos['version']) }}"
+
+- name: double check the prefix/cluster name and version
+  pause:
+    prompt: |
+        Please double check the prefix/cluster name and version of this cluster:
+
+          Cluster: {{ dcos['config']['cluster_name'] }}
+          Version: {{ dcos['version_to_upgrade_from'] | default("None") }} -> {{ dcos['version'] }}
+          Commit:  {{ dcos['image_commit'] | default("None") }}
+          via:     {{ dcos['download'] }}
+
+        PRESS *ENTER* OR CANCEL NOW IF IT ISN'T CORRECT
+  when: cluster_name_confirmed is not defined
+  register: cluster_name_confirmed
+  no_log: true
+
+# PRE DOWNLOAD vvv
+
+- name: check for docker
+  shell: which docker
+  register: which_docker
+  failed_when: false
+  changed_when: "which_docker.stdout  == ''"
+  notify: install docker
+
+- name: Install pip to install python-docker
+  yum:
+    name: python-pip
+    state: present
+
+- name: Install python docker bindings
+  pip:
+    name: docker
+    state: present
+
+- name: docker deamon started
+  systemd:
+    name: docker
+    state: started
+    enabled: yes
+
+- name: Setting download dir
+  set_fact:
+     download_path: "{{ download_base_dir }}/{{ dcos_version_specifier }}"
+
+- name: "create install directory/genconf"
+  file: path={{ download_path }}/genconf state=directory mode=0755
+
+#  vvv DOWNLOAD vvv
+
+- name: download installation file
+  get_url: url="{{ dcos['download'] }}" dest={{ download_path }}/dcos_generate_config.ee.sh mode=0440
+
+# vvv POST DOWNLOAD / configuration vvv
+
+- name: set IP detection script
+  template: src=ip-detect.j2 dest={{ download_path }}/genconf/ip-detect mode=0644
+  notify: trigger_new_config
+
+- name: set public IP detection script
+  template: src=ip-detect-public.j2 dest={{ download_path }}/genconf/ip-detect-public mode=0644
+  notify: trigger_new_config
+
+- name: set fault domain detection script
+  template: src=fault-domain-detect.sh.j2 dest={{ download_path }}/genconf/fault-domain-detect mode=0644
+  notify: trigger_new_config
+
+- name: "generate DC/OS configuration"
+  template: src=config.yaml.j2 dest={{ download_path }}/genconf/config.yaml mode=0644
+  notify: trigger_new_config
+
+- name: Flush handler now
+  meta: flush_handlers
+
+# vvv GENERATE INSTALLER vvv
+
+- name: generate DC/OS bootstrap files
+  shell: "bash dcos_generate_config.ee.sh"
+  args:
+    chdir: "{{ download_path }}"
+    creates: "{{ download_path }}/genconf/serve/dcos_install.sh"
+
+# vvv GENERATE UPGRADE SCRIPTS vvv
+- name: generate DC/OS upgrade files
+  shell: "bash dcos_generate_config.ee.sh --generate-node-upgrade-script {{ dcos['version_to_upgrade_from'] }}; mv genconf/serve/upgrade genconf/serve/upgrade_from_{{ dcos['version_to_upgrade_from'] }}"
+  args:
+    chdir: "{{ download_path }}"
+    creates: "{{ download_path }}/genconf/serve/upgrade_from_{{ dcos['version_to_upgrade_from'] }}/"
+  when: "dcos['version'] is version('1.9', '>=') and dcos['version_to_upgrade_from'] is defined"
+
+- name: get upgrade directory hash
+  shell: "ls -td -- */ | head -n 1 | cut -d'/' -f1"
+  args:
+    chdir: "{{ download_path }}/genconf/serve/upgrade_from_{{ dcos['version_to_upgrade_from'] }}"
+  changed_when: false
+  register: upgrade_dir_hash
+  when: "dcos['version'] is version('1.9', '>=') and dcos['version_to_upgrade_from'] is defined"
+
+- name: create latest/ symlink for upgrade.sh
+  file:
+    path: "{{ download_path }}/genconf/serve/upgrade_from_{{ dcos['version_to_upgrade_from'] }}/latest"
+    src:  "{{ upgrade_dir_hash.stdout }}"
+    state: link
+  when: " dcos['version'] is version('1.9', '>=') and dcos['version_to_upgrade_from'] is defined"
+
+# vvv serve files via http vvv
+
+- name: serve bootstrap files via dockerized httpd
+  docker_container:
+    name: bootstrapnginx
+    image: nginx
+    ports:
+     - "8080:80"
+    volumes:
+      - "{{ download_base_dir }}:/usr/share/nginx/html:ro"

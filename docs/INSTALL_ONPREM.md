@@ -85,7 +85,7 @@ To check that all instances are reachable via Ansible, run the following:
 $ ansible all -m ping
 ```
 
-Finally, you can install DC/OS by applying the Absible playbook:
+Finally, you can install DC/OS by applying the Ansible playbook:
 
 ```shell
 $ ansible-playbook plays/install.yml

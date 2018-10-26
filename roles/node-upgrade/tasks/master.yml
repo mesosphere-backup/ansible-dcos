@@ -14,10 +14,21 @@
     delay: 5
 
 - name: check if mesos master recovered
-  uri: url=http://{{ ansible_default_ipv4['address'] }}:5050/metrics/snapshot return_content=true
+  uri: 
+    url: "http://{{ ansible_default_ipv4['address'] }}:5050/metrics/snapshot"
+    return_content: true
   register: response
-  until: "'registrar\\/log\\/recovered\":1.0' in response.content"
+  until: "'registrar/log/recovered\":1.0' in response.content"
   retries: 12
   delay: 5
   changed_when: false
   when: dcos_ee_security != "strict"
+
+- name: check if cockroachdb recovered
+  shell: "/opt/mesosphere/bin/cockroach node status --ranges --certs-dir=/run/dcos/pki/cockroach --host={{ ansible_default_ipv4['address'] }} --format=csv 2>/dev/null | grep -v '^#' | tail -n +2 | rev | cut -d, -f1 | rev"
+  register: underreplicated
+  until: "'0' in underreplicated.stdout"
+  retries: 12
+  delay: 5
+  changed_when: false
+  when: dcos_deploy_ee_package

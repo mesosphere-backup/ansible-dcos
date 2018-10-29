@@ -8,28 +8,28 @@
 
 - name: install system utilities
   yum:
-    name: "{{ item }}"
+    name: [
+        'tar',
+         'xz',
+        'unzip',
+        'curl',
+        'ipset',
+        'chrony',
+        'firewalld',
+        'dnsmasq',
+        'yum-utils',
+        'net-tools',
+        'bind-utils',
+        'bash',
+        'coreutils',
+        'gawk',
+        'gettext',
+        'grep',
+        'iproute',
+        'util-linux',
+        'sed'
+        ]
     state: latest
-  with_items:
-    - tar
-    - xz
-    - unzip
-    - curl
-    - ipset
-    - chrony
-    - firewalld
-    - dnsmasq
-    - yum-utils
-    - net-tools
-    - bind-utils
-    - bash
-    - coreutils
-    - gawk
-    - gettext
-    - grep
-    - iproute
-    - util-linux
-    - sed
 
 - name: disable selinux
   selinux: 

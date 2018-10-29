@@ -24,7 +24,7 @@
 
 - name: "Docker installed"
   yum:
-    name: docker-ce >= 17.05
+    name: "docker-ce-{{ docker_version }}"
     state: present
 
 - name: "Docker running"
@@ -40,15 +40,27 @@
 
 - name: "Install required system packages"
   yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - tar
-    - xz
-    - unzip
-    - curl
-    - ipset
-    - jq # not technically required by DC/OS but by this Ansible role for checks
+    name: [
+        'tar',
+         'xz',
+        'unzip',
+        'curl',
+        'ipset',
+        'chrony',
+        'yum-utils',
+        'net-tools',
+        'bind-utils',
+        'bash',
+        'coreutils',
+        'gawk',
+        'gettext',
+        'grep',
+        'iproute',
+        'util-linux',
+        'sed',
+        'jq' # not technically required by DC/OS but by this Ansible role for checks
+        ]
+    state: latest
 
 - name: "SELinux '{{ dcos['selinux_mode'] | default('permissive') }}'"
   selinux:

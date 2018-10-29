@@ -1,4 +1,48 @@
+# common
+.DS_Store
+
+# cli
+dcos
+kubectl
+kubectl-version
+
+# ansible
+.vault
+**/vault
+hosts.yaml
+group_vars/all
+*.retry
+/tmp
 group_vars/all/dcos.yaml
 inventory
 roles/*/molecule/*/.molecule/
 roles/*/molecule/*/.pytest_cache/
+
+# vagrant
+.vagrant
+
+# terraform
+.deploy
+.terraform
+/*.tf
+/*.tf.disabled
+*.tfstate
+*.tfstate.backup
+terraform.tfvars
+.terraform.tfstate.lock.info
+modules/
+desired_cluster_profile.tfvars.example
+desired_cluster_profile
+
+# terraform gce
+/account.json
+
+# ide
+.idea
+
+# keypair
+private-key.pem
+public-key.pem
+
+# python
+*.pyc

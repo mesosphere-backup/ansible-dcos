@@ -19,7 +19,7 @@
 - name: check if mesos agent reregistered
   uri: url=http://{{ ansible_default_ipv4['address'] }}:5051/metrics/snapshot return_content=true
   register: response
-  until: "'slave\\/registered\":1.0' in response.content"
+  until: "'slave/registered\":1.0' in response.content"
   retries: 12
   delay: 5
   changed_when: false

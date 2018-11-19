@@ -24,7 +24,8 @@
 
 - name: "Docker installed"
   yum:
-    name: docker-ce >= 17.05
+    name: "docker-ce"
+    update_cache: true
     state: present
 
 - name: "Docker running"

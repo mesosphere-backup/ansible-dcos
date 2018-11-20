@@ -8,6 +8,13 @@ platforms:
     image: ami-9887c6e7
     region: us-east-1
     instance_type: t2.micro
+    ssh_user: centos
+    groups:
+      - prereqsgroup
+  - name: prereqs1-rhel7
+    image: ami-011b3ccf1bd6db744
+    region: us-east-1
+    instance_type: t2.micro
     groups:
       - prereqsgroup
 provisioner:

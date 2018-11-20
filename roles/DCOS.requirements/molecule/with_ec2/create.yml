@@ -5,7 +5,7 @@
   gather_facts: false
   no_log: "{{ not (lookup('env', 'MOLECULE_DEBUG') | bool or molecule_yml.provisioner.log|default(false) | bool) }}"
   vars:
-    ssh_user: centos
+    ssh_user: ec2-user
     ssh_port: 22
 
     security_group_name: molecule
@@ -28,6 +28,8 @@
     keypair_name: molecule_key
     keypair_path: "{{ lookup('env', 'MOLECULE_EPHEMERAL_DIRECTORY') }}/ssh_key"
   tasks:
+    - debug:
+        var: molecule_yml.platforms
     - name: Create security group
       ec2_group:
         name: "{{ security_group_name }}"
@@ -73,13 +75,12 @@
         image: "{{ item.image }}"
         region: "{{ item.region }}"
         instance_type: "{{ item.instance_type }}"
-        #vpc_subnet_id: "{{ item.vpc_subnet_id }}"
         group: "{{ security_group_name }}"
         instance_tags:
           instance: "{{ item.name }}"
-          region: "{{ item.region }}"
+          molecule_region: "{{ item.region }}"
+          molecule_ssh_user: "{{ item.ssh_user | default(ssh_user) }}"
         wait: true
-        #assign_public_ip: true
         exact_count: 1
         count_tag:
           instance: "{{ item.name }}"
@@ -102,9 +103,9 @@
       set_fact:
         instance_conf_dict: {
           'instance': "{{ item.instances[0].tags.instance }}",
-          'region': "{{ item.instances[0].tags['region'] | default(None) }}",
+          'region': "{{ item.instances[0].tags['molecule_region'] }}",
           'address': "{{ item.instances[0].public_ip }}",
-          'user': "{{ ssh_user }}",
+          'user': "{{ item.instances[0].tags['molecule_ssh_user'] }}",
           'port': "{{ ssh_port }}",
           'identity_file': "{{ keypair_path }}",
           'instance_ids': "{{ item.instance_ids }}", }

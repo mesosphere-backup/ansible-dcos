@@ -1,0 +1,5 @@
+molecule==2.19.0
+molecule[ec2]
+molecule[vagrant]
+boto
+boto3

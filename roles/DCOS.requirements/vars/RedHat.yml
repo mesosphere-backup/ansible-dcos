@@ -1,0 +1,10 @@
+dcos_docker_pkg_name: docker
+dcos_docker_repo_name: rhui-REGION-rhel-server-extras
+dcos_prereq_packages:
+  - tar
+  - xz
+  - unzip
+  - curl
+  - ipset
+  - jq # not technically required by DC/OS but by this Ansible role for checks
+

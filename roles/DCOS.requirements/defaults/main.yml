@@ -1,0 +1,3 @@
+---
+dcos:
+  selinux_mode: permissive

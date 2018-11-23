@@ -46,3 +46,4 @@ public-key.pem
 
 # python
 *.pyc
+**.pyc

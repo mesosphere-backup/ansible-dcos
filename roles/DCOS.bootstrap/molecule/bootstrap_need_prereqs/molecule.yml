@@ -7,7 +7,7 @@ lint:
   name: yamllint
   enabled: False
 platforms:
-  - name: bootstrap1
+  - name: bootstrap1-centos75
     box: centos/7
     memory: 2048
     cpus: 2
@@ -18,7 +18,9 @@ provisioner:
   inventory:
     group_vars:
       bootstrap:
-        cluster_name: "moleculevagranttestcluster"
+        node_type: bootstrap
+        cluster_name_confirmed: true
+        cluster_name: "moleculecentos75"
         dcos:
           download: "https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh"
           version: "1.12.0-beta1"

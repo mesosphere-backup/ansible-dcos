@@ -3,3 +3,4 @@ inventory
 roles/*/molecule/*/.molecule/
 roles/*/molecule/*/.pytest_cache/
 **.pyc
+.vscode/

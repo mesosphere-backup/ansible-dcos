@@ -105,6 +105,17 @@ There are a few parameters that are used by these roles outside the DC/OS config
 
 * `bootstrap_url`: Should point to http://*your bootstrap node*:8080. Will be used internally and conviniently overwritten for the installer/upgrader to point to a version specific sub-directory.
 
+#### Ansible dictionary merge behavior caveat
+
+Due to the nested structure of the `dcos` configuration, it might be required to set Ansible to [merge instead over replacing](https://docs.ansible.com/ansible/2.4/intro_configuration.html#hash-behaviour), when combining config from multiple places.
+
+##### Example
+
+```ini
+# ansible.cfg
+hash_behaviour = merge
+```
+
 ## Example playbook
 
 Mesosphere DC/OS is a complex system, spanning multiple nodes to form a full multi-node cluster. There are some constraints in making a playbook use the provided roles:

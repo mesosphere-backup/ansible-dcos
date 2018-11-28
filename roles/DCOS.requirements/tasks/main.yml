@@ -2,7 +2,7 @@
 - name: "Gather OS specific variables"
   include_vars: "{{ item }}"
   with_first_found:
-    - "vars/{{ ansible_distribution }}.yml"
+    - "vars/{{ ansible_distribution }}{{ ansible_distribution_major_version }}.yml"
     - "vars/generic.yml"
   tags: vars
 
@@ -25,7 +25,7 @@
 
 - name: "Docker CE (stable) repository (Only non-EL systems)"
   yum_repository:
-    name: "{{ dcos_docker_repo_name }}"
+    name: docker-ce
     description: Docker CE Repository
     baseurl: "https://download.docker.com/linux/centos/7/$basearch/stable"
     enabled: yes
@@ -33,35 +33,47 @@
     gpgkey: https://download.docker.com/linux/centos/gpg
   when: ansible_distribution == 'CentOS'
 
-- name: "Docker installed"
-  yum:
-    name: "{{ dcos_docker_pkg_name }}"
-    update_cache: true
-    enablerepo: "{{ dcos_docker_repo_name }}"
-    state: present
+- block:
+  - name: "Finding RHEL extras repository name (Only EL systems)"
+    shell: |
+      cat /etc/yum.repos.d/redhat* | grep -E '^\[.*extras.*\]$' | grep -vE 'debug|source' | tr -d '[|]'
+    register: rhel_exras_repo_name
+    changed_when: false
+    when: ansible_distribution == 'RedHat'
+  - name: "Docker installed"
+    yum:
+      name: "{{ dcos_docker_pkg_name }}"
+      update_cache: true
+      enablerepo: "{{ rhel_exras_repo_name.stdout | default('') }}"
+      state: present
+  rescue:
+    - fail:
+        msg: "ABORTING! Could not install '{{ dcos_docker_pkg_name }}'. Please make sure RHEL *extras* repository is availble!"
+      when: ansible_distribution == 'RedHat'
+    - fail:
+        msg: "ABORTING! Could not install '{{ dcos_docker_pkg_name }}'."
+      when: ansible_distribution != 'RedHat'
 
-- name: "Docker running"
+- name: "Docker running (Only on some platforms)"
   systemd:
-    name: docker
+    name: "{{ dcos_docker_service_name | default('docker') }}"
     state: started
     enabled: true
+  when: "'podman' not in (dcos_docker_service_name | default('docker'))"
 
 - name: "Install EPEL repositories for required packages"
   yum:
     name: https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm
     state: present
 
-- name: "Install required system packages"
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - tar
-    - xz
-    - unzip
-    - curl
-    - ipset
-    - jq # not technically required by DC/OS but by this Ansible role for checks
+- block:
+  - name: "Install required system packages"
+    yum:
+        name: "{{ dcos_prereq_packages }}"
+        state: present
+  rescue:
+    - fail:
+        msg: "ABORTING! Could not install '{{ dcos_prereq_packages }}'. Please make sure the systems repositories are enabled and reachable!"
 
 - name: "SELinux '{{ dcos['selinux_mode'] | default('permissive') }}'"
   selinux:

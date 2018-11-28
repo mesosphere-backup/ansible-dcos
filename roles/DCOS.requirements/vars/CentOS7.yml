@@ -1,0 +1,9 @@
+dcos_docker_pkg_name: docker-ce
+dcos_prereq_packages:
+  - tar
+  - xz
+  - unzip
+  - curl
+  - ipset
+  - jq # not technically required by DC/OS but by this Ansible role for checks
+

@@ -17,9 +17,18 @@ platforms:
     instance_type: t2.micro
     groups:
       - prereqsgroup
+  # - name: prereqs1-rhel8
+  #   image: ami-0551d2acb56d6e88c
+  #   region: us-east-1
+  #   instance_type: t2.micro
+  #   groups:
+  #     - prereqsgroup
 provisioner:
   name: ansible
   inventory:
+    host_vars:
+      prereqs1-rhel8:
+        ansible_python_interpreter: "/usr/libexec/platform-python" #hack hack hack! Switch to official once RH releases the packages
     group_vars:
       prereqsgroup:
         dcos:

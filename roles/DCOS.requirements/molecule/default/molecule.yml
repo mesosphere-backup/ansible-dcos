@@ -19,9 +19,18 @@ platforms:
     cpus: 1
     groups:
       - prereqsgroup
+  # - name: prereqs1-rhel8
+  #   box: mesosphere-rhel/8beta
+  #   memory: 1024
+  #   cpus: 1
+  #   groups:
+  #     - prereqsgroup
 provisioner:
   name: ansible
   inventory:
+    host_vars:
+      prereqs1-rhel8:
+        ansible_python_interpreter: "/usr/libexec/platform-python" #hack hack hack! Switch to official once RH releases the packages:
     group_vars:
       prereqsgroup:
         dcos:

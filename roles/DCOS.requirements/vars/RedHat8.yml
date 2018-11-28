@@ -1,5 +1,5 @@
-dcos_docker_pkg_name: docker-ce
-dcos_docker_repo_name: docker-ce-stable
+dcos_docker_pkg_name: podman-docker
+dcos_docker_service_name: podman
 dcos_prereq_packages:
   - tar
   - xz

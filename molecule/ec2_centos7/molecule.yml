@@ -1,0 +1,46 @@
+---
+scenario:
+  name: ec2_centos7
+driver:
+  name: ec2
+platforms:
+  - name: bootstrap1-centos7
+    image: ami-9887c6e7
+    region: us-east-1
+    instance_type: m5.large
+    ssh_user: centos
+    groups:
+      - bootstraps
+  - name: master1-centos7
+    image: ami-9887c6e7
+    region: us-east-1
+    instance_type: m5.large
+    ssh_user: centos
+    groups:
+      - masters
+  - name: agent1-centos7
+    image: ami-9887c6e7
+    region: us-east-1
+    instance_type: m5.large
+    ssh_user: centos
+    groups:
+      - agents_private
+      - agents
+
+provisioner:
+  name: ansible
+  log: true
+  config_options:
+    defaults:
+      hash_behaviour: merge
+  env:
+    ANSIBLE_ROLES_PATH: "../../roles/"
+  inventory:
+    links:
+      group_vars: ../../group_vars/
+  lint:
+    name: ansible-lint
+    enabled: False
+lint:
+  name: yamllint
+  enabled: False

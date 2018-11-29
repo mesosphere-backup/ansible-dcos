@@ -1,10 +1,10 @@
 ---
 dcos:
-  download: "https://downloads.dcos.io/dcos/EarlyAccess/dcos_generate_config.sh"
-  version: "1.12.0-beta1"
-  # version_to_upgrade_from: "1.12.0-dev"
+  download: "https://downloads.dcos.io/dcos/stable/dcos_generate_config.sh"
+  version: "1.12.0"
+  version_to_upgrade_from: "1.12.0-beta1"
   # image_commit: "acc9fe548aea5b1b5b5858a4b9d2c96e07eeb9de"
-  enterprise_dcos: true
+  enterprise_dcos: false
 
   selinux_mode: enforcing
 

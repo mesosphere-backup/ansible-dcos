@@ -1,0 +1,43 @@
+---
+scenario:
+  name: ec2_rhel7
+driver:
+  name: ec2
+platforms:
+  - name: bootstrap1-rhel7
+    image: ami-011b3ccf1bd6db744
+    region: us-east-1
+    instance_type: m5.large
+    groups:
+      - bootstraps
+  - name: master1-rhel7
+    image: ami-011b3ccf1bd6db744
+    region: us-east-1
+    instance_type: m5.large
+    groups:
+      - masters
+  - name: agent1-rhel7
+    image: ami-011b3ccf1bd6db744
+    region: us-east-1
+    instance_type: m5.large
+    groups:
+      - agents_private
+      - agents
+
+provisioner:
+  name: ansible
+  log: true
+  config_options:
+    defaults:
+      hash_behaviour: merge
+  env:
+    ANSIBLE_ROLES_PATH: "../../roles/"
+  inventory:
+    links:
+      group_vars: ../../group_vars/
+  lint:
+    name: ansible-lint
+    enabled: False
+lint:
+  name: yamllint
+  enabled: False

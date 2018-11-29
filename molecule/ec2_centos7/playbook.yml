@@ -1,0 +1,49 @@
+---
+- name: DC/OS Requirements
+  hosts: all
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.requirements
+
+- name: "Setup and configure BOOTSTRAP nodes"
+  hosts: bootstraps
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.bootstrap
+  vars:
+    dcos:
+      config:
+        bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address }}:8080"
+        master_list: ["{{ hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address }}"]
+
+- name: "Setup and configure MASTER nodes"
+  hosts: masters
+  serial: 1
+  become: true
+  tasks:
+    - debug:
+        var: hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address
+    - debug:
+        var: hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address
+    - include_role:
+        name: DCOS.master
+  vars:
+    dcos:
+      config:
+        bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address }}:8080"
+        master_list: ["{{ hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address }}"]
+
+- name: "Setup and configure AGENT nodes"
+  hosts: agents
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.agent
+  vars:
+    dcos:
+      config:
+        bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address }}:8080"
+        master_list: ["{{ hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address }}"]
+

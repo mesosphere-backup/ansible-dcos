@@ -80,6 +80,11 @@
         region: "{{ item.region }}"
         instance_type: "{{ item.instance_type }}"
         group: "{{ security_group_name }}"
+        volumes:
+          - device_name: /dev/sda1
+            volume_size: 20
+            volume_type: gp2
+            delete_on_termination: yes
         instance_tags:
           Name: "molecule {{ item.name }} {{ lookup('env', 'USER') }}@{{ lookup('env', 'HOSTNAME') }}"
           instance: "{{ item.name }}"

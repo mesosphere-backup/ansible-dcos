@@ -3,8 +3,6 @@
   set_fact:
      dcos_version_specifier: "{{ dcos['image_commit'] | default(dcos['version']) }}"
 
-- ec2_metadata_facts:
-
 - name: "Create custom fact directory"
   file:
     path: "/etc/ansible/facts.d"

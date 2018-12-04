@@ -30,6 +30,12 @@ platforms:
 provisioner:
   name: ansible
   log: true
+  playbooks:
+    ec2:
+      create: ../ec2/create.yml
+      destroy: ../ec2/destroy.yml
+    converge: ../default/playbook.yml
+    idempotence: ../default/idempotence.yml
   config_options:
     defaults:
       hash_behaviour: merge
@@ -40,7 +46,7 @@ provisioner:
       group_vars: ../../group_vars/
   lint:
     name: ansible-lint
-    enabled: False
+    enabled: True
 lint:
   name: yamllint
-  enabled: False
+  enabled: True

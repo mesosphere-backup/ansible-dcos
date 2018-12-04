@@ -13,4 +13,4 @@ def test_docker_running_and_enabled(host):
 
 def test_selinux_set(host):
     cmd = host.run("sudo sestatus | grep 'Current mode:'")
-    assert 'enforcing' in cmd.stdout
+    assert 'permissive' in cmd.stdout

@@ -1,0 +1,56 @@
+# The converge 'playbook.yml' invokes both an initial install and an upgrade, therefore
+# it cannot be used for idempotence test, as it would downgrade (which would fail anyway)
+# and then upgrade again. Below is a copy of the upgrading part, which should not trigger
+# any changes in Ansible.
+
+- name: "Upgrade and configure BOOTSTRAP nodes"
+  hosts: bootstraps
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.bootstrap
+  vars:
+    dcos:
+      download: "https://downloads.dcos.io/dcos/testing/1.12/commit/3b8b3837cd12bdbc0853e5cd9e0d635b8ba83623/dcos_generate_config.sh"
+      version: "1.12.0"
+      version_to_upgrade_from: "1.12.0"
+      image_commit: "3b8b3837cd12bdbc0853e5cd9e0d635b8ba83623"
+      config:
+        bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address }}:8080"
+        master_list: ["{{ hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address }}"]
+        resolvers: [1.1.1.1]
+
+- name: "Upgrade and configure MASTER nodes"
+  hosts: masters
+  serial: 1
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.master
+  vars:
+    dcos:
+      download: "https://downloads.dcos.io/dcos/testing/1.12/commit/3b8b3837cd12bdbc0853e5cd9e0d635b8ba83623/dcos_generate_config.sh"
+      version: "1.12.0"
+      version_to_upgrade_from: "1.12.0"
+      image_commit: "3b8b3837cd12bdbc0853e5cd9e0d635b8ba83623"
+      config:
+        bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address }}:8080"
+        master_list: ["{{ hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address }}"]
+        resolvers: [1.1.1.1]
+
+- name: "Upgrade and configure AGENT nodes"
+  hosts: agents
+  become: true
+  tasks:
+    - include_role:
+        name: DCOS.agent
+  vars:
+    dcos:
+      download: "https://downloads.dcos.io/dcos/testing/1.12/commit/3b8b3837cd12bdbc0853e5cd9e0d635b8ba83623/dcos_generate_config.sh"
+      version: "1.12.0"
+      version_to_upgrade_from: "1.12.0"
+      image_commit: "3b8b3837cd12bdbc0853e5cd9e0d635b8ba83623"
+      config:
+        bootstrap_url: "http://{{ hostvars[groups['bootstraps'][0]].ansible_facts.default_ipv4.address }}:8080"
+        master_list: ["{{ hostvars[groups['masters'][0]].ansible_facts.default_ipv4.address }}"]
+        resolvers: [1.1.1.1]

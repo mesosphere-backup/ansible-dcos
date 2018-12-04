@@ -6,7 +6,7 @@ dcos:
   # image_commit: "acc9fe548aea5b1b5b5858a4b9d2c96e07eeb9de"
   enterprise_dcos: false
 
-  selinux_mode: enforcing
+  selinux_mode: permissive
 
   config:
     # This is a direct yaml representation of the DC/OS config.yaml

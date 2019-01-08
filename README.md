@@ -1,4 +1,6 @@
-# Deploy DC/OS using Ansible
+# DEPRECATED - Deploy DC/OS using Ansible
+
+*Notice:* This repo was deprecated. Please consider using the Ansible Roles for DC/OS maintained by the Mesosphere SRE team: https://github.com/dcos/dcos-ansible
 
 ## Overview
 
